@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 from portfolio_management.fx import calc_fx_exc_ret
 from portfolio_management.fx import calc_fx_regression
+from portfolio_management.fx import calc_dynamic_carry_trade
+import math
 
 import pandas.testing as pdt
 
@@ -138,8 +140,6 @@ def test_calc_fx_regression():
         'USEU': np.exp(cumulative_differentials)
     }, index=rf_rates.index)
 
-    print(fx_rates)
-
     regression_stats = calc_fx_regression(
         fx_rates,
         rf_rates,
@@ -172,4 +172,86 @@ def test_calc_fx_regression():
     assert regression_stats.shape == expected_shape
 
 def test_calc_dynamic_carry_trade():
-    pass
+
+    # Test Basic Functionality for alpha = 0 and beta = 1 - Everything should be 0
+    rf_rates = pd.DataFrame({
+        'USD1M': [0.01, 0.02, 0.03, 0.04],
+        'EUR1M': [0, 0, 0, 0]
+    }, index=pd.date_range("2023-01-01", periods=4))
+
+    rate_differentials = np.log(1 + rf_rates['USD1M'])
+    cumulative_differentials = rate_differentials.cumsum()
+
+    fx_rates = pd.DataFrame({
+        'USEU': np.exp(cumulative_differentials)
+    }, index=rf_rates.index)
+
+    res = calc_dynamic_carry_trade(
+        fx_rates=fx_rates,
+        rf_rates=rf_rates,
+        rf_to_fx={'EUR1M': 'USEU'},
+        base_rf='USD1M',
+        return_premium_series=False  # Set True to get premium series instead of summary
+    )
+
+    atol = 1e-5
+    assert abs(res['% of Periods with Positive Premium']['EUR'] - 0) <= atol
+    assert abs(res['Nº of Positive Premium Periods']['EUR'] - 0) <= atol
+    assert res['Total Number of Periods']['EUR'] == 3
+    assert abs(res['Mean']['EUR'] - 0) <= atol
+    assert abs(res['Vol']['EUR'] - 0) <= atol
+    assert abs(res['Min']['EUR'] - 0) <= atol
+    assert abs(res['Max']['EUR'] - 0) <= atol
+    assert abs(res['Skewness']['EUR'] - 0) <= atol
+    assert math.isnan(res['Kurtosis']['EUR']) == math.isnan(np.float64('nan'))
+    assert abs(res['Annualized Mean']['EUR'] - 0) <= atol
+    assert abs(res['Annualized Vol']['EUR'] - 0) <= atol
+
+    #Test functionality with data that produce b = 2 and alpha = 0 (so we should have non-zero results)
+    rf_rates = pd.DataFrame({
+        'USD1M': [0.01, 0.02, 0.03, 0.04],  # Base risk-free rate
+        'EUR1M': [0, 0, 0, 0]  # Foreign risk-free rate
+    }, index=pd.date_range("2023-01-01", periods=4))
+
+    rate_differentials = np.log(1 + rf_rates['USD1M'])[:-1]
+
+    cumulative_differentials = rate_differentials.cumsum()
+    fx_rates = pd.DataFrame({
+        'USEU': np.exp(2 * cumulative_differentials)  # Adjusted for beta = 2
+    }, index=rf_rates.index)
+
+    res = calc_dynamic_carry_trade(
+        fx_rates=fx_rates,
+        rf_rates=rf_rates,
+        rf_to_fx={'EUR1M': 'USEU'},
+        base_rf='USD1M',
+        return_premium_series = False
+    )
+
+    # Manually compute expected premium (since expected premium = alpha + (b - 1) rate diff then in our case since beta = 2 and alpha = 0, expected premium = rate diff
+    expected_premiums = rate_differentials
+
+    atol = 1e-5
+    assert res['% of Periods with Positive Premium']['EUR'] == 1
+
+    assert res['Nº of Positive Premium Periods']['EUR'] == 3
+
+    assert res['Total Number of Periods']['EUR'] == 3
+
+    expected_mean = expected_premiums.mean()
+    assert abs(res['Mean']['EUR'] - expected_mean) <= atol
+
+    expected_vol = expected_premiums.std()
+    assert abs(res['Vol']['EUR'] - expected_vol) <= atol
+
+    assert abs(res['Min']['EUR'] - expected_premiums.min()) <= atol
+    assert abs(res['Max']['EUR'] - expected_premiums.max()) <= atol
+
+
+    annual_factor = 12
+    assert abs(res['Annualized Mean']['EUR'] - (expected_mean * annual_factor)) <= atol
+    assert abs(res['Annualized Vol']['EUR'] - (expected_vol * np.sqrt(annual_factor))) <= atol
+
+    assert list(res.columns) == ['% of Periods with Positive Premium', 'Nº of Positive Premium Periods',
+       'Total Number of Periods', 'Mean', 'Vol', 'Min', 'Max', 'Skewness',
+       'Kurtosis', 'Annualized Mean', 'Annualized Vol']

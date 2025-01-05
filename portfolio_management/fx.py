@@ -311,7 +311,7 @@ def calc_dynamic_carry_trade(
     Returns:
     pd.DataFrame: Summary of the carry trade strategy statistics or premium series.
     """
-    raise Exception("Function not available - needs testing prior to use")
+    # raise Exception("Function not available - needs testing prior to use")
     if annual_factor is None:
         print(
             "Regression assumes 'annual_factor' equals to 12 since it was not provided"
