@@ -51,14 +51,15 @@ def calc_negative_pct(
                 series, right_index=True, left_index=True, how="outer"
             )
 
+    if isinstance(returns, pd.Series):
+        returns = returns.to_frame()
+    
     if "date" in returns.columns.str.lower():
         returns = returns.rename({"Date": "date"}, axis=1)
         returns = returns.set_index("date")
 
     returns.index.name = "date"
 
-    if isinstance(returns, pd.Series):
-        returns = returns.to_frame()
     returns = returns.apply(lambda x: x.astype(float))
     prev_len_index = returns.apply(lambda x: len(x))
     returns = returns.dropna(axis=0)
@@ -66,9 +67,9 @@ def calc_negative_pct(
     if not (prev_len_index == new_len_index).all():
         print("Some columns had NaN values and were dropped")
     if calc_positive:
-        returns = returns.applymap(lambda x: 1 if x > 0 else 0)
+        returns = returns.map(lambda x: 1 if x > 0 else 0)
     else:
-        returns = returns.applymap(lambda x: 1 if x < 0 else 0)
+        returns = returns.map(lambda x: 1 if x < 0 else 0)
 
     negative_statistics = returns.agg(["mean", "count", "sum"]).set_axis(
         ["% Negative Returns", "Nº Returns", "Nº Negative Returns"], axis=0
