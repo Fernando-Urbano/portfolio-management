@@ -7,7 +7,7 @@ import os
 sys.path.append(os.pardir)
 from portfolio_management.statistics import *
 from tests.utils import create_returns_df
-
+from tests.conftest import setup_pandas_display  # Import the fixture
 
 @pytest.fixture
 def test_returns():
@@ -42,13 +42,19 @@ def test_calc_negative_pct_series(test_returns):
 # Test get_best_and_worst
 def test_get_best_and_worst(test_summary_statistics):
     for stat in test_summary_statistics.columns:
-        result = get_best_and_worst(test_summary_statistics, stat=stat)
+        try:
+            result = get_best_and_worst(test_summary_statistics, stat=stat)
+        except ValueError as e:
+            if bool(re.search("All values in", str(e))):
+                continue
+            else:
+                raise e
         assert isinstance(result, pd.DataFrame)
         assert result.index[0] == test_summary_statistics[stat].idxmax()
         assert result.index[-1] == test_summary_statistics[stat].idxmin()
 
 def test_get_best_and_worst_invalid_stat(test_summary_statistics):
-    with pytest.raises(Exception, match=r"not in \"summary_statistics\""):
+    with pytest.raises(ValueError, match=r"not in \"summary_statistics\""):
         get_best_and_worst(test_summary_statistics, stat="Nonexistent Stat")
 
 # Test calc_correlations
@@ -95,5 +101,5 @@ def test_calc_summary_statistics_with_drops(test_returns):
     for d in drop:
         assert d not in result.index
 
-if __name__ == "__main__":
-    pytest.main()
+# if __name__ == "__main__":
+#     pytest.main()

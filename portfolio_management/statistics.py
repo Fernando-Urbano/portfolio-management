@@ -18,6 +18,95 @@ pd.options.display.float_format = "{:,.4f}".format
 warnings.filterwarnings("ignore")
 
 
+ANNUAL_FACTOR_MAP = {
+    "D": 360,
+    "DU": 252,
+    "W": 52,
+    "BM": 12,
+    "ME": 12,
+    "BQ": 4,
+    "BA": 2,
+    "A": 1,
+}
+
+import numpy as np
+import pandas as pd
+
+ANNUAL_FACTOR_MAP = {
+    "D": 252,  # Daily
+    "W": 52,  # Weekly
+    "BM": 12,  # Monthly (Business Monthly)
+    "ME": 12,  # Monthly (Month-End)
+    "BQ": 4,  # Quarterly
+    "BA": 2,  # Semiannual (Biannual or Annual if larger gaps)
+    "A": 1,  # Annual
+}
+
+
+def _transform_annual_factor(freq) -> int:
+    return ANNUAL_FACTOR_MAP.get(freq)
+
+
+def _calc_annual_factor(dates) -> str:
+    """
+    Given a list/array-like of dates, attempt to infer the frequency
+    (daily, weekly, monthly, etc.) and return one of the keys in
+    ANNUAL_FACTOR_MAP:
+        "D"  -> 252   (Daily)
+        "W"  -> 52    (Weekly)
+        "BM" -> 12    (Monthly, not necessarily month-end)
+        "ME" -> 12    (Monthly, all month-end)
+        "BQ" -> 4     (Quarterly)
+        "BA" -> 2     (Semiannual, or even annual in practice)
+
+    If fewer than 20 dates are provided, the function raises a ValueError
+    forcing the user to specify the frequency manually.
+
+    :param dates: A list/array-like of datetime objects (or date strings).
+    :return: A string key from ANNUAL_FACTOR_MAP indicating the inferred frequency.
+    """
+    # Require at least 20 dates to auto-detect
+    if len(dates) < 20:
+        raise ValueError(
+            "Not enough data points to auto-detect frequency. "
+            "At least 20 dates are required, otherwise please specify the frequency."
+        )
+
+    dates = pd.to_datetime(dates)
+    dates = np.sort(dates)
+
+    day_diffs = np.diff(dates) / np.timedelta64(1, "D")  # length n-1
+    median_gap = np.median(day_diffs)
+
+    # ----- Frequency detection thresholds -----
+    #
+    # Typical day-gap heuristics (approximate):
+    #
+    #   < 2 days   => "D"  (Daily)
+    #   < 10 days  => "W"  (Weekly)
+    #   < 40 days  => "ME" or "BM" (Monthly)
+    #   < 80 days  => "BQ" (Quarterly)
+    #   < 200 days => "BA" (Semiannual)
+    #   >= 200 days=> "A" (also used for ~annual in this map)
+    #
+    if median_gap < 2:
+        max_gap = np.max(day_diffs)
+        frequency = "DU" if max_gap > 2 else "D"
+    elif median_gap < 10:
+        frequency = "W"
+    elif median_gap < 40:
+        # Distinguish "month-end" vs. "business-monthly"
+        is_month_end = all(d == (d + pd.tseries.offsets.MonthEnd(0)) for d in dates)
+        frequency = "ME" if is_month_end else "BM"
+    elif median_gap < 80:
+        frequency = "BQ"
+    elif median_gap < 200:
+        frequency = "BA"
+    else:
+        frequency = "A"
+    return _transform_annual_factor(frequency)
+
+
 def calc_negative_pct(
     returns: Union[pd.DataFrame, pd.Series, list],
     calc_positive: bool = False,
@@ -53,7 +142,7 @@ def calc_negative_pct(
 
     if isinstance(returns, pd.Series):
         returns = returns.to_frame()
-    
+
     if "date" in returns.columns.str.lower():
         returns = returns.rename({"Date": "date"}, axis=1)
         returns = returns.set_index("date")
@@ -168,7 +257,6 @@ def calc_cumulative_returns(
 def get_best_and_worst(
     summary_statistics: pd.DataFrame,
     stat: str = "Annualized Sharpe",
-    return_df: bool = True,
 ):
     """
     Identifies the best and worst assets based on a specified statistic.
@@ -189,31 +277,30 @@ def get_best_and_worst(
         )
 
     if stat not in summary_statistics.columns:
-        raise Exception(f'{stat} not in "summary_statistics"')
+        raise ValueError(f'{stat} not in "summary_statistics"')
     summary_statistics.rename(columns=lambda c: c.replace(" ", "").lower())
     best_stat = summary_statistics[stat].max()
     worst_stat = summary_statistics[stat].min()
+    if all(pd.isna(summary_statistics[stat])):
+        raise ValueError(f'All values in "{stat}" are missing')
     asset_best_stat = summary_statistics.loc[
         lambda df: df[stat] == df[stat].max()
     ].index[0]
     asset_worst_stat = summary_statistics.loc[
         lambda df: df[stat] == df[stat].min()
     ].index[0]
-    print(f"The asset with the highest {stat} is {asset_best_stat}: {best_stat:.5f}")
-    print(f"The asset with the lowest {stat} is {asset_worst_stat}: {worst_stat:.5f}")
-    if return_df:
-        return pd.concat(
-            [
-                summary_statistics.loc[lambda df: df.index == asset_best_stat],
-                summary_statistics.loc[lambda df: df.index == asset_worst_stat],
-            ]
-        )
+    return pd.concat(
+        [
+            summary_statistics.loc[lambda df: df.index == asset_best_stat],
+            summary_statistics.loc[lambda df: df.index == asset_worst_stat],
+        ]
+    )
 
 
 def calc_summary_statistics(
     returns: Union[pd.DataFrame, List],
     annual_factor: int = None,
-    provided_excess_returns: bool = None,
+    provided_excess_returns: bool = True,
     rf: Union[pd.Series, pd.DataFrame] = None,
     var_quantile: Union[float, List] = 0.05,
     timeframes: Union[None, dict] = None,
@@ -270,30 +357,23 @@ def calc_summary_statistics(
     returns.index.name = "date"
 
     try:
-        returns.index = pd.to_datetime(returns.index.map(lambda x: x.date()))
-    except AttributeError:
-        print('Could not convert "date" index to datetime.date')
-        pass
+        returns.index = pd.to_datetime(returns.index, errors="coerce")
+        if returns.index.isnull().any():
+            raise ValueError(
+                "Index contains invalid datetime values. Ensure the 'returns' index is fully parsable."
+            )
+    except Exception as e:
+        raise ValueError(f"Failed to process the 'date' index: {e}")
 
     returns = returns.apply(lambda x: x.astype(float))
 
     if annual_factor is None:
-        print("Assuming monthly returns with annualization term of 12")
-        annual_factor = 12
+        annual_factor = _calc_annual_factor(list(returns.index))
 
-    if provided_excess_returns is None:
-        print(
-            "Assuming excess returns were provided to calculate Sharpe."
-            ' If returns were provided (steady of excess returns), the column "Sharpe" is actually "Mean/Volatility"'
-        )
-        provided_excess_returns = True
-    elif provided_excess_returns is False:
+    if provided_excess_returns is False:
         if rf is not None:
             if len(rf.index) != len(returns.index):
                 raise Exception('"rf" index must be the same lenght as "returns"')
-            print(
-                '"rf" is used to subtract returns to calculate Sharpe, but nothing else'
-            )
 
     if isinstance(timeframes, dict):
         all_timeframes_summary_statistics = pd.DataFrame({})
@@ -430,6 +510,12 @@ def calc_summary_statistics(
             returns_corr = returns_corr[[c + " Correlation" for c in correlations]]
         summary_statistics = summary_statistics.join(returns_corr)
 
+    if provided_excess_returns is False:
+        summary_statistics = summary_statistics.rename(
+            {"Sharpe": "Mean / Vol", "Annualized Sharpe": "Annualized Mean / Vol"},
+            axis=1,
+        )
+
     return _filter_columns_and_indexes(
         summary_statistics,
         keep_columns=keep_columns,
@@ -442,8 +528,8 @@ def calc_summary_statistics(
 
 def calc_correlations(
     returns: pd.DataFrame,
-    print_highest_lowest: bool = True,
-    matrix_size: Union[int, float] = 7,
+    return_only_highest_and_lowest: bool = False,
+    matrix_size: Union[int, float, tuple] = 7,
     return_heatmap: bool = True,
     keep_columns: Union[list, str] = None,
     drop_columns: Union[list, str] = None,
@@ -477,15 +563,26 @@ def calc_correlations(
 
     correlation_matrix = returns.corr()
     if return_heatmap:
-        fig, ax = plt.subplots(figsize=(matrix_size * 1.5, matrix_size))
+        if isinstance(matrix_size, list):
+            matrix_size = tuple(matrix_size)
+        if isinstance(matrix_size, tuple):
+            if len(matrix_size) != 2:
+                raise Exception(
+                    "matrix_size must be a tuple with two elements (width, height) or a single integer/float"
+                )
+            figsize = plt.subplots(figsize=matrix_size)
+        else:
+            figsize = (matrix_size * 1.5, matrix_size)
+        fig, ax = plt.subplots(figsize=figsize)
         heatmap = sns.heatmap(
             correlation_matrix,
             xticklabels=correlation_matrix.columns,
             yticklabels=correlation_matrix.columns,
             annot=True,
+            fmt=".2%",
         )
 
-    if print_highest_lowest:
+    if return_only_highest_and_lowest:
         highest_lowest_corr = (
             correlation_matrix.unstack()
             .sort_values()
@@ -495,11 +592,13 @@ def calc_correlations(
         )
         highest_corr = highest_lowest_corr.iloc[lambda df: len(df) - 1, :]
         lowest_corr = highest_lowest_corr.iloc[0, :]
-        print(
-            f'The highest correlation ({highest_corr["corr"]:.2%}) is between {highest_corr.asset_1} and {highest_corr.asset_2}'
-        )
-        print(
-            f'The lowest correlation ({lowest_corr["corr"]:.2%}) is between {lowest_corr.asset_1} and {lowest_corr.asset_2}'
+        return pd.DataFrame(
+            {
+                "First Asset": [highest_corr.asset_1, lowest_corr.asset_1],
+                "Second Asset": [highest_corr.asset_2, lowest_corr.asset_2],
+                "Correlation": [highest_corr.corr, lowest_corr],
+            },
+            index=["Highest", "Lowest"],
         )
 
     if return_heatmap:
