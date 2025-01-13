@@ -25,11 +25,13 @@ setup(
         "datetime>=3.0.3",
         "statsmodels>=0.14.3",
         "scikit-learn>=1.4.2",
+        "scikit-optimize>=0.10.2",
         "seaborn>=0.13.2",
         "openpyxl>=3.1.3",
         "ipywidgets>=8.1.5",
         "arch>=7.1.0",
-        "setuptools>=57.5.0"
+        "setuptools>=57.5.0",
+        "cvxpy>=1.6.0"
     ],
     python_requires='>=3.8',
     classifiers=[
