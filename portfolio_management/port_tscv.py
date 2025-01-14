@@ -99,7 +99,7 @@ def _run_tscv_for_params(
     This function slices the data into training and testing windows for each fold,
     calls `calc_weights` to fit portfolio weights on the training set, then evaluates
     out-of-sample performance on the test set. The final score is computed by
-    aggregating (mean, median, or sum) the per-fold performance values.
+    aggregating (mean or median) the per-fold performance values.
 
     Parameters
     ----------
@@ -109,7 +109,7 @@ def _run_tscv_for_params(
         The evaluation metric (e.g., mean_return, sharpe, volatility). Also used to decide
         whether we maximize or minimize scores.
     aggregator : str
-        How to combine the fold-level performance scores. Must be one of: ["mean", "median", "sum"].
+        How to combine the fold-level performance scores. Must be one of ('mean', 'median').
     l1_reg : float
         L1 regularization penalty factor (Lasso). Passed to `calc_weights`.
     l2_reg : float
@@ -216,11 +216,9 @@ def _run_tscv_for_params(
             agg_perf = float(np.mean(valid_perfs))
         elif aggregator == "median":
             agg_perf = float(np.median(valid_perfs))
-        elif aggregator == "sum":
-            agg_perf = float(np.sum(valid_perfs))
         else:
             raise ValueError(
-                f"Invalid aggregator: {aggregator}. Choose from ['mean', 'median', 'sum']."
+                f"Invalid aggregator: {aggregator}. Choose from ['mean', 'median']."
             )
 
     return agg_perf
@@ -261,7 +259,7 @@ def _tune_grid_search_tscv(
         The evaluation metric (e.g., mean_return, sharpe, volatility). Also used to decide
         whether we maximize or minimize scores.
     aggregator : str
-        How to combine fold scores ('mean', 'median', 'sum').
+        How to combine fold scores ('mean', 'median').
     window_type : str
         Type of cross-validation windowing ('rolling' or 'expanding').
     n_folds : int
@@ -368,7 +366,7 @@ def _tune_bayes_search_tscv(
         The evaluation metric (e.g., mean_return, sharpe, volatility). Also used to decide
         whether we maximize or minimize scores.
     aggregator : str
-        How to combine fold scores ('mean', 'median', 'sum').
+        How to combine fold scores ('mean', 'median').
     window_type : str
         Type of cross-validation windowing ('rolling' or 'expanding').
     n_folds : int
@@ -513,7 +511,6 @@ def tune_regularization_tscv(
         Aggregation method for cross-validation fold scores. Supported values:
         - "mean": Use the mean of fold scores.
         - "median": Use the median of fold scores.
-        - "sum": Use the sum of fold scores.
     window_type : str, default="rolling"
         Type of cross-validation windowing. Supported values:
         - "rolling": Use rolling windows for train/test splits.
