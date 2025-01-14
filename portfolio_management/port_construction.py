@@ -207,9 +207,15 @@ def _shrink_covariance(
         target_matrix = np.diag(np.diag(Sigma))
     elif target == "constant_correlation":
         # construct a constant correlation matrix
+        N = Sigma.shape[0]  # number of assets
         std_devs = np.sqrt(np.diag(Sigma))
-        avg_corr = np.mean(Sigma / np.outer(std_devs, std_devs))
+        corr_mat = Sigma / np.outer(std_devs, std_devs)
+        off_diag_vals = corr_mat[~np.eye(N, dtype=bool)]  # exclude diagonal
+        avg_corr = np.mean(off_diag_vals)
+        # set off-diagonals to avg_corr * std_dev[i]*std_dev[j]
         target_matrix = avg_corr * np.outer(std_devs, std_devs)
+        # overwrite the diagonal with original variances
+        np.fill_diagonal(target_matrix, np.diag(Sigma))
     elif isinstance(target, np.ndarray):
         # custom target matrix
         target_matrix = target
@@ -220,10 +226,10 @@ def _shrink_covariance(
 
     # if shrinkage factor not provided, use Ledoit-Wolf formula to compute optimal shrinkage_factor (alpha)
     if shrinkage_factor is None:
-        diff = Sigma - target_matrix
-        numerator = np.sum(diff**2)
-        denominator = np.sum((Sigma - np.mean(Sigma, axis=0)) ** 2)
-        shrinkage_factor = numerator / (numerator + denominator)
+        # TODO implement optimized shrinkage factor via http://www.ledoit.net/honey.pdf -> Appendix B
+        raise NotImplementedError(
+            "Automatic optimization of shrinkage factor not yet implemented. Please specify a `shrinkage_factor`."
+        )
 
     # apply shrinkage using Sigma_shrunk = alpha * target_matrix + (1 - alpha) * Sigma
     shrunk_cov = shrinkage_factor * target_matrix + (1 - shrinkage_factor) * Sigma
@@ -386,8 +392,8 @@ def calc_weights(
     )
 
     # generate inputs for portfolio optimization
-    Sigma = returns.cov().values * periods_per_year
-    mu = returns.mean().values * periods_per_year
+    Sigma = returns.cov().values
+    mu = returns.mean().values
     n_assets = len(returns.columns)
     x = cp.Variable(n_assets)
 
@@ -396,6 +402,10 @@ def calc_weights(
         Sigma = _shrink_covariance(
             Sigma, target=shrinkage_target, shrinkage_factor=shrinkage_factor
         )
+
+    # apply annualization, this is done after shrinkage (if applied)
+    Sigma *= periods_per_year
+    mu *= periods_per_year
 
     # build objective
     objective_expr = _build_objective(objective_type, x, mu, Sigma, risk_tolerance)
