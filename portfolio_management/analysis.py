@@ -86,7 +86,7 @@ def calc_cross_section_regression(
         if rf is not None:
             if len(rf.index) != len(returns.index):
                 raise Exception('"rf" index must be the same lenght as "returns"')
-            returns = returns.sub(rf, axis=0)
+            returns = returns.sub(rf.values, axis=0)
 
     time_series_regressions = calc_iterative_regression(
         returns, factors, periods_per_year=periods_per_year, warnings=False
@@ -243,6 +243,7 @@ def calc_regression(
     drop_indexes: Union[list, str] = None,
     drop_before_keep: bool = False,
     calc_sortino_ratio: bool = False,
+    is_time_series_regression: bool = False,
 ):
     """
     Performs an OLS regression on the provided data with optional intercept, timeframes, and statistical ratios.
@@ -277,18 +278,30 @@ def calc_regression(
 
     return_model = return_model if not return_fitted_values else True
 
-    periods_per_year = define_periods_per_year(clean_returns_df(y), periods_per_year)
-
-    X = clean_returns_df(X)
-
-    if warnings:
-        warnings.warn(
-            '"calc_regression" assumes excess returns to calculate Information and Treynor Ratios'
+    if is_time_series_regression:
+        periods_per_year = define_periods_per_year(
+            clean_returns_df(y), periods_per_year
         )
+    elif periods_per_year is None:
+        periods_per_year = 12
+        warnings.warn(
+            "Assuming 12 periods per year. Set 'periods_per_year' to silence "
+            + "this warning or speficy 'is_time_series_regression' as True to "
+            + "allow for estimate of 'periods_per_year'"
+        )
+
     if intercept:
         X = sm.add_constant(X)
 
     y_name = y.name if isinstance(y, pd.Series) else y.columns[0]
+
+    if isinstance(y, pd.Series):
+        y = y.to_frame(y_name)
+
+    if y.shape[1] > 1:
+        raise Exception(
+            f"y has more than one column. Please provide a single column DataFrame or Series"
+        )
 
     if len(X.index) != len(y.index):
         print(
@@ -348,7 +361,7 @@ def calc_regression(
         X = X.reset_index(drop=True)
         model = sm.OLS(y, X, missing="drop", hasconst=intercept)
         if warnings:
-            print(
+            warnings.warn(
                 f'"{y_name}" Required to reset indexes to make regression work. Try passing "y" and "X" as pd.DataFrame'
             )
     results = model.fit()
@@ -453,6 +466,7 @@ def calc_iterative_regression(
     Returns:
     pd.DataFrame: Summary statistics for each asset regression.
     """
+
     multiple_y = clean_returns_df(multiple_y)
     X = clean_returns_df(X)
     periods_per_year = define_periods_per_year(multiple_y, periods_per_year)
