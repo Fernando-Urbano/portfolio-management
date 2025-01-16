@@ -1,383 +1,677 @@
-import pandas as pd
 import numpy as np
-import re
-import math
-import datetime
-from typing import Union, List
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import warnings
-from arch import arch_model
-from collections import defaultdict
-from scipy.stats import norm
-from portfolio_management.utils import _filter_columns_and_indexes
-
-pd.options.display.float_format = "{:,.4f}".format
-warnings.filterwarnings("ignore")
+import pandas as pd
+import cvxpy as cp
+from typing import Union
+from enum import Enum
+from portfolio_management.utils import define_periods_per_year, clean_returns_df
 
 
-def calc_tangency_weights(
-    returns: pd.DataFrame,
-    cov_mat: str = 1,
-    return_graphic: bool = False,
-    return_port_ret: bool = False,
-    target_ret_rescale_weights: Union[None, float] = None,
-    annual_factor: int = 12,
-    name: str = "Tangency",
-    expected_returns: Union[pd.Series, pd.DataFrame] = None,
-    expected_returns_already_annualized: bool = False,
-):
+class ObjectiveType(Enum):
+    """Enum of supported portfolio optimization objective types."""
+
+    MIN_VARIANCE = "min_variance"
+    MAX_SHARPE = "max_sharpe"
+    MAX_RETURN = "max_return"
+    MEAN_VARIANCE = "mean_variance"
+
+
+### HELPER SUBROUTINES
+
+
+def _build_objective(
+    objective_type: ObjectiveType,
+    x: cp.Variable,
+    mu: np.ndarray,
+    Sigma: np.ndarray,
+    risk_tolerance: float,
+) -> cp.Expression:
     """
-    Calculates tangency portfolio weights based on the covariance matrix of returns.
+    Construct the cvxpy-compatible objective expression for portfolio optimization.
+
+    Parameters
+    ----------
+    objective_type : ObjectiveType
+        The optimization objective, as defined in the `ObjectiveType` enum.
+    x : cp.Variable
+        Portfolio weight vector (cvxpy variable).
+    mu : np.ndarray
+        Expected returns vector.
+    Sigma : np.ndarray
+        Covariance matrix of asset returns.
+    risk_tolerance : float
+        Risk tolerance parameter for mean-variance optimization.
+
+    Returns
+    -------
+    cp.Expression
+        The cvxpy-compatible objective expression for the optimization problem.
+
+    Raises
+    ------
+    ValueError
+        If the provided objective type is not implemented.
+    """
+    if objective_type == ObjectiveType.MEAN_VARIANCE:
+        # minimize 0.5 * x^T Sigma x - gamma * mu^T x
+        return 0.5 * cp.quad_form(x, Sigma) - risk_tolerance * (mu @ x)
+
+    elif objective_type in {ObjectiveType.MIN_VARIANCE, ObjectiveType.MAX_SHARPE}:
+        # minimize x^T Sigma x
+        return cp.quad_form(x, Sigma)
+
+    elif objective_type == ObjectiveType.MAX_RETURN:
+        # maximize x^T mu == minimize -x^T mu
+        return -mu @ x
+
+    raise NotImplementedError(f"Objective type '{objective_type}' is not implemented.")
+
+
+def _add_constraints(
+    objective_type: ObjectiveType,
+    x: cp.Variable,
+    mu: np.ndarray,
+    Sigma: np.ndarray,
+    target_return: float = None,
+    target_variance: float = None,
+    strict_targets: bool = False,
+    long_only: bool = False,
+) -> list:
+    """
+    Build and return portfolio optimization constraints based on specified parameters.
+
+    Parameters
+    ----------
+    objective_type : ObjectiveType
+        The optimization objective, as defined in the `ObjectiveType` enum.
+    x : cp.Variable
+        Portfolio weight vector (cvxpy variable).
+    mu : np.ndarray
+        Expected returns vector.
+    Sigma : np.ndarray
+        Covariance matrix of asset returns.
+    target_return : float, optional
+        Target portfolio return constraint. If provided, enforces a portfolio return.
+    target_variance : float, optional
+        Target portfolio variance constraint. If provided, enforces a portfolio variance.
+    strict_targets : bool, optional
+        If True, enforces strict equality (`==`) for target_return and target_variance constraints.
+        If False, uses inequalities (`>=` for return and `<=` for variance).
+    long_only : bool, optional
+        If True, enforces non-negative weights (long-only portfolio).
+
+    Returns
+    -------
+    list
+        A list of cvxpy constraints for the optimization problem.
+    """
+    constraints = []
+
+    # sum weights to 1
+    if objective_type == ObjectiveType.MAX_SHARPE:
+        constraints.append(mu @ x == 1)
+    else:
+        constraints.append(cp.sum(x) == 1)
+
+    if long_only:
+        constraints.append(x >= 0)
+
+    if target_return is not None:
+        if strict_targets:
+            constraints.append(mu @ x == target_return)
+        else:
+            constraints.append(mu @ x >= target_return)
+
+    if target_variance is not None:
+        if strict_targets:
+            constraints.append(cp.quad_form(x, Sigma) == target_variance)
+        else:
+            constraints.append(cp.quad_form(x, Sigma) <= target_variance)
+
+    return constraints
+
+
+def _add_regularization_to_objective(
+    objective_expr: cp.Expression,
+    x: cp.Variable,
+    l1_reg: float = 0.0,
+    l2_reg: float = 0.0,
+) -> cp.Expression:
+    """
+    Adds L1 (Lasso) and L2 (Ridge) regularization terms to the optimization objective.
+
+    Parameters
+    ----------
+    objective_expr : cp.Expression
+        The existing cvxpy objective expression to which regularization terms will be added.
+    x : cp.Variable
+        Portfolio weight vector (cvxpy variable).
+    l1_reg : float, optional
+        Coefficient for L1 regularization (Lasso). Defaults to 0.0.
+    l2_reg : float, optional
+        Coefficient for L2 regularization (Ridge). Defaults to 0.0.
+
+    Returns
+    -------
+    cp.Expression
+        The modified objective expression with added regularization terms.
+    """
+    # L1 (Lasso) penalty
+    if l1_reg > 0:
+        objective_expr += l1_reg * cp.norm1(x)
+
+    # L2 (Ridge) penalty
+    if l2_reg > 0:
+        objective_expr += l2_reg * cp.sum_squares(x)
+
+    return objective_expr
+
+
+def _shrink_covariance(
+    Sigma: np.ndarray,
+    target: Union[str, np.ndarray] = "diagonal",
+    shrinkage_factor: float = None,
+) -> np.ndarray:
+    r"""
+    Generalized shrinkage function for covariance matrix.
+
+    This function applies shrinkage to the input covariance matrix \(\Sigma\) by blending it
+    with a specified target matrix using a shrinkage factor \(\alpha\). The formula is:
+
+        \(\Sigma_{\text{shrunk}} = \alpha \cdot \text{target\_matrix} + (1 - \alpha) \cdot \Sigma\)
 
     Parameters:
-    returns (pd.DataFrame): Time series of returns.
-    cov_mat (str, default=1): Covariance matrix for calculating tangency weights.
-    return_graphic (bool, default=False): If True, plots the tangency weights.
-    return_port_ret (bool, default=False): If True, returns the portfolio returns.
-    target_ret_rescale_weights (float or None, default=None): Target return for rescaling weights.
-    annual_factor (int, default=12): Factor for annualizing returns.
-    name (str, default='Tangency'): Name for labeling the weights and portfolio.
+    ----------
+    Sigma : np.ndarray
+        Covariance matrix.
+    target : Union[str, np.ndarray]
+        Target covariance matrix. Options:
+            - "diagonal": Diagonal covariance matrix from variances.
+            - "constant_correlation": Shrinks to a constant correlation matrix.
+            - Custom matrix: Provide an explicit target matrix as a numpy array.
+    shrinkage_factor : float, optional
+        Shrinkage factor (\(\alpha\)). If None, the optimal shrinkage is calculated using
+        the Ledoit-Wolf (2003) method.
 
     Returns:
-    pd.DataFrame or pd.Series: Tangency portfolio weights or portfolio returns if `return_port_ret` is True.
+    -------
+    np.ndarray
+        Shrunk covariance matrix.
     """
-    returns = returns.copy()
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    if cov_mat == 1:
-        cov_inv = np.linalg.inv((returns.cov() * annual_factor))
+    # define the target matrix
+    if target == "diagonal":
+        # use diagonal matrix with variances
+        target_matrix = np.diag(np.diag(Sigma))
+    elif target == "constant_correlation":
+        # construct a constant correlation matrix
+        N = Sigma.shape[0]  # number of assets
+        std_devs = np.sqrt(np.diag(Sigma))
+        corr_mat = Sigma / np.outer(std_devs, std_devs)
+        off_diag_vals = corr_mat[~np.eye(N, dtype=bool)]  # exclude diagonal
+        avg_corr = np.mean(off_diag_vals)
+        # set off-diagonals to avg_corr * std_dev[i]*std_dev[j]
+        target_matrix = avg_corr * np.outer(std_devs, std_devs)
+        # overwrite the diagonal with original variances
+        np.fill_diagonal(target_matrix, np.diag(Sigma))
+    elif isinstance(target, np.ndarray):
+        # custom target matrix
+        target_matrix = target
     else:
-        cov = returns.cov()
-        covmat_diag = np.diag(np.diag((cov)))
-        covmat = cov_mat * cov + (1 - cov_mat) * covmat_diag
-        cov_inv = np.linalg.pinv((covmat * annual_factor))
+        raise ValueError(
+            "Invalid target specified. Use 'diagonal', 'constant_correlation', or a custom matrix."
+        )
 
-    ones = np.ones(returns.columns.shape)
-    if expected_returns is not None:
-        mu = expected_returns
-        if not expected_returns_already_annualized:
-            mu *= annual_factor
+    # if shrinkage factor not provided, use Ledoit-Wolf formula to compute optimal shrinkage_factor (alpha)
+    if shrinkage_factor is None:
+        # TODO implement optimized shrinkage factor via http://www.ledoit.net/honey.pdf -> Appendix B
+        raise NotImplementedError(
+            "Automatic optimization of shrinkage factor not yet implemented. Please specify a `shrinkage_factor`."
+        )
+
+    # apply shrinkage using Sigma_shrunk = alpha * target_matrix + (1 - alpha) * Sigma
+    shrunk_cov = shrinkage_factor * target_matrix + (1 - shrinkage_factor) * Sigma
+
+    return shrunk_cov
+
+
+def _validate_and_map_inputs(
+    objective_type: Union[str, ObjectiveType],
+    target_return: float,
+    target_variance: float,
+    risk_tolerance: float,
+    shrinkage_target: Union[str, np.ndarray],
+    shrinkage_factor: float,
+) -> ObjectiveType:
+    """
+    Validates and maps inputs for the calc_weights function.
+
+    Parameters
+    ----------
+    objective_type : Union[str, ObjectiveType]
+        Type of optimization objective. Can be passed as a string or an ObjectiveType enum.
+    target_return : float
+        Enforces the portfolio return. Used with 'min_variance' or 'mean_variance'.
+    target_variance : float
+        Enforces the portfolio variance. Used with 'max_return' or 'mean_variance'.
+    risk_tolerance : float
+        Risk tolerance parameter (gamma) for the 'mean_variance' objective.
+    shrinkage_target : Union[str, np.ndarray]
+        Shrinkage target for covariance matrix.
+    shrinkage_factor : float
+        Shrinkage intensity (alpha), between 0 and 1.
+    l1_reg : float
+        L1 regularization penalty (Lasso).
+    long_only : bool
+        Whether portfolio weights are constrained to be non-negative.
+
+    Returns
+    -------
+    ObjectiveType
+        Validated and mapped ObjectiveType enum.
+    """
+
+    # map and validate objective_type
+    if isinstance(objective_type, str):
+        try:
+            objective_type = ObjectiveType(objective_type)
+        except ValueError:
+            raise ValueError(
+                f"Invalid objective_type '{objective_type}'. Valid options are: {", ".join([e.value for e in ObjectiveType])}."
+            )
+    elif not isinstance(objective_type, ObjectiveType):
+        raise TypeError(
+            f"objective_type must be of type str or ObjectiveType, not {type(objective_type)}."
+        )
+
+    # shrinkage checks
+    if shrinkage_factor is not None:
+        if not (0 <= shrinkage_factor <= 1):
+            raise ValueError("`shrinkage factor` must be between 0 and 1, inclusive.")
+        if shrinkage_target is None:
+            raise ValueError(
+                "`shrinkage_target` must be specified when providing a `shrinkage_factor`."
+            )
+
+    # objective checks
+    if objective_type != ObjectiveType.MEAN_VARIANCE and risk_tolerance is not None:
+        raise ValueError(
+            "`risk_tolerance` can only be used when objective_type='mean_variance'."
+        )
+    if objective_type == ObjectiveType.MEAN_VARIANCE and risk_tolerance is None:
+        raise ValueError(
+            "`risk_tolerance` must be specified when objective_type='mean_variance'."
+        )
+
+    if objective_type == ObjectiveType.MAX_SHARPE and (
+        target_return is not None or target_variance is not None
+    ):
+        raise ValueError(
+            "Cannot specify `target_return` or `target_variance` when objective_type='max_sharpe'. "
+            "If you want a specific return, use 'min_variance' with `target_return`. "
+            "If you want a specific variance, use 'max_return' with `target_variance`, or consider 'mean_variance'."
+        )
+
+    return objective_type
+
+
+### MASTER FUNCTION
+
+
+def calc_weights(
+    returns: pd.DataFrame,
+    objective_type: Union[str, ObjectiveType] = "max_sharpe",
+    target_return: float = None,
+    target_variance: float = None,
+    strict_targets: bool = False,
+    risk_tolerance: float = None,
+    l1_reg: float = 0.0,
+    l2_reg: float = 0.0,
+    shrinkage_target: Union[str, np.ndarray] = None,
+    shrinkage_factor: float = None,
+    long_only: bool = False,
+    periods_per_year: int = None,
+) -> pd.Series:
+    """
+    Calculate portfolio weights using a flexible framework that supports multiple objectives, constraints, and regularization methods.
+    Portfolio weights are constrained to sum to 1.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns for each asset (columns=assets).
+    objective_type : Union[str, ObjectiveType]
+        Optimization objective type. Can be a string (e.g., 'min_variance', 'max_sharpe')
+        or an ObjectiveType enum. Internally, strings are mapped to ObjectiveType enums.
+    target_return : float, optional
+        If set, enforces portfolio return.
+    target_variance : float, optional
+        If set, enforces portfolio variance.
+    strict_targets : bool, optional
+        If True, enforces strict equality (`==`) for target_return and target_variance constraints.
+        If False, uses inequalities (`>=` for return and `<=` for variance).
+    risk_tolerance : float, optional
+        Risk-return trade-off parameter (gamma) for the mean-variance objective.
+        Only used when objective_type is "mean_variance".
+    l1_reg : float, optional
+        L1 penalty factor (Lasso), penalizing the absolute sum of weights.
+    l2_reg : float, optional
+        L2 penalty factor (Ridge), penalizing the squared sum of weights.
+    shrinkage_target : Union[str, np.ndarray], optional
+        The shrinkage target for the covariance matrix. Options:
+            - "diagonal": Diagonal covariance matrix from variances.
+            - "constant_correlation": Shrinks to a constant correlation matrix.
+            - Custom matrix: Provide an explicit target matrix as a numpy array.
+            - None: No shrinkage is applied.
+    shrinkage_factor : float, optional
+        Shrinkage intensity (alpha), a value between 0 and 1:
+        - 0: No shrinkage (uses the raw sample covariance matrix).
+        - 1: Fully shrinks to the specified target matrix.
+        If None, the optimal shrinkage is automatically calculated using the Ledoit-Wolf method.
+        If explicitly set, `shrinkage_target` must also be provided.
+    long_only : bool, optional
+        If True, enforces x >= 0, making the portfolio long-only.
+    periods_per_year : int, optional
+        Used to annualize return and covariance estimates, e.g., 12 for monthly data.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights, indexed by returns.columns
+    """
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
+
+    # validate inputs
+    objective_type = _validate_and_map_inputs(
+        objective_type,
+        target_return,
+        target_variance,
+        risk_tolerance,
+        shrinkage_target,
+        shrinkage_factor,
+    )
+
+    # generate inputs for portfolio optimization
+    Sigma = returns.cov().values
+    mu = returns.mean().values
+    n_assets = len(returns.columns)
+    x = cp.Variable(n_assets)
+
+    # apply shrinkage to covariance matrix
+    if shrinkage_target is not None:
+        Sigma = _shrink_covariance(
+            Sigma, target=shrinkage_target, shrinkage_factor=shrinkage_factor
+        )
+
+    # apply annualization, this is done after shrinkage (if applied)
+    mu *= periods_per_year
+    Sigma *= periods_per_year
+
+    # build objective
+    objective_expr = _build_objective(objective_type, x, mu, Sigma, risk_tolerance)
+
+    # add L1/L2 regularization
+    objective_expr = _add_regularization_to_objective(objective_expr, x, l1_reg, l2_reg)
+
+    # build constraints
+    constraints = _add_constraints(
+        objective_type,
+        x,
+        mu,
+        Sigma,
+        target_return=target_return,
+        target_variance=target_variance,
+        strict_targets=strict_targets,
+        long_only=long_only,
+    )
+
+    if len(constraints) == 0:
+        if objective_type == ObjectiveType.MAX_SHARPE:
+            weights = np.inv(Sigma) @ mu
+        elif objective_type == ObjectiveType.MIN_VARIANCE:
+            weights = np.inv(Sigma) @ np.ones(n_assets)
     else:
-        mu = returns.mean() * annual_factor
-    scaling = 1 / (np.transpose(ones) @ cov_inv @ mu)
-    tangent_return = scaling * (cov_inv @ mu)
-    tangency_wts = pd.DataFrame(
-        index=returns.columns, data=tangent_return, columns=[f"{name} Weights"]
-    )
-    port_returns = returns @ tangency_wts.rename(
-        {f"{name} Weights": f"{name} Portfolio"}, axis=1
-    )
+        # solve objective function with constraints
+        problem = cp.Problem(cp.Minimize(objective_expr), constraints)
+        problem.solve()
 
-    if return_graphic:
-        tangency_wts.plot(kind="bar", title=f"{name} Weights")
+        # check solution converged
+        if x.value is None:
+            raise ValueError(f"Solver did not converge for objective={objective_type}.")
 
-    if isinstance(target_ret_rescale_weights, (float, int)):
-        scaler = target_ret_rescale_weights / port_returns[f"{name} Portfolio"].mean()
-        tangency_wts[[f"{name} Weights"]] *= scaler
-        port_returns *= scaler
-        tangency_wts = tangency_wts.rename(
-            {
-                f"{name} Weights": f"{name} Weights Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
-        )
-        port_returns = port_returns.rename(
-            {
-                f"{name} Portfolio": f"{name} Portfolio Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
-        )
+    weights = x.value
 
-    if cov_mat != 1:
-        port_returns = port_returns.rename(
-            columns=lambda c: c.replace(
-                "Tangency", f"Tangency Regularized {cov_mat:.2f}"
+    # for max sharpe, rescale weights to a sum of 1
+    if objective_type in [ObjectiveType.MAX_SHARPE, ObjectiveType.MIN_VARIANCE]:
+        sum_weights = np.sum(weights)
+        if sum_weights <= 0:
+            raise ValueError(
+                "The solution has non-positive sum; cannot normalize to sum=1."
             )
-        )
-        tangency_wts = tangency_wts.rename(
-            columns=lambda c: c.replace(
-                "Tangency", f"Tangency Regularized {cov_mat:.2f}"
-            )
+
+        weights /= sum_weights
+
+    return pd.Series(weights, index=returns.columns, name="Weights")
+
+
+### PUBLIC HELPERS
+
+
+def scale_weights(
+    returns: pd.DataFrame,
+    weights: pd.Series,
+    target_return: float = None,
+    target_variance: float = None,
+    periods_per_year: int = None,
+) -> pd.Series:
+    """
+    Scale portfolio weights to achieve a target return or target variance.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data for assets.
+    weights : pd.Series
+        Portfolio weights.
+    target_return : float, optional
+        Target annualized portfolio return.
+    target_variance : float, optional
+        Target annualized portfolio variance.
+    periods_per_year : int, optional
+        Number of periods in a year for annualization.
+
+    Returns
+    -------
+    pd.Series
+        Scaled portfolio weights to meet the specified target.
+
+    Raises
+    ------
+    ValueError
+        If both `target_return` and `target_variance` are specified.
+    """
+    # check that only one target is specified
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
+
+    if target_return is not None and target_variance is not None:
+        raise ValueError(
+            "Only one target can be specified: either `target_return` or `target_variance`, not both."
         )
 
-    if return_port_ret:
-        return port_returns
-    return tangency_wts
+    scaled_weights = weights.copy()
+
+    # scale weights to achieve target return
+    if target_return is not None:
+        portfolio_returns = returns @ scaled_weights
+        mean_return = portfolio_returns.mean()
+        if periods_per_year:
+            mean_return *= periods_per_year
+        scaler = target_return / mean_return
+        scaled_weights *= scaler
+
+    # scale weights to achieve target variance
+    if target_variance is not None:
+        portfolio_variance = (returns @ scaled_weights).var()
+        if periods_per_year:
+            portfolio_variance *= periods_per_year
+        scaler = (target_variance / portfolio_variance) ** 0.5
+        scaled_weights *= scaler
+
+    return scaled_weights
+
+
+### BASIC METHODS - SIMPLE USER ENTRY POINTS
 
 
 def calc_equal_weights(
     returns: pd.DataFrame,
-    return_graphic: bool = False,
-    return_port_ret: bool = False,
-    target_ret_rescale_weights: Union[float, None] = None,
-    name: str = "Equal Weights",
-):
+    target_return: float = None,
+    target_variance: float = None,
+    periods_per_year: int = None,
+) -> pd.Series:
     """
-    Calculates equal weights for the portfolio based on the provided returns.
-
-    Parameters:
-    returns (pd.DataFrame): Time series of returns.
-    return_graphic (bool, default=False): If True, plots the equal weights.
-    return_port_ret (bool, default=False): If True, returns the portfolio returns.
-    target_ret_rescale_weights (float or None, default=None): Target return for rescaling weights.
-    name (str, default='Equal Weights'): Name for labeling the portfolio.
-
-    Returns:
-    pd.DataFrame or pd.Series: Equal portfolio weights or portfolio returns if `return_port_ret` is True.
+    Calculate equal-weighted weights, optionally scaled to meet a target return or variance.
     """
-    returns = returns.copy()
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
 
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    equal_wts = pd.DataFrame(
-        index=returns.columns,
-        data=[1 / len(returns.columns)] * len(returns.columns),
-        columns=[f"{name}"],
+    n_assets = len(returns.columns)
+    weights = pd.Series(
+        np.ones(n_assets) / n_assets, index=returns.columns, name="Weights"
     )
-    port_returns = returns @ equal_wts.rename({f"{name}": f"{name} Portfolio"}, axis=1)
 
-    if return_graphic:
-        equal_wts.plot(kind="bar", title=f"{name}")
+    # scale weights to target return or target variance if specified
+    weights = scale_weights(
+        returns, weights, target_return, target_variance, periods_per_year
+    )
 
-    if isinstance(target_ret_rescale_weights, (float, int)):
-        scaler = target_ret_rescale_weights / port_returns[f"{name} Portfolio"].mean()
-        equal_wts[[f"{name}"]] *= scaler
-        port_returns *= scaler
-        equal_wts = equal_wts.rename(
-            {f"{name}": f"{name} Rescaled Target {target_ret_rescale_weights:.2%}"},
-            axis=1,
-        )
-        port_returns = port_returns.rename(
-            {
-                f"{name} Portfolio": f"{name} Portfolio Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
+    return weights
+
+
+def calc_min_variance_weights(returns: pd.DataFrame, **calc_weight_kwargs) -> pd.Series:
+    """
+    Calculate weights for the minimum-variance portfolio.
+    """
+    if "objective_type" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_min_variance_weights sets objective_type=MIN_VARIANCE. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
         )
 
-    if return_port_ret:
-        return port_returns
-    return equal_wts
+    return calc_weights(
+        returns, objective_type=ObjectiveType.MIN_VARIANCE, **calc_weight_kwargs
+    )
+
+
+def calc_tangency_weights(returns: pd.DataFrame, **calc_weight_kwargs) -> pd.Series:
+    """
+    Calculate weights for the tangency (maximum Sharpe ratio) portfolio.
+    """
+    if "objective_type" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_tangency_weights sets objective_type=MAX_SHARPE. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
+        )
+
+    return calc_weights(
+        returns, objective_type=ObjectiveType.MAX_SHARPE, **calc_weight_kwargs
+    )
+
+
+def calc_target_return_weights(
+    returns: pd.DataFrame, target_return: float, **calc_weight_kwargs
+) -> pd.Series:
+    """
+    Calculate weights for the portfolio minimizing variance subject to a target return.
+    """
+    returns = clean_returns_df(returns)
+    if "periods_per_year" in calc_weight_kwargs:
+        periods_per_year = calc_weight_kwargs["periods_per_year"]
+        periods_per_year = define_periods_per_year(returns, periods_per_year)
+
+    if "objective_type" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_target_return_weights sets objective_type=MIN_VARIANCE. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
+        )
+
+    if "target_variance" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_target_return_weights is for a target return, not a target variance. Please remove 'target_variance' or use `calc_target_variance_weights`."
+        )
+
+    return calc_weights(
+        returns,
+        objective_type=ObjectiveType.MIN_VARIANCE,
+        target_return=target_return,
+        **calc_weight_kwargs,
+    )
+
+
+def calc_target_variance_weights(
+    returns: pd.DataFrame, target_variance: float, **calc_weight_kwargs
+) -> pd.Series:
+    """
+    Calculate weights for the portfolio maximizing return subject to a target variance.
+    """
+    returns = clean_returns_df(returns)
+
+    if "objective_type" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_target_variance_weights sets objective_type=MAX_RETURN. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
+        )
+
+    if "target_return" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_target_variance_weights is for a target variance, not a target return. Please remove 'target_return' or use `calc_target_return_weights`."
+        )
+
+    return calc_weights(
+        returns,
+        objective_type=ObjectiveType.MAX_RETURN,
+        target_variance=target_variance,
+        **calc_weight_kwargs,
+    )
+
+
+def calc_mean_variance_weights(
+    returns: pd.DataFrame, risk_tolerance: float, **calc_weight_kwargs
+) -> pd.Series:
+    """
+    Calculate weights for the portfolio using mean-variance optimization.
+    """
+    returns = clean_returns_df(returns)
+
+    if "objective_type" in calc_weight_kwargs:
+        raise ValueError(
+            "calc_mean_variance_weights sets objective_type=MEAN_VARIANCE. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
+        )
+
+    return calc_weights(
+        returns,
+        objective_type=ObjectiveType.MEAN_VARIANCE,
+        risk_tolerance=risk_tolerance,
+        **calc_weight_kwargs,
+    )
 
 
 def calc_risk_parity_weights(
     returns: pd.DataFrame,
-    return_graphic: bool = False,
-    return_port_ret: bool = False,
-    target_ret_rescale_weights: Union[None, float] = None,
-    name: str = "Risk Parity",
-):
+    target_return: float = None,
+    target_variance: float = None,
+    periods_per_year: int = None,
+) -> pd.Series:
     """
-    Calculates risk parity portfolio weights based on the variance of each asset.
-
-    Parameters:
-    returns (pd.DataFrame): Time series of returns.
-    return_graphic (bool, default=False): If True, plots the risk parity weights.
-    return_port_ret (bool, default=False): If True, returns the portfolio returns.
-    target_ret_rescale_weights (float or None, default=None): Target return for rescaling weights.
-    name (str, default='Risk Parity'): Name for labeling the portfolio.
-
-    Returns:
-    pd.DataFrame or pd.Series: Risk parity portfolio weights or portfolio returns if `return_port_ret` is True.
+    Calculate risk parity weights, optionally scaled to meet a target return or variance.
     """
-    returns = returns.copy()
+    returns = clean_returns_df(returns)
 
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    risk_parity_wts = pd.DataFrame(
+    weights = pd.Series(
+        [1 / returns[asset].var() for asset in returns.columns],
         index=returns.columns,
-        data=[1 / returns[asset].var() for asset in returns.columns],
-        columns=[f"{name} Weights"],
-    )
-    port_returns = returns @ risk_parity_wts.rename(
-        {f"{name} Weights": f"{name} Portfolio"}, axis=1
+        name="Weights",
     )
 
-    if return_graphic:
-        risk_parity_wts.plot(kind="bar", title=f"{name} Weights")
-
-    if isinstance(target_ret_rescale_weights, (float, int)):
-        scaler = target_ret_rescale_weights / port_returns[f"{name} Portfolio"].mean()
-        risk_parity_wts[[f"{name} Weights"]] *= scaler
-        port_returns *= scaler
-        risk_parity_wts = risk_parity_wts.rename(
-            {
-                f"{name} Weights": f"{name} Weights Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
-        )
-        port_returns = port_returns.rename(
-            {
-                f"{name} Portfolio": f"{name} Portfolio Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
-        )
-
-    if return_port_ret:
-        return port_returns
-    return risk_parity_wts
-
-
-def calc_gmv_weights(
-    returns: pd.DataFrame,
-    return_graphic: bool = False,
-    return_port_ret: bool = False,
-    target_ret_rescale_weights: Union[float, None] = None,
-    name: str = "GMV",
-):
-    """
-    Calculates Global Minimum Variance (GMV) portfolio weights.
-
-    Parameters:
-    returns (pd.DataFrame): Time series of returns.
-    return_graphic (bool, default=False): If True, plots the GMV weights.
-    return_port_ret (bool, default=False): If True, returns the portfolio returns.
-    target_ret_rescale_weights (float or None, default=None): Target return for rescaling weights.
-    name (str, default='GMV'): Name for labeling the portfolio.
-
-    Returns:
-    pd.DataFrame or pd.Series: GMV portfolio weights or portfolio returns if `return_port_ret` is True.
-    """
-    returns = returns.copy()
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    ones = np.ones(returns.columns.shape)
-    cov = returns.cov()
-    cov_inv = np.linalg.inv(cov)
-    scaling = 1 / (np.transpose(ones) @ cov_inv @ ones)
-    gmv_tot = scaling * cov_inv @ ones
-    gmv_wts = pd.DataFrame(
-        index=returns.columns, data=gmv_tot, columns=[f"{name} Weights"]
-    )
-    port_returns = returns @ gmv_wts.rename(
-        {f"{name} Weights": f"{name} Portfolio"}, axis=1
+    # scale weights to target return or target variance if specified
+    weights = scale_weights(
+        returns, weights, target_return, target_variance, periods_per_year
     )
 
-    if isinstance(target_ret_rescale_weights, (float, int)):
-        scaler = target_ret_rescale_weights / port_returns[f"{name} Portfolio"].mean()
-        gmv_wts[[f"{name} Weights"]] *= scaler
-        port_returns *= scaler
-        gmv_wts = gmv_wts.rename(
-            {
-                f"{name} Weights": f"{name} Weights Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
-        )
-        port_returns = port_returns.rename(
-            {
-                f"{name} Portfolio": f"{name} Portfolio Rescaled Target {target_ret_rescale_weights:.2%}"
-            },
-            axis=1,
-        )
-
-    if return_graphic:
-        gmv_wts.plot(kind="bar", title=f"{name} Weights")
-
-    if return_port_ret:
-        return port_returns
-
-    return gmv_wts
-
-
-def calc_target_ret_weights(
-    target_ret: float,
-    returns: pd.DataFrame,
-    return_graphic: bool = False,
-    return_port_ret: bool = False,
-):
-    """
-    Calculates the portfolio weights to achieve a target return by combining Tangency and GMV portfolios.
-
-    Parameters:
-    target_ret (float): Target return for the portfolio.
-    returns (pd.DataFrame): Time series of asset returns.
-    return_graphic (bool, default=False): If True, plots the portfolio weights.
-    return_port_ret (bool, default=False): If True, returns the portfolio returns.
-
-    Returns:
-    pd.DataFrame: Weights of the Tangency and GMV portfolios, along with the combined target return portfolio.
-    """
-    returns = returns.copy()
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    mu_tan = returns.mean() @ calc_tangency_weights(returns, cov_mat=1)
-    mu_gmv = returns.mean() @ calc_gmv_weights(returns)
-
-    delta = (target_ret - mu_gmv[0]) / (mu_tan[0] - mu_gmv[0])
-    mv_weights = (delta * calc_tangency_weights(returns, cov_mat=1)).values + (
-        (1 - delta) * calc_gmv_weights(returns)
-    ).values
-
-    mv_weights = pd.DataFrame(
-        index=returns.columns,
-        data=mv_weights,
-        columns=[f"Target {target_ret:.2%} Weights"],
-    )
-    port_returns = returns @ mv_weights.rename(
-        {f"Target {target_ret:.2%} Weights": f"Target {target_ret:.2%} Portfolio"},
-        axis=1,
-    )
-
-    if return_graphic:
-        mv_weights.plot(kind="bar", title=f"Target Return of {target_ret:.2%} Weights")
-
-    if return_port_ret:
-        return port_returns
-
-    mv_weights["Tangency Weights"] = calc_tangency_weights(returns, cov_mat=1).values
-    mv_weights["GMV Weights"] = calc_gmv_weights(returns).values
-
-    return mv_weights
-
-
-def create_portfolio(
-    returns: pd.DataFrame,
-    weights: Union[dict, list],
-    port_name: Union[None, str] = None,
-):
-    """
-    Creates a portfolio by applying the specified weights to the asset returns.
-
-    Parameters:
-    returns (pd.DataFrame): Time series of asset returns.
-    weights (dict or list): Weights to apply to the returns. If a list is provided, it will be converted into a dictionary.
-    port_name (str or None, default=None): Name for the portfolio. If None, a name will be generated based on asset weights.
-
-    Returns:
-    pd.DataFrame: The portfolio returns based on the provided weights.
-    """
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    if isinstance(weights, list):
-        returns = returns.iloc[:, : len(weights)]
-        weights = dict(zip(returns.columns, weights))
-
-    returns = returns[list(weights.keys())]
-    port_returns = pd.DataFrame(returns @ list(weights.values()))
-
-    if port_name is None:
-        port_name = " + ".join([f"{n} ({w:.2%})" for n, w in weights.items()])
-    port_returns.columns = [port_name]
-    return port_returns
+    return weights

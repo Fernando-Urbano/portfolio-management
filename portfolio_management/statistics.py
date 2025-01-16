@@ -13,9 +13,17 @@ from collections import defaultdict
 from portfolio_management.utils import _filter_columns_and_indexes
 from scipy.stats import norm
 from portfolio_management.port_construction import calc_tangency_weights
+from portfolio_management.utils import (
+    PERIODS_PER_YEAR_MAP,
+    clean_returns_df,
+    define_periods_per_year,
+)
 
 pd.options.display.float_format = "{:,.4f}".format
 warnings.filterwarnings("ignore")
+
+import numpy as np
+import pandas as pd
 
 
 def calc_negative_pct(
@@ -42,33 +50,11 @@ def calc_negative_pct(
     Returns:
     pd.DataFrame: A DataFrame with the percentage of negative or positive returns, number of returns, and the count of negative/positive returns.
     """
-    returns = returns.copy()
-    if isinstance(returns, list):
-        returns_list = returns[:]
-        returns = pd.DataFrame({})
-        for series in returns_list:
-            returns = returns.merge(
-                series, right_index=True, left_index=True, how="outer"
-            )
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-
-    returns.index.name = "date"
-
-    if isinstance(returns, pd.Series):
-        returns = returns.to_frame()
-    returns = returns.apply(lambda x: x.astype(float))
-    prev_len_index = returns.apply(lambda x: len(x))
-    returns = returns.dropna(axis=0)
-    new_len_index = returns.apply(lambda x: len(x))
-    if not (prev_len_index == new_len_index).all():
-        print("Some columns had NaN values and were dropped")
+    returns = clean_returns_df(returns)
     if calc_positive:
-        returns = returns.applymap(lambda x: 1 if x > 0 else 0)
+        returns = returns.map(lambda x: 1 if x > 0 else 0)
     else:
-        returns = returns.applymap(lambda x: 1 if x < 0 else 0)
+        returns = returns.map(lambda x: 1 if x < 0 else 0)
 
     negative_statistics = returns.agg(["mean", "count", "sum"]).set_axis(
         ["% Negative Returns", "Nº Returns", "Nº Negative Returns"], axis=0
@@ -111,6 +97,7 @@ def calc_cumulative_returns(
     Returns:
     pd.DataFrame or None: Returns cumulative returns DataFrame if `return_series` is True.
     """
+    returns = clean_returns_df(returns)
     if timeframes is not None:
         for name, timeframe in timeframes.items():
             if timeframe[0] and timeframe[1]:
@@ -132,10 +119,6 @@ def calc_cumulative_returns(
                 timeframes=None,
             )
         return
-    returns = returns.copy()
-    if isinstance(returns, pd.Series):
-        returns = returns.to_frame()
-    returns = returns.apply(lambda x: x.astype(float))
     returns = returns.apply(lambda x: x + 1)
     returns = returns.cumprod()
     returns = returns.apply(lambda x: x - 1)
@@ -167,7 +150,6 @@ def calc_cumulative_returns(
 def get_best_and_worst(
     summary_statistics: pd.DataFrame,
     stat: str = "Annualized Sharpe",
-    return_df: bool = True,
 ):
     """
     Identifies the best and worst assets based on a specified statistic.
@@ -188,31 +170,28 @@ def get_best_and_worst(
         )
 
     if stat not in summary_statistics.columns:
-        raise Exception(f'{stat} not in "summary_statistics"')
+        raise ValueError(f'{stat} not in "summary_statistics"')
     summary_statistics.rename(columns=lambda c: c.replace(" ", "").lower())
-    best_stat = summary_statistics[stat].max()
-    worst_stat = summary_statistics[stat].min()
+    if all(pd.isna(summary_statistics[stat])):
+        raise ValueError(f'All values in "{stat}" are missing')
     asset_best_stat = summary_statistics.loc[
         lambda df: df[stat] == df[stat].max()
     ].index[0]
     asset_worst_stat = summary_statistics.loc[
         lambda df: df[stat] == df[stat].min()
     ].index[0]
-    print(f"The asset with the highest {stat} is {asset_best_stat}: {best_stat:.5f}")
-    print(f"The asset with the lowest {stat} is {asset_worst_stat}: {worst_stat:.5f}")
-    if return_df:
-        return pd.concat(
-            [
-                summary_statistics.loc[lambda df: df.index == asset_best_stat],
-                summary_statistics.loc[lambda df: df.index == asset_worst_stat],
-            ]
-        )
+    return pd.concat(
+        [
+            summary_statistics.loc[lambda df: df.index == asset_best_stat],
+            summary_statistics.loc[lambda df: df.index == asset_worst_stat],
+        ]
+    )
 
 
 def calc_summary_statistics(
     returns: Union[pd.DataFrame, List],
-    annual_factor: int = None,
-    provided_excess_returns: bool = None,
+    periods_per_year: int = None,
+    provided_excess_returns: bool = True,
     rf: Union[pd.Series, pd.DataFrame] = None,
     var_quantile: Union[float, List] = 0.05,
     timeframes: Union[None, dict] = None,
@@ -230,7 +209,7 @@ def calc_summary_statistics(
 
     Parameters:
     returns (pd.DataFrame or List): Time series of returns.
-    annual_factor (int, default=None): Factor for annualizing returns.
+    periods_per_year (int, default=None): Factor for annualizing returns.
     provided_excess_returns (bool, default=None): Whether excess returns are already provided.
     rf (pd.Series or pd.DataFrame, default=None): Risk-free rate data.
     var_quantile (float or list, default=0.05): Quantile for Value at Risk (VaR) calculation.
@@ -255,44 +234,13 @@ def calc_summary_statistics(
                 'Remove "rf" or set "provided_excess_returns" to None or False'
             )
 
-    if isinstance(returns, list):
-        returns_list = returns[:]
-        returns = pd.DataFrame({})
-        for series in returns_list:
-            returns = returns.merge(
-                series, right_index=True, left_index=True, how="outer"
-            )
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
 
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    try:
-        returns.index = pd.to_datetime(returns.index.map(lambda x: x.date()))
-    except AttributeError:
-        print('Could not convert "date" index to datetime.date')
-        pass
-
-    returns = returns.apply(lambda x: x.astype(float))
-
-    if annual_factor is None:
-        print("Assuming monthly returns with annualization term of 12")
-        annual_factor = 12
-
-    if provided_excess_returns is None:
-        print(
-            "Assuming excess returns were provided to calculate Sharpe."
-            ' If returns were provided (steady of excess returns), the column "Sharpe" is actually "Mean/Volatility"'
-        )
-        provided_excess_returns = True
-    elif provided_excess_returns is False:
+    if provided_excess_returns is False:
         if rf is not None:
             if len(rf.index) != len(returns.index):
                 raise Exception('"rf" index must be the same lenght as "returns"')
-            print(
-                '"rf" is used to subtract returns to calculate Sharpe, but nothing else'
-            )
 
     if isinstance(timeframes, dict):
         all_timeframes_summary_statistics = pd.DataFrame({})
@@ -312,7 +260,7 @@ def calc_summary_statistics(
             )
             timeframe_summary_statistics = calc_summary_statistics(
                 returns=timeframe_returns,
-                annual_factor=annual_factor,
+                periods_per_year=periods_per_year,
                 provided_excess_returns=provided_excess_returns,
                 rf=rf,
                 var_quantile=var_quantile,
@@ -333,9 +281,9 @@ def calc_summary_statistics(
 
     summary_statistics = pd.DataFrame(index=returns.columns)
     summary_statistics["Mean"] = returns.mean()
-    summary_statistics["Annualized Mean"] = returns.mean() * annual_factor
+    summary_statistics["Annualized Mean"] = returns.mean() * periods_per_year
     summary_statistics["Vol"] = returns.std()
-    summary_statistics["Annualized Vol"] = returns.std() * np.sqrt(annual_factor)
+    summary_statistics["Annualized Vol"] = returns.std() * np.sqrt(periods_per_year)
     try:
         if not provided_excess_returns:
             if type(rf) == pd.DataFrame:
@@ -351,7 +299,7 @@ def calc_summary_statistics(
     except Exception as e:
         print(f"Could not calculate Sharpe: {e}")
     summary_statistics["Annualized Sharpe"] = summary_statistics["Sharpe"] * np.sqrt(
-        annual_factor
+        periods_per_year
     )
     summary_statistics["Min"] = returns.min()
     summary_statistics["Max"] = returns.max()
@@ -365,14 +313,14 @@ def calc_summary_statistics(
             var_q, axis=0
         )
         summary_statistics[f"Annualized Historical VaR ({var_q:.2%})"] = (
-            returns.quantile(var_q, axis=0) * np.sqrt(annual_factor)
+            returns.quantile(var_q, axis=0) * np.sqrt(periods_per_year)
         )
         summary_statistics[f"Historical CVaR ({var_q:.2%})"] = returns[
             returns <= returns.quantile(var_q, axis=0)
         ].mean()
         summary_statistics[f"Annualized Historical CVaR ({var_q:.2%})"] = returns[
             returns <= returns.quantile(var_q, axis=0)
-        ].mean() * np.sqrt(annual_factor)
+        ].mean() * np.sqrt(periods_per_year)
 
     wealth_index = 1000 * (1 + returns).cumprod()
     previous_peaks = wealth_index.cummax()
@@ -429,6 +377,12 @@ def calc_summary_statistics(
             returns_corr = returns_corr[[c + " Correlation" for c in correlations]]
         summary_statistics = summary_statistics.join(returns_corr)
 
+    if provided_excess_returns is False:
+        summary_statistics = summary_statistics.rename(
+            {"Sharpe": "Mean / Vol", "Annualized Sharpe": "Annualized Mean / Vol"},
+            axis=1,
+        )
+
     return _filter_columns_and_indexes(
         summary_statistics,
         keep_columns=keep_columns,
@@ -441,8 +395,8 @@ def calc_summary_statistics(
 
 def calc_correlations(
     returns: pd.DataFrame,
-    print_highest_lowest: bool = True,
-    matrix_size: Union[int, float] = 7,
+    return_only_highest_and_lowest: bool = False,
+    matrix_size: Union[int, float, tuple] = 7,
     return_heatmap: bool = True,
     keep_columns: Union[list, str] = None,
     drop_columns: Union[list, str] = None,
@@ -467,24 +421,30 @@ def calc_correlations(
     Returns:
     sns.heatmap or pd.DataFrame: Heatmap of the correlation matrix or the correlation matrix itself.
     """
-    returns = returns.copy()
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
+    returns = clean_returns_df(returns)
 
     correlation_matrix = returns.corr()
     if return_heatmap:
-        fig, ax = plt.subplots(figsize=(matrix_size * 1.5, matrix_size))
+        if isinstance(matrix_size, list):
+            matrix_size = tuple(matrix_size)
+        if isinstance(matrix_size, tuple):
+            if len(matrix_size) != 2:
+                raise Exception(
+                    "matrix_size must be a tuple with two elements (width, height) or a single integer/float"
+                )
+            figsize = plt.subplots(figsize=matrix_size)
+        else:
+            figsize = (matrix_size * 1.5, matrix_size)
+        fig, ax = plt.subplots(figsize=figsize)
         heatmap = sns.heatmap(
             correlation_matrix,
             xticklabels=correlation_matrix.columns,
             yticklabels=correlation_matrix.columns,
             annot=True,
+            fmt=".2%",
         )
 
-    if print_highest_lowest:
+    if return_only_highest_and_lowest:
         highest_lowest_corr = (
             correlation_matrix.unstack()
             .sort_values()
@@ -494,11 +454,13 @@ def calc_correlations(
         )
         highest_corr = highest_lowest_corr.iloc[lambda df: len(df) - 1, :]
         lowest_corr = highest_lowest_corr.iloc[0, :]
-        print(
-            f'The highest correlation ({highest_corr["corr"]:.2%}) is between {highest_corr.asset_1} and {highest_corr.asset_2}'
-        )
-        print(
-            f'The lowest correlation ({lowest_corr["corr"]:.2%}) is between {lowest_corr.asset_1} and {lowest_corr.asset_2}'
+        return pd.DataFrame(
+            {
+                "First Asset": [highest_corr.asset_1, lowest_corr.asset_1],
+                "Second Asset": [highest_corr.asset_2, lowest_corr.asset_2],
+                "Correlation": [highest_corr.corr, lowest_corr],
+            },
+            index=["Highest", "Lowest"],
         )
 
     if return_heatmap:

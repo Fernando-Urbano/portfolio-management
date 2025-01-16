@@ -47,7 +47,7 @@ def calc_strategy_oos(
     Returns:
     pd.DataFrame: Time series of strategy returns.
     """
-    raise Exception("Function not available - needs testing prior to use")
+    raise NotImplementedError("Function not available")
     try:
         y = y.copy()
         X = X.copy()
@@ -111,7 +111,7 @@ def calc_replication_oos_not_lagged_features(
     Returns:
     pd.DataFrame: Summary statistics for the out-of-sample replication.
     """
-    raise Exception("Function not available - needs testing prior to use")
+    raise NotImplementedError("Function not available")
     try:
         y = y.copy()
         X = X.copy()
@@ -261,7 +261,7 @@ def calc_replication_oos(
     Returns:
     pd.DataFrame: Summary statistics for the out-of-sample replication.
     """
-    raise Exception("Function not available - needs testing prior to use")
+    raise NotImplementedError("Function not available")
     try:
         y = y.copy()
         X = X.copy()
@@ -389,7 +389,7 @@ def calc_rolling_oos_port(
     Returns:
     pd.DataFrame: Out-of-sample portfolio returns.
     """
-    raise Exception("Function not available - needs testing prior to use")
+    raise NotImplementedError("Function not available")
     if window is None:
         print(
             'Using "window" of 60 periods for in-sample optimization, since none were provided.'

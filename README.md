@@ -7,7 +7,7 @@ The following steps are used to create the virtual environment.
 
 Inside your terminal, write:
 ```bash
-conda create -n finm python=3.12.5
+conda create -n finm python=3.12.6
 ```
 
 Activate virtual environment:
