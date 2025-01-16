@@ -86,7 +86,7 @@ def calc_cross_section_regression(
         if rf is not None:
             if len(rf.index) != len(returns.index):
                 raise Exception('"rf" index must be the same lenght as "returns"')
-            returns = returns.sub(rf, axis=0)
+            returns = returns.sub(rf.values, axis=0)
 
     time_series_regressions = calc_iterative_regression(
         returns, factors, periods_per_year=periods_per_year, warnings=False
