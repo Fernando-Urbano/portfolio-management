@@ -111,3 +111,24 @@ def test_returns_as_positional_argument():
         return "Success"
 
     assert positional_function(df) == "Success"
+
+
+def test_returns_as_keyword_argument():
+    df = pd.DataFrame(
+        {
+            Columns.DATE.value: pd.to_datetime(
+                ["2023-01-01", "2023-01-04", "2023-01-03"]
+            ),
+            "other_column": [1, 2, 3],
+        }
+    )
+
+    @validate_date_column()
+    def keyword_function(*, returns):
+        return "Success"
+
+    with pytest.raises(
+        ValueError,
+        match=f"The '{Columns.DATE.value}' column must be sorted in ascending order.",
+    ):
+        dummy_function(returns=df)

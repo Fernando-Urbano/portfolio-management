@@ -174,3 +174,24 @@ def test_returns_as_positional_argument():
         return "Success"
 
     assert positional_function(df) == "Success"
+
+
+def test_returns_as_keyword_argument():
+    df = pd.DataFrame(
+        {
+            Columns.DATE.value: pd.to_datetime(
+                ["2023-01-01", "2023-01-02", "2023-01-03"]
+            ),
+            Columns.RETURNS.value: [0.1, None, 0.3],
+        }
+    )
+
+    @validate_returns()
+    def keyword_function(*, returns):
+        return "Success"
+
+    with pytest.raises(
+        ValueError,
+        match=f"The '{Columns.RETURNS.value}' column in the DataFrame contains NaN or None values.",
+    ):
+        dummy_function(returns=df)
