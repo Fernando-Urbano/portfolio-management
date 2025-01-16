@@ -62,6 +62,8 @@ def scripts_to_file(directory, extension, initial_text, filename, filter_files=N
     script_text = list_to_text(script_list, initial_text)
     text_to_file(script_text, filename)
 
+ALL_EXPLANATION = "The following contains a tree of the directory and all the important files of the current version of my project: "
+
 if __name__ == "__main__":
     if os.path.exists("scripts"):
         os.system("rm -r scripts")
@@ -69,13 +71,14 @@ if __name__ == "__main__":
     save_tree_output_to_file("scripts/tree_output.txt")
     scripts_to_file(
         "portfolio_management", "py", "Package files:", "scripts/portfolio_management",
-        ignore_files=["__init__.py", "fx.py", "utils.py", "backtest.py"]
+        ignore_files=["__init__.py", "fx.py", "backtest.py"]
     )
     scripts_to_file(
         "tests", "py", "Test files:", "scripts/tests",
         ignore_files=["__init__.py"]
     )
     scripts_to_file(
-        "scripts", "txt", "The following contains a tree of the directory and all the important files",
+        "scripts", "txt", ALL_EXPLANATION,
         "scripts/all"
     )
+    os.system("cat scripts/all.txt | pbcopy")

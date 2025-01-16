@@ -11,16 +11,20 @@ import warnings
 from arch import arch_model
 from collections import defaultdict
 from scipy.stats import norm
-from portfolio_management.utils import _filter_columns_and_indexes
+from portfolio_management.utils import _filter_columns_and_indexes, clean_returns_df
 
 pd.options.display.float_format = "{:,.4f}".format
 warnings.filterwarnings("ignore")
 
+DEFAULT_WINDOW_VAR_CALCULATION = 60
+DEFAULT_EWMA_THETA = 0.94
+DELTA_EWMA_INITIAL_VOL = 0.2 / np.sqrt(252)
+
 
 def calc_ewma_volatility(
     excess_returns: pd.Series,
-    theta: float = 0.94,
-    initial_vol: float = 0.2 / np.sqrt(252),
+    theta: float = DEFAULT_EWMA_THETA,
+    initial_vol: float = DELTA_EWMA_INITIAL_VOL,
 ) -> pd.Series:
     var_t0 = initial_vol**2
     ewma_var = [var_t0]
@@ -35,18 +39,65 @@ def calc_ewma_volatility(
 
 
 def calc_garch_volatility(
-    excess_returs: pd.Series, p: int = 1, q: int = 1
+    excess_returns: pd.Series, p: int = 1, q: int = 1
 ) -> pd.Series:
-    model = arch_model(excess_returs, vol="Garch", p=p, q=q)
-    fitted_model = model.fit(disp="off")
-    fitted_values = fitted_model.conditional_volatility
-    return fitted_values
+    """
+    Calculate GARCH volatility for a given series of excess returns with automatic scaling.
+
+    Parameters:
+    ----------
+    excess_returns : pd.Series
+        Time series of excess returns.
+    p : int, default=1
+        Order of the GARCH model for the lagged variance terms.
+    q : int, default=1
+        Order of the GARCH model for the lagged squared returns.
+
+    Returns:
+    -------
+    pd.Series
+        Conditional volatility series corresponding to the input excess returns.
+
+    Notes:
+    -----
+    - Automatically scales the input data to improve numerical stability.
+    - Rescales the conditional volatility back to the original scale.
+    """
+    # Check if the series is empty
+    if excess_returns.empty:
+        raise ValueError("Input excess_returns series is empty.")
+    std_dev = excess_returns.std()
+
+    scaling_threshold = 1e-3
+
+    scaling_factor = 1.0
+
+    if std_dev < scaling_threshold and std_dev > 0:
+        scaling_factor = 1 / std_dev
+        scaled_returns = excess_returns * scaling_factor
+    else:
+        scaled_returns = excess_returns.copy()
+
+    model = arch_model(scaled_returns, vol="Garch", p=p, q=q, rescale=False)
+
+    try:
+        fitted_model = model.fit(disp="off")
+    except Exception as e:
+        raise RuntimeError(f"GARCH model fitting failed: {e}")
+
+    scaled_volatility = fitted_model.conditional_volatility
+
+    volatility = scaled_volatility / scaling_factor
+
+    volatility = pd.Series(volatility, index=excess_returns.index)
+
+    return volatility
 
 
 def calc_var_cvar_summary(
     returns: Union[pd.Series, pd.DataFrame],
     quantile: Union[None, float] = 0.05,
-    window: Union[None, str] = None,
+    window: Union[int] = DEFAULT_WINDOW_VAR_CALCULATION,
     return_hit_ratio: bool = False,
     filter_first_hit_ratio_date: Union[None, str, datetime.date] = None,
     return_stats: Union[str, list] = ["Returns", "VaR", "CVaR", "Vol"],
@@ -54,8 +105,8 @@ def calc_var_cvar_summary(
     z_score: float = None,
     shift: int = 1,
     normal_vol_formula: bool = False,
-    ewma_theta: float = 0.94,
-    ewma_initial_vol: float = 0.2 / np.sqrt(252),
+    ewma_theta: float = DEFAULT_EWMA_THETA,
+    ewma_initial_vol: float = DELTA_EWMA_INITIAL_VOL,
     garch_p: int = 1,
     garch_q: int = 1,
     keep_columns: Union[list, str] = None,
@@ -86,9 +137,16 @@ def calc_var_cvar_summary(
     Returns:
     pd.DataFrame: Summary of VaR and CVaR statistics.
     """
-    if window is None:
-        print('Using "window" of 60 periods, since none was specified')
-        window = 60
+    if quantile > 1 or quantile < 0:
+        raise ValueError(
+            "Quantile must be between 0 and 1, meaning that it should not be passed as percentage"
+        )
+    if shift < 0:
+        raise ValueError("Shift must be greater than or equal to 0.")
+    if window < 1:
+        raise ValueError("Window must be greater than 0.")
+    returns = clean_returns_df(returns)
+
     if isinstance(returns, pd.DataFrame):
         returns_series = returns.iloc[:, 0]
         returns_series.index = returns.index
@@ -146,8 +204,9 @@ def calc_var_cvar_summary(
             f"EWMA {ewma_theta:.2f} Parametric VaR ({quantile:.2%})",
             f"GARCH({garch_p:.0f}, {garch_q:.0f}) Parametric VaR ({quantile:.2%})",
         ]
-        summary_shift = summary.copy()
-        summary_shift[shift_stats] = summary_shift[shift_stats].shift()
+        summary_shift = summary[["Returns"] + shift_stats].copy()
+        if shift > 0:
+            summary_shift[shift_stats] = summary_shift[shift_stats].shift(shift)
         if filter_first_hit_ratio_date:
             if isinstance(
                 filter_first_hit_ratio_date, (datetime.date, datetime.datetime)
@@ -156,6 +215,11 @@ def calc_var_cvar_summary(
                     "%Y-%m-%d"
                 )
             summary_shift = summary_shift.loc[filter_first_hit_ratio_date:]
+        if len(summary_shift.index) < 20:
+            warnings.warn(
+                "There are few data points to calculate the hit ratio, which might produce unreliable results"
+            )
+
         summary_shift = summary_shift.dropna(axis=0)
         summary_shift[shift_stats] = summary_shift[shift_stats].apply(
             lambda x: (x - summary_shift["Returns"]) > 0
@@ -204,9 +268,8 @@ def calc_var_cvar_summary(
             c for c in summary.columns if not bool(re.search("returns", c))
         ]
         summary[shift_columns] = summary[shift_columns].shift(shift)
-        print(f"VaR and CVaR are given shifted by {shift:0f} period(s).")
-    else:
-        print("VaR and CVaR are given in-sample.")
+        if shift == 1:
+            warnings.warn(f"VaR and CVaR are given shifted by {shift:.0f} period.")
 
     if full_time_sample:
         summary = summary.loc[

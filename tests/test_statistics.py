@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.append(os.pardir)
 from portfolio_management.statistics import *
-from tests.utils import create_returns_df
+from portfolio_management.utils import create_returns_df
 from tests.conftest import setup_pandas_display  # Import the fixture
 
 @pytest.fixture
@@ -100,6 +100,3 @@ def test_calc_summary_statistics_with_drops(test_returns):
     result = calc_summary_statistics(test_returns, drop_indexes=drop)
     for d in drop:
         assert d not in result.index
-
-# if __name__ == "__main__":
-#     pytest.main()

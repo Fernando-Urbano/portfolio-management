@@ -3,11 +3,7 @@ import pandas as pd
 import cvxpy as cp
 from typing import Union
 from enum import Enum
-
-
-# Default for number of periods per year, used for annualizing returns and variances
-# Defaults to 12 for monthly data but can be adjusted for other frequencies (e.g., 252 for daily, 4 for quarterly)
-PERIODS_PER_YEAR = 12
+from portfolio_management.utils import define_periods_per_year, clean_returns_df
 
 
 class ObjectiveType(Enum):
@@ -332,7 +328,7 @@ def calc_weights(
     shrinkage_target: Union[str, np.ndarray] = None,
     shrinkage_factor: float = None,
     long_only: bool = False,
-    periods_per_year: int = PERIODS_PER_YEAR,
+    periods_per_year: int = None,
 ) -> pd.Series:
     """
     Calculate portfolio weights using a flexible framework that supports multiple objectives, constraints, and regularization methods.
@@ -381,6 +377,9 @@ def calc_weights(
     pd.Series
         Portfolio weights, indexed by returns.columns
     """
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
+
     # validate inputs
     objective_type = _validate_and_map_inputs(
         objective_type,
@@ -404,8 +403,8 @@ def calc_weights(
         )
 
     # apply annualization, this is done after shrinkage (if applied)
-    Sigma *= periods_per_year
     mu *= periods_per_year
+    Sigma *= periods_per_year
 
     # build objective
     objective_expr = _build_objective(objective_type, x, mu, Sigma, risk_tolerance)
@@ -425,18 +424,24 @@ def calc_weights(
         long_only=long_only,
     )
 
-    # solve objective function with constraints
-    problem = cp.Problem(cp.Minimize(objective_expr), constraints)
-    problem.solve()
+    if len(constraints) == 0:
+        if objective_type == ObjectiveType.MAX_SHARPE:
+            weights = np.inv(Sigma) @ mu
+        elif objective_type == ObjectiveType.MIN_VARIANCE:
+            weights = np.inv(Sigma) @ np.ones(n_assets)
+    else:
+        # solve objective function with constraints
+        problem = cp.Problem(cp.Minimize(objective_expr), constraints)
+        problem.solve()
 
-    # check solution converged
-    if x.value is None:
-        raise ValueError(f"Solver did not converge for objective={objective_type}.")
+        # check solution converged
+        if x.value is None:
+            raise ValueError(f"Solver did not converge for objective={objective_type}.")
 
     weights = x.value
 
     # for max sharpe, rescale weights to a sum of 1
-    if objective_type == ObjectiveType.MAX_SHARPE:
+    if objective_type in [ObjectiveType.MAX_SHARPE, ObjectiveType.MIN_VARIANCE]:
         sum_weights = np.sum(weights)
         if sum_weights <= 0:
             raise ValueError(
@@ -456,7 +461,7 @@ def scale_weights(
     weights: pd.Series,
     target_return: float = None,
     target_variance: float = None,
-    periods_per_year: int = PERIODS_PER_YEAR,
+    periods_per_year: int = None,
 ) -> pd.Series:
     """
     Scale portfolio weights to achieve a target return or target variance.
@@ -485,6 +490,9 @@ def scale_weights(
         If both `target_return` and `target_variance` are specified.
     """
     # check that only one target is specified
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
+
     if target_return is not None and target_variance is not None:
         raise ValueError(
             "Only one target can be specified: either `target_return` or `target_variance`, not both."
@@ -519,11 +527,14 @@ def calc_equal_weights(
     returns: pd.DataFrame,
     target_return: float = None,
     target_variance: float = None,
-    periods_per_year: int = PERIODS_PER_YEAR,
+    periods_per_year: int = None,
 ) -> pd.Series:
     """
     Calculate equal-weighted weights, optionally scaled to meet a target return or variance.
     """
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
+
     n_assets = len(returns.columns)
     weights = pd.Series(
         np.ones(n_assets) / n_assets, index=returns.columns, name="Weights"
@@ -571,6 +582,11 @@ def calc_target_return_weights(
     """
     Calculate weights for the portfolio minimizing variance subject to a target return.
     """
+    returns = clean_returns_df(returns)
+    if "periods_per_year" in calc_weight_kwargs:
+        periods_per_year = calc_weight_kwargs["periods_per_year"]
+        periods_per_year = define_periods_per_year(returns, periods_per_year)
+
     if "objective_type" in calc_weight_kwargs:
         raise ValueError(
             "calc_target_return_weights sets objective_type=MIN_VARIANCE. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
@@ -595,6 +611,8 @@ def calc_target_variance_weights(
     """
     Calculate weights for the portfolio maximizing return subject to a target variance.
     """
+    returns = clean_returns_df(returns)
+
     if "objective_type" in calc_weight_kwargs:
         raise ValueError(
             "calc_target_variance_weights sets objective_type=MAX_RETURN. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
@@ -619,6 +637,8 @@ def calc_mean_variance_weights(
     """
     Calculate weights for the portfolio using mean-variance optimization.
     """
+    returns = clean_returns_df(returns)
+
     if "objective_type" in calc_weight_kwargs:
         raise ValueError(
             "calc_mean_variance_weights sets objective_type=MEAN_VARIANCE. Please remove 'objective_type' from calc_weight_kwargs or call calc_weights directly."
@@ -636,11 +656,12 @@ def calc_risk_parity_weights(
     returns: pd.DataFrame,
     target_return: float = None,
     target_variance: float = None,
-    periods_per_year: int = PERIODS_PER_YEAR,
+    periods_per_year: int = None,
 ) -> pd.Series:
     """
     Calculate risk parity weights, optionally scaled to meet a target return or variance.
     """
+    returns = clean_returns_df(returns)
 
     weights = pd.Series(
         [1 / returns[asset].var() for asset in returns.columns],

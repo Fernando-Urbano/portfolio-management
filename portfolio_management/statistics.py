@@ -13,98 +13,17 @@ from collections import defaultdict
 from portfolio_management.utils import _filter_columns_and_indexes
 from scipy.stats import norm
 from portfolio_management.port_construction import calc_tangency_weights
+from portfolio_management.utils import (
+    PERIODS_PER_YEAR_MAP,
+    clean_returns_df,
+    define_periods_per_year,
+)
 
 pd.options.display.float_format = "{:,.4f}".format
 warnings.filterwarnings("ignore")
 
-
-ANNUAL_FACTOR_MAP = {
-    "D": 360,
-    "DU": 252,
-    "W": 52,
-    "BM": 12,
-    "ME": 12,
-    "BQ": 4,
-    "BA": 2,
-    "A": 1,
-}
-
 import numpy as np
 import pandas as pd
-
-ANNUAL_FACTOR_MAP = {
-    "D": 252,  # Daily
-    "W": 52,  # Weekly
-    "BM": 12,  # Monthly (Business Monthly)
-    "ME": 12,  # Monthly (Month-End)
-    "BQ": 4,  # Quarterly
-    "BA": 2,  # Semiannual (Biannual or Annual if larger gaps)
-    "A": 1,  # Annual
-}
-
-
-def _transform_annual_factor(freq) -> int:
-    return ANNUAL_FACTOR_MAP.get(freq)
-
-
-def _calc_annual_factor(dates) -> str:
-    """
-    Given a list/array-like of dates, attempt to infer the frequency
-    (daily, weekly, monthly, etc.) and return one of the keys in
-    ANNUAL_FACTOR_MAP:
-        "D"  -> 252   (Daily)
-        "W"  -> 52    (Weekly)
-        "BM" -> 12    (Monthly, not necessarily month-end)
-        "ME" -> 12    (Monthly, all month-end)
-        "BQ" -> 4     (Quarterly)
-        "BA" -> 2     (Semiannual, or even annual in practice)
-
-    If fewer than 20 dates are provided, the function raises a ValueError
-    forcing the user to specify the frequency manually.
-
-    :param dates: A list/array-like of datetime objects (or date strings).
-    :return: A string key from ANNUAL_FACTOR_MAP indicating the inferred frequency.
-    """
-    # Require at least 20 dates to auto-detect
-    if len(dates) < 20:
-        raise ValueError(
-            "Not enough data points to auto-detect frequency. "
-            "At least 20 dates are required, otherwise please specify the frequency."
-        )
-
-    dates = pd.to_datetime(dates)
-    dates = np.sort(dates)
-
-    day_diffs = np.diff(dates) / np.timedelta64(1, "D")  # length n-1
-    median_gap = np.median(day_diffs)
-
-    # ----- Frequency detection thresholds -----
-    #
-    # Typical day-gap heuristics (approximate):
-    #
-    #   < 2 days   => "D"  (Daily)
-    #   < 10 days  => "W"  (Weekly)
-    #   < 40 days  => "ME" or "BM" (Monthly)
-    #   < 80 days  => "BQ" (Quarterly)
-    #   < 200 days => "BA" (Semiannual)
-    #   >= 200 days=> "A" (also used for ~annual in this map)
-    #
-    if median_gap < 2:
-        max_gap = np.max(day_diffs)
-        frequency = "DU" if max_gap > 2 else "D"
-    elif median_gap < 10:
-        frequency = "W"
-    elif median_gap < 40:
-        # Distinguish "month-end" vs. "business-monthly"
-        is_month_end = all(d == (d + pd.tseries.offsets.MonthEnd(0)) for d in dates)
-        frequency = "ME" if is_month_end else "BM"
-    elif median_gap < 80:
-        frequency = "BQ"
-    elif median_gap < 200:
-        frequency = "BA"
-    else:
-        frequency = "A"
-    return _transform_annual_factor(frequency)
 
 
 def calc_negative_pct(
@@ -131,30 +50,7 @@ def calc_negative_pct(
     Returns:
     pd.DataFrame: A DataFrame with the percentage of negative or positive returns, number of returns, and the count of negative/positive returns.
     """
-    returns = returns.copy()
-    if isinstance(returns, list):
-        returns_list = returns[:]
-        returns = pd.DataFrame({})
-        for series in returns_list:
-            returns = returns.merge(
-                series, right_index=True, left_index=True, how="outer"
-            )
-
-    if isinstance(returns, pd.Series):
-        returns = returns.to_frame()
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-
-    returns.index.name = "date"
-
-    returns = returns.apply(lambda x: x.astype(float))
-    prev_len_index = returns.apply(lambda x: len(x))
-    returns = returns.dropna(axis=0)
-    new_len_index = returns.apply(lambda x: len(x))
-    if not (prev_len_index == new_len_index).all():
-        print("Some columns had NaN values and were dropped")
+    returns = clean_returns_df(returns)
     if calc_positive:
         returns = returns.map(lambda x: 1 if x > 0 else 0)
     else:
@@ -201,6 +97,7 @@ def calc_cumulative_returns(
     Returns:
     pd.DataFrame or None: Returns cumulative returns DataFrame if `return_series` is True.
     """
+    returns = clean_returns_df(returns)
     if timeframes is not None:
         for name, timeframe in timeframes.items():
             if timeframe[0] and timeframe[1]:
@@ -222,10 +119,6 @@ def calc_cumulative_returns(
                 timeframes=None,
             )
         return
-    returns = returns.copy()
-    if isinstance(returns, pd.Series):
-        returns = returns.to_frame()
-    returns = returns.apply(lambda x: x.astype(float))
     returns = returns.apply(lambda x: x + 1)
     returns = returns.cumprod()
     returns = returns.apply(lambda x: x - 1)
@@ -279,8 +172,6 @@ def get_best_and_worst(
     if stat not in summary_statistics.columns:
         raise ValueError(f'{stat} not in "summary_statistics"')
     summary_statistics.rename(columns=lambda c: c.replace(" ", "").lower())
-    best_stat = summary_statistics[stat].max()
-    worst_stat = summary_statistics[stat].min()
     if all(pd.isna(summary_statistics[stat])):
         raise ValueError(f'All values in "{stat}" are missing')
     asset_best_stat = summary_statistics.loc[
@@ -299,7 +190,7 @@ def get_best_and_worst(
 
 def calc_summary_statistics(
     returns: Union[pd.DataFrame, List],
-    annual_factor: int = None,
+    periods_per_year: int = None,
     provided_excess_returns: bool = True,
     rf: Union[pd.Series, pd.DataFrame] = None,
     var_quantile: Union[float, List] = 0.05,
@@ -318,7 +209,7 @@ def calc_summary_statistics(
 
     Parameters:
     returns (pd.DataFrame or List): Time series of returns.
-    annual_factor (int, default=None): Factor for annualizing returns.
+    periods_per_year (int, default=None): Factor for annualizing returns.
     provided_excess_returns (bool, default=None): Whether excess returns are already provided.
     rf (pd.Series or pd.DataFrame, default=None): Risk-free rate data.
     var_quantile (float or list, default=0.05): Quantile for Value at Risk (VaR) calculation.
@@ -343,32 +234,8 @@ def calc_summary_statistics(
                 'Remove "rf" or set "provided_excess_returns" to None or False'
             )
 
-    if isinstance(returns, list):
-        returns_list = returns[:]
-        returns = pd.DataFrame({})
-        for series in returns_list:
-            returns = returns.merge(
-                series, right_index=True, left_index=True, how="outer"
-            )
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
-    try:
-        returns.index = pd.to_datetime(returns.index, errors="coerce")
-        if returns.index.isnull().any():
-            raise ValueError(
-                "Index contains invalid datetime values. Ensure the 'returns' index is fully parsable."
-            )
-    except Exception as e:
-        raise ValueError(f"Failed to process the 'date' index: {e}")
-
-    returns = returns.apply(lambda x: x.astype(float))
-
-    if annual_factor is None:
-        annual_factor = _calc_annual_factor(list(returns.index))
+    returns = clean_returns_df(returns)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
 
     if provided_excess_returns is False:
         if rf is not None:
@@ -393,7 +260,7 @@ def calc_summary_statistics(
             )
             timeframe_summary_statistics = calc_summary_statistics(
                 returns=timeframe_returns,
-                annual_factor=annual_factor,
+                periods_per_year=periods_per_year,
                 provided_excess_returns=provided_excess_returns,
                 rf=rf,
                 var_quantile=var_quantile,
@@ -414,9 +281,9 @@ def calc_summary_statistics(
 
     summary_statistics = pd.DataFrame(index=returns.columns)
     summary_statistics["Mean"] = returns.mean()
-    summary_statistics["Annualized Mean"] = returns.mean() * annual_factor
+    summary_statistics["Annualized Mean"] = returns.mean() * periods_per_year
     summary_statistics["Vol"] = returns.std()
-    summary_statistics["Annualized Vol"] = returns.std() * np.sqrt(annual_factor)
+    summary_statistics["Annualized Vol"] = returns.std() * np.sqrt(periods_per_year)
     try:
         if not provided_excess_returns:
             if type(rf) == pd.DataFrame:
@@ -432,7 +299,7 @@ def calc_summary_statistics(
     except Exception as e:
         print(f"Could not calculate Sharpe: {e}")
     summary_statistics["Annualized Sharpe"] = summary_statistics["Sharpe"] * np.sqrt(
-        annual_factor
+        periods_per_year
     )
     summary_statistics["Min"] = returns.min()
     summary_statistics["Max"] = returns.max()
@@ -446,14 +313,14 @@ def calc_summary_statistics(
             var_q, axis=0
         )
         summary_statistics[f"Annualized Historical VaR ({var_q:.2%})"] = (
-            returns.quantile(var_q, axis=0) * np.sqrt(annual_factor)
+            returns.quantile(var_q, axis=0) * np.sqrt(periods_per_year)
         )
         summary_statistics[f"Historical CVaR ({var_q:.2%})"] = returns[
             returns <= returns.quantile(var_q, axis=0)
         ].mean()
         summary_statistics[f"Annualized Historical CVaR ({var_q:.2%})"] = returns[
             returns <= returns.quantile(var_q, axis=0)
-        ].mean() * np.sqrt(annual_factor)
+        ].mean() * np.sqrt(periods_per_year)
 
     wealth_index = 1000 * (1 + returns).cumprod()
     previous_peaks = wealth_index.cummax()
@@ -554,12 +421,7 @@ def calc_correlations(
     Returns:
     sns.heatmap or pd.DataFrame: Heatmap of the correlation matrix or the correlation matrix itself.
     """
-    returns = returns.copy()
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
+    returns = clean_returns_df(returns)
 
     correlation_matrix = returns.corr()
     if return_heatmap:
