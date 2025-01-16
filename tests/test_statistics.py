@@ -100,3 +100,7 @@ def test_calc_summary_statistics_with_drops(test_returns):
     result = calc_summary_statistics(test_returns, drop_indexes=drop)
     for d in drop:
         assert d not in result.index
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

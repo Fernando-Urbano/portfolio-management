@@ -279,7 +279,7 @@ def define_periods_per_year(returns, periods_per_year=None):
         return periods_per_year
     elif periods_per_year is None:
         if isinstance(returns, pd.DataFrame):
-            if "date" in [d.lower() for d in dates.columns]:
+            if "date" in [c.lower() for c in returns.columns]:
                 dates = returns["date"]
             elif isinstance(returns.index, pd.DatetimeIndex):
                 dates = returns.index
