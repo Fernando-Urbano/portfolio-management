@@ -7,9 +7,7 @@ If you haven’t already installed the package, you can install it using:
 
 .. code-block:: console
 
-   pip install -r requirements.txt
-   # or
-   python setup.py install
+   pip install portfolio-management
 
 Overview
 --------

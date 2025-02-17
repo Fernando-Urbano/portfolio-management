@@ -25,6 +25,8 @@ extensions = [
 # Generate autosummary even if no references
 autosummary_generate = True
 
+add_module_names = False
+
 # Napoleon settings (for NumPy style)
 napoleon_google_docstring = False
 napoleon_numpy_docstring = True
