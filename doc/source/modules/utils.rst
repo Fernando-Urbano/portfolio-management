@@ -1,7 +1,6 @@
 Utils Module
 ============
 
-.. automodule:: portfolio_management.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. .. automodule:: portfolio_management.utils
+..    :members:
+..    :undoc-members:
