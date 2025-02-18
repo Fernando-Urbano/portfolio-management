@@ -25,6 +25,11 @@ Install pre-commit hooks:
 pre-commit install
 ```
 
+## How to commit without the hook?
+```
+git commit -m "commit not using verification" --no-verify
+```
+
 ## How to Update version in Pipy?
 
 Update the `version/new_version.txt` file with the new version number.
@@ -100,4 +105,14 @@ make.bat html
 View documentation:
 ```
 open build/html/index.html
+```
+
+# Build Website for Docs
+```
+cd doc
+make html
+cd ..
+mkdir -p docs
+touch docs/.nojekyll
+cp -r doc/build/html/* docs/
 ```
