@@ -88,23 +88,20 @@ Check that the version of the package is updated in the [PyPi](https://pypi.org/
 - If you have any ideas on how to improve the project structure or want to propose new issues, let me know!
 
 # Build Sphix Documentation
-```
-cd doc
-```
-
 On Mac:
 ```
+cd doc
 make html
+open build/html/index.html
+cd ..
 ```
 
 On Windows:
 ```
+cd doc
 make.bat html
-```
-
-View documentation:
-```
 open build/html/index.html
+cd ..
 ```
 
 # Build Website for Docs

@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 project = 'Portfolio Management'
 copyright = '2024'
-author = 'Your Name or Company'
+author = 'University of Chicago Financial Mathematics'
 
 # -- General configuration ---------------------------------------------------
 extensions = [
@@ -36,12 +36,14 @@ html_theme = 'pydata_sphinx_theme'
 
 # Optional theme options
 html_theme_options = {
-    'github_url': 'https://github.com/yourusername/portfolio-management',
+    'github_url': 'https://github.com/fernando-urbano/portfolio-management',
     # You can add more links or theme customizations here
 }
 
 # If you have a custom logo:
-# html_logo = '_static/your_logo.png'
+html_logo = '_static/logo.png'
+
+
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
@@ -52,4 +54,4 @@ html_extra_path = ['.nojekyll']  # Will copy an empty .nojekyll file to your bui
 
 # -- In case you have your .rst files or static assets in other subfolders:
 # templates_path = ['_templates']
-# html_static_path = ['_static']
+html_static_path = ['_static']
