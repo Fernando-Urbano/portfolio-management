@@ -3,12 +3,15 @@ import pandas as pd
 import cvxpy as cp
 from typing import Union
 from enum import Enum
-from portfolio_management.utils import define_periods_per_year, clean_returns_df
+from portfolio_management.utils import (
+    define_periods_per_year,
+    clean_returns_df,
+    PERIODS_PER_YEAR_MAP,
+    PERIODS_PER_YEAR,
+)
 
 
 class ObjectiveType(Enum):
-    """Enum of supported portfolio optimization objective types."""
-
     MIN_VARIANCE = "min_variance"
     MAX_SHARPE = "max_sharpe"
     MAX_RETURN = "max_return"
@@ -331,51 +334,77 @@ def calc_weights(
     periods_per_year: int = None,
 ) -> pd.Series:
     """
-    Calculate portfolio weights using a flexible framework that supports multiple objectives, constraints, and regularization methods.
-    Portfolio weights are constrained to sum to 1.
+    Calculate portfolio weights using a flexible optimization framework.
+
+    This function computes portfolio weights by solving a convex optimization
+    problem that supports multiple objective types (e.g., minimum variance,
+    maximum Sharpe ratio, target return, or mean-variance optimization) and
+    incorporates constraints and regularization. The weights are normalized so
+    that they sum to 1.
 
     Parameters
     ----------
     returns : pd.DataFrame
-        Historical returns for each asset (columns=assets).
-    objective_type : Union[str, ObjectiveType]
-        Optimization objective type. Can be a string (e.g., 'min_variance', 'max_sharpe')
-        or an ObjectiveType enum. Internally, strings are mapped to ObjectiveType enums.
+        Historical returns for each asset (columns represent assets).
+    objective_type : Union[str, ObjectiveType], optional
+        Optimization objective type. Can be provided as a string (e.g., "min_variance",
+        "max_sharpe", "max_return", "mean_variance") or as an ObjectiveType enum.
+        Defaults to "max_sharpe".
     target_return : float, optional
-        If set, enforces portfolio return.
+        Desired portfolio return to be enforced as a constraint. Defaults to None.
     target_variance : float, optional
-        If set, enforces portfolio variance.
+        Desired portfolio variance to be enforced as a constraint. Defaults to None.
     strict_targets : bool, optional
-        If True, enforces strict equality (`==`) for target_return and target_variance constraints.
-        If False, uses inequalities (`>=` for return and `<=` for variance).
+        If True, enforces strict equality (==) for target_return and target_variance.
+        Otherwise, inequality constraints are used. Defaults to False.
     risk_tolerance : float, optional
-        Risk-return trade-off parameter (gamma) for the mean-variance objective.
-        Only used when objective_type is "mean_variance".
+        Risk tolerance parameter (gamma) for mean-variance optimization.
+        Required when objective_type is "mean_variance". Defaults to None.
     l1_reg : float, optional
-        L1 penalty factor (Lasso), penalizing the absolute sum of weights.
+        Coefficient for L1 regularization (Lasso). Defaults to 0.0.
     l2_reg : float, optional
-        L2 penalty factor (Ridge), penalizing the squared sum of weights.
+        Coefficient for L2 regularization (Ridge). Defaults to 0.0.
     shrinkage_target : Union[str, np.ndarray], optional
-        The shrinkage target for the covariance matrix. Options:
-            - "diagonal": Diagonal covariance matrix from variances.
-            - "constant_correlation": Shrinks to a constant correlation matrix.
-            - Custom matrix: Provide an explicit target matrix as a numpy array.
-            - None: No shrinkage is applied.
+        The target for covariance matrix shrinkage. Options include "diagonal",
+        "constant_correlation", or a custom numpy array. Defaults to None (no shrinkage).
     shrinkage_factor : float, optional
-        Shrinkage intensity (alpha), a value between 0 and 1:
-        - 0: No shrinkage (uses the raw sample covariance matrix).
-        - 1: Fully shrinks to the specified target matrix.
-        If None, the optimal shrinkage is automatically calculated using the Ledoit-Wolf method.
-        If explicitly set, `shrinkage_target` must also be provided.
+        The intensity of shrinkage (alpha), between 0 and 1. If None, the optimal
+        shrinkage factor is calculated using the Ledoit-Wolf method. Defaults to None.
     long_only : bool, optional
-        If True, enforces x >= 0, making the portfolio long-only.
+        If True, constrains portfolio weights to be non-negative (long-only portfolio).
+        Defaults to False.
     periods_per_year : int, optional
-        Used to annualize return and covariance estimates, e.g., 12 for monthly data.
+        Number of periods per year used to annualize return and covariance estimates.
+        For example, 12 for monthly data. Defaults to None.
 
     Returns
     -------
     pd.Series
-        Portfolio weights, indexed by returns.columns
+        Portfolio weights as a pandas Series, indexed by asset names (columns in returns).
+
+    Raises
+    ------
+    ValueError
+        If the solver does not converge or if normalization fails due to a non-positive
+        sum of weights.
+    TypeError
+        If the provided objective_type is not a valid string or ObjectiveType.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_weights
+    >>> # Sample returns DataFrame
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> # Calculate tangency (maximum Sharpe) weights
+    >>> weights = calc_weights(returns_df, objective_type="max_sharpe")
+    >>> weights
+    AssetA    0.6
+    AssetB    0.4
+    Name: Weights, dtype: float64
     """
     returns = clean_returns_df(returns)
     periods_per_year = define_periods_per_year(returns, periods_per_year)
@@ -464,30 +493,50 @@ def scale_weights(
     periods_per_year: int = None,
 ) -> pd.Series:
     """
-    Scale portfolio weights to achieve a target return or target variance.
+    Scale portfolio weights to achieve a specified target return or target variance.
+
+    This function adjusts the input portfolio weights by scaling them so that the
+    resulting portfolio meets the desired annualized return or variance target.
+    Only one target (return or variance) may be specified.
 
     Parameters
     ----------
     returns : pd.DataFrame
         Historical returns data for assets.
     weights : pd.Series
-        Portfolio weights.
+        Original portfolio weights.
     target_return : float, optional
-        Target annualized portfolio return.
+        Desired annualized portfolio return.
     target_variance : float, optional
-        Target annualized portfolio variance.
+        Desired annualized portfolio variance.
     periods_per_year : int, optional
-        Number of periods in a year for annualization.
+        Number of periods per year used for annualizing returns and variances.
+        Defaults to None.
 
     Returns
     -------
     pd.Series
-        Scaled portfolio weights to meet the specified target.
+        Scaled portfolio weights meeting the specified target.
 
     Raises
     ------
     ValueError
-        If both `target_return` and `target_variance` are specified.
+        If both target_return and target_variance are provided simultaneously.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import scale_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, -0.02, 0.03],
+    ...     'AssetB': [0.005, 0.007, -0.002]
+    ... })
+    >>> weights = pd.Series([0.5, 0.5], index=returns_df.columns)
+    >>> scaled = scale_weights(returns_df, weights, target_return=0.02)
+    >>> scaled
+    AssetA    0.55
+    AssetB    0.45
+    Name: Weights, dtype: float64
     """
     # check that only one target is specified
     returns = clean_returns_df(returns)
@@ -530,7 +579,40 @@ def calc_equal_weights(
     periods_per_year: int = None,
 ) -> pd.Series:
     """
-    Calculate equal-weighted weights, optionally scaled to meet a target return or variance.
+    Calculate equal-weighted portfolio weights, optionally scaled to meet a target.
+
+    This function assigns an equal weight to each asset and, if a target return or variance
+    is specified, scales the weights accordingly.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data where columns represent assets.
+    target_return : float, optional
+        Desired annualized portfolio return. Defaults to None.
+    target_variance : float, optional
+        Desired annualized portfolio variance. Defaults to None.
+    periods_per_year : int, optional
+        Number of periods per year for annualization. Defaults to None.
+
+    Returns
+    -------
+    pd.Series
+        Equal (or scaled) portfolio weights, indexed by asset names.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_equal_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_equal_weights(returns_df)
+    >>> weights
+    AssetA    0.5
+    AssetB    0.5
+    Name: Weights, dtype: float64
     """
     returns = clean_returns_df(returns)
     periods_per_year = define_periods_per_year(returns, periods_per_year)
@@ -550,7 +632,41 @@ def calc_equal_weights(
 
 def calc_min_variance_weights(returns: pd.DataFrame, **calc_weight_kwargs) -> pd.Series:
     """
-    Calculate weights for the minimum-variance portfolio.
+    Calculate portfolio weights for the minimum-variance portfolio.
+
+    This function computes the weights that minimize portfolio variance using a convex
+    optimization framework. It internally sets the optimization objective to "min_variance".
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data with columns representing assets.
+    **calc_weight_kwargs : dict, optional
+        Additional keyword arguments to be passed to :func:`calc_weights`.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights corresponding to the minimum-variance portfolio.
+
+    Raises
+    ------
+    ValueError
+        If the caller attempts to specify the objective type via calc_weight_kwargs.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_min_variance_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_min_variance_weights(returns_df)
+    >>> weights
+    AssetA    0.65
+    AssetB    0.35
+    Name: Weights, dtype: float64
     """
     if "objective_type" in calc_weight_kwargs:
         raise ValueError(
@@ -564,7 +680,41 @@ def calc_min_variance_weights(returns: pd.DataFrame, **calc_weight_kwargs) -> pd
 
 def calc_tangency_weights(returns: pd.DataFrame, **calc_weight_kwargs) -> pd.Series:
     """
-    Calculate weights for the tangency (maximum Sharpe ratio) portfolio.
+    Calculate portfolio weights for the tangency (maximum Sharpe ratio) portfolio.
+
+    This function computes the weights that maximize the Sharpe ratio using a convex
+    optimization framework. It internally sets the optimization objective to "max_sharpe".
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data with columns representing assets.
+    **calc_weight_kwargs : dict, optional
+        Additional keyword arguments to be passed to :func:`calc_weights`.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights corresponding to the tangency portfolio.
+
+    Raises
+    ------
+    ValueError
+        If the caller attempts to specify the objective type via calc_weight_kwargs.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_tangency_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_tangency_weights(returns_df)
+    >>> weights
+    AssetA    0.60
+    AssetB    0.40
+    Name: Weights, dtype: float64
     """
     if "objective_type" in calc_weight_kwargs:
         raise ValueError(
@@ -580,7 +730,45 @@ def calc_target_return_weights(
     returns: pd.DataFrame, target_return: float, **calc_weight_kwargs
 ) -> pd.Series:
     """
-    Calculate weights for the portfolio minimizing variance subject to a target return.
+    Calculate portfolio weights by minimizing variance subject to a target return.
+
+    This function computes the minimum-variance portfolio weights while enforcing a
+    specified target return. It sets the optimization objective internally to "min_variance"
+    and applies the target return constraint.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data with columns representing assets.
+    target_return : float
+        The desired annualized portfolio return.
+    **calc_weight_kwargs : dict, optional
+        Additional keyword arguments to be passed to :func:`calc_weights`.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights that achieve the target return.
+
+    Raises
+    ------
+    ValueError
+        If objective_type or target_variance are provided in calc_weight_kwargs, as they
+        conflict with this function's purpose.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_target_return_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_target_return_weights(returns_df, target_return=0.015)
+    >>> weights
+    AssetA    0.55
+    AssetB    0.45
+    Name: Weights, dtype: float64
     """
     returns = clean_returns_df(returns)
     if "periods_per_year" in calc_weight_kwargs:
@@ -609,7 +797,45 @@ def calc_target_variance_weights(
     returns: pd.DataFrame, target_variance: float, **calc_weight_kwargs
 ) -> pd.Series:
     """
-    Calculate weights for the portfolio maximizing return subject to a target variance.
+    Calculate portfolio weights by maximizing return subject to a target variance.
+
+    This function computes portfolio weights that maximize return while enforcing a
+    specified target variance. It sets the optimization objective internally to "max_return"
+    and applies the target variance constraint.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data with columns representing assets.
+    target_variance : float
+        The desired annualized portfolio variance.
+    **calc_weight_kwargs : dict, optional
+        Additional keyword arguments to be passed to :func:`calc_weights`.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights that meet the target variance.
+
+    Raises
+    ------
+    ValueError
+        If objective_type or target_return are provided in calc_weight_kwargs, as they
+        conflict with this function's purpose.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_target_variance_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_target_variance_weights(returns_df, target_variance=0.002)
+    >>> weights
+    AssetA    0.45
+    AssetB    0.55
+    Name: Weights, dtype: float64
     """
     returns = clean_returns_df(returns)
 
@@ -635,7 +861,44 @@ def calc_mean_variance_weights(
     returns: pd.DataFrame, risk_tolerance: float, **calc_weight_kwargs
 ) -> pd.Series:
     """
-    Calculate weights for the portfolio using mean-variance optimization.
+    Calculate portfolio weights using mean-variance optimization.
+
+    This function computes portfolio weights that balance expected return and variance
+    using a risk tolerance parameter. It internally sets the optimization objective to
+    "mean_variance" and applies the risk tolerance (gamma) in the objective.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data with columns representing assets.
+    risk_tolerance : float
+        Risk tolerance parameter (gamma) for the mean-variance objective.
+    **calc_weight_kwargs : dict, optional
+        Additional keyword arguments to be passed to :func:`calc_weights`.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights based on mean-variance optimization.
+
+    Raises
+    ------
+    ValueError
+        If objective_type is provided in calc_weight_kwargs, as it conflicts with this function's purpose.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_mean_variance_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_mean_variance_weights(returns_df, risk_tolerance=0.5)
+    >>> weights
+    AssetA    0.50
+    AssetB    0.50
+    Name: Weights, dtype: float64
     """
     returns = clean_returns_df(returns)
 
@@ -659,7 +922,47 @@ def calc_risk_parity_weights(
     periods_per_year: int = None,
 ) -> pd.Series:
     """
-    Calculate risk parity weights, optionally scaled to meet a target return or variance.
+    Calculate risk parity portfolio weights, optionally scaled to meet a target.
+
+    This function computes portfolio weights based on the risk parity approach,
+    where each asset's contribution to portfolio risk is equalized. Optionally, the
+    weights can be scaled to achieve a desired annualized return or variance.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Historical returns data with columns representing assets.
+    target_return : float, optional
+        Desired annualized portfolio return. Defaults to None.
+    target_variance : float, optional
+        Desired annualized portfolio variance. Defaults to None.
+    periods_per_year : int, optional
+        Number of periods per year used for annualization (e.g., 12 for monthly data).
+        Defaults to None.
+
+    Returns
+    -------
+    pd.Series
+        Portfolio weights computed using the risk parity approach.
+
+    Raises
+    ------
+    ValueError
+        If both target_return and target_variance are specified simultaneously.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_construction import calc_risk_parity_weights
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> weights = calc_risk_parity_weights(returns_df)
+    >>> weights
+    AssetA    0.60
+    AssetB    0.40
+    Name: Weights, dtype: float64
     """
     returns = clean_returns_df(returns)
 

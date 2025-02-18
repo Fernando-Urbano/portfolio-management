@@ -20,6 +20,8 @@ PERIODS_PER_YEAR_MAP = {
     "A": 1,
 }
 
+PERIODS_PER_YEAR = 12
+
 
 def read_excel_default(
     excel_name: str,
@@ -30,22 +32,39 @@ def read_excel_default(
     **kwargs,
 ):
     """
-    Reads an Excel file and returns a DataFrame with specified options.
+    Read an Excel file into a pandas DataFrame with default options.
 
-    Parameters:
-    excel_name (str): The path to the Excel file.
-    index_col (int, default=0): Column to use as the row labels of the DataFrame.
-    parse_dates (bool, default=True): Boolean to parse dates.
-    print_sheets (bool, default=False): If True, prints the names and first few rows of all sheets.
-    sheet_name (str or int, default=None): Name or index of the sheet to read. If None, reads the first sheet.
-    **kwargs: Additional arguments passed to `pd.read_excel`.
+    This function reads the specified Excel file and returns a DataFrame using the provided
+    options. If `print_sheets` is True, it prints the names and first few rows of all sheets and
+    returns None. The function also sets the index name to "date" if the index appears to contain
+    date-like values.
 
-    Returns:
-    pd.DataFrame: DataFrame containing the data from the specified Excel sheet.
+    Parameters
+    ----------
+    excel_name : str
+        Path to the Excel file.
+    index_col : int, optional
+        Column to use as the row labels of the DataFrame. Defaults to 0.
+    parse_dates : bool, optional
+        Whether to parse dates in the index. Defaults to True.
+    print_sheets : bool, optional
+        If True, prints the sheet names and the first few rows of each sheet and returns None.
+        Defaults to False.
+    sheet_name : str or int, optional
+        Name or index of the sheet to read. If None, reads the first sheet.
+    **kwargs
+        Additional keyword arguments passed to `pd.read_excel`.
 
-    Notes:
-    - If `print_sheets` is True, the function will print the names and first few rows of all sheets and return None.
-    - The function ensures that the index name is set to 'date' if the index column name is 'date' or 'dates', or if the index contains date-like values.
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the data from the specified Excel sheet. If `print_sheets` is True,
+        the function returns None.
+
+    Examples
+    --------
+    >>> df = read_excel_default("data.xlsx", index_col=0, parse_dates=True)
+    >>> df.head()
     """
     if print_sheets:
         n = 0
@@ -228,6 +247,50 @@ def create_returns_df(
     variance_multiplier: float = 0.03,
     truncate: bool = True,
 ) -> pd.DataFrame:
+    """
+    Generate a synthetic returns DataFrame.
+
+    This function creates a DataFrame of synthetic asset returns using a multivariate normal
+    distribution. It generates a random covariance matrix via a sparse positive-definite matrix,
+    scales it by `variance_multiplier`, and simulates returns for a specified number of assets
+    and samples. Optionally, returns below -1 are truncated to -0.95.
+
+    Parameters
+    ----------
+    n_samples : int, optional
+        Number of time periods (samples) to generate. Defaults to 1000.
+    n_assets : int, optional
+        Number of assets (columns) to generate. Defaults to 5.
+    avg_return : float, optional
+        Average return for each asset. Defaults to 0.004.
+    alpha_sparsity : float, optional
+        Sparsity parameter for generating the covariance matrix. Defaults to 0.3.
+    seed : int, optional
+        Random seed for reproducibility. Defaults to 42.
+    end_date : str, optional
+        End date for the date range index. Defaults to "2024-01-01".
+    date_frequecy : {"ME", "BM", "BQ", "BA", "W", "D"}, optional
+        Frequency for the date range. Defaults to "ME" (month-end).
+    variance_multiplier : float, optional
+        Multiplier for scaling the covariance matrix. Must be between 0 and 0.5. Defaults to 0.03.
+    truncate : bool, optional
+        If True, truncates returns less than -1 to -0.95. Defaults to True.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame of synthetic returns with a datetime index and asset columns.
+
+    Raises
+    ------
+    ValueError
+        If `variance_multiplier` is not between 0 and 0.5.
+
+    Examples
+    --------
+    >>> df_returns = create_returns_df(n_samples=500, n_assets=3, avg_return=0.005)
+    >>> df_returns.head()
+    """
     if variance_multiplier > 0.5 or variance_multiplier <= 0:
         raise ValueError("variance_multiplier must be between 0 and 0.5")
     rng = np.random.RandomState(seed)
@@ -258,6 +321,40 @@ def create_rf_returns_df(
     end_date: str = "2024-01-01",
     date_frequecy: Union[Literal["ME", "BM", "BQ", "BA", "W", "D"]] = "ME",
 ) -> pd.DataFrame:
+    """
+    Generate a synthetic risk-free returns DataFrame.
+
+    This function creates a DataFrame of synthetic risk-free returns using a normal distribution.
+    It applies a time-series autocorrelation model to simulate persistence in the risk-free rate.
+    The resulting DataFrame has a datetime index and a single column labeled "RF".
+
+    Parameters
+    ----------
+    n_samples : int, optional
+        Number of time periods (samples) to generate. Defaults to 1000.
+    avg_rf_rate : float, optional
+        Average risk-free rate. Defaults to 0.002.
+    ts_auto_correlation : float, optional
+        Autocorrelation coefficient for the risk-free rate time series. Defaults to 0.8.
+    seed : int, optional
+        Random seed for reproducibility. Defaults to 42.
+    std_rf_rate : float, optional
+        Standard deviation of the risk-free rate. Defaults to 0.01.
+    end_date : str, optional
+        End date for the date range index. Defaults to "2024-01-01".
+    date_frequecy : {"ME", "BM", "BQ", "BA", "W", "D"}, optional
+        Frequency for the date range. Defaults to "ME" (month-end).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame of synthetic risk-free returns with a datetime index and a single column "RF".
+
+    Examples
+    --------
+    >>> rf_df = create_rf_returns_df(n_samples=500)
+    >>> rf_df.head()
+    """
     rng = np.random.RandomState(seed)
     rf_returns = rng.normal(avg_rf_rate, std_rf_rate, n_samples)
     rf_returns = pd.Series(rf_returns)
@@ -273,6 +370,46 @@ def create_rf_returns_df(
 
 
 def define_periods_per_year(returns, periods_per_year=None):
+    """
+    Determine the number of periods per year for a returns DataFrame.
+
+    This function validates and returns the number of periods per year. If `periods_per_year`
+    is provided as a float, it is converted to an integer (if whole). If not provided, the
+    function attempts to infer the frequency from the DataFrame's date information using
+    internal heuristics.
+
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        DataFrame containing returns data. The function expects either a "date" column or a
+        DatetimeIndex.
+    periods_per_year : int or float, optional
+        Number of periods per year. Must be a positive integer. If None, the frequency is inferred
+        from the returns data.
+
+    Returns
+    -------
+    int
+        The number of periods per year.
+
+    Raises
+    ------
+    ValueError
+        If `periods_per_year` is not a positive integer or if the date frequency cannot be inferred.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({"returns": [0.01, 0.02, 0.03]},
+    ...                   index=pd.date_range("2021-01-01", periods=3))
+    >>> define_periods_per_year(df)
+    252  # Example output for daily data
+    """
+    if isinstance(periods_per_year, float):
+        if periods_per_year % 1 != 0:
+            raise ValueError("periods_per_year must be a positive integer.")
+        else:
+            periods_per_year = int(periods_per_year)
     if isinstance(periods_per_year, int):
         if periods_per_year < 1:
             raise ValueError("periods_per_year must be a positive integer.")
@@ -293,7 +430,60 @@ def define_periods_per_year(returns, periods_per_year=None):
 
 
 def clean_returns_df(returns):
-    returns = returns.copy()
+    """
+    Clean and validate the returns data.
+
+    This function accepts returns data in various formats (a list of Series,
+    a pandas Series, or a pandas DataFrame) and performs several cleaning steps
+    to ensure consistency. The cleaning process includes:
+
+    - Merging multiple pandas Series (if provided as a list) into a single DataFrame.
+    - Converting a pandas Series to a DataFrame and renaming its column if necessary.
+    - Renaming any column that contains "date" (case insensitive) to "date" and setting
+      it as the index.
+    - Ensuring that the index is a DatetimeIndex or PeriodIndex, converting it if needed.
+    - Converting all data values to floats.
+    - Dropping rows with missing values and printing a warning if any rows are removed.
+
+    Parameters
+    ----------
+    returns : list, pd.Series, or pd.DataFrame
+        The input returns data. It can be provided as:
+        - A list of pandas Series objects to be merged into a DataFrame.
+        - A single pandas Series, which will be converted into a DataFrame.
+        - A pandas DataFrame containing the returns data.
+        In all cases, the index should represent dates or be convertible to datetime.
+
+    Returns
+    -------
+    pd.DataFrame
+        A cleaned DataFrame with:
+        - A DatetimeIndex (or PeriodIndex) named "date".
+        - All values converted to float.
+        - Rows with missing values removed.
+
+    Raises
+    ------
+    ValueError
+        - If the input DataFrame or Series is empty.
+        - If the index contains invalid datetime values or cannot be parsed.
+        - If the conversion of data values to floats fails.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.utils import clean_returns_df
+    >>> # Example with a Series:
+    >>> dates = pd.date_range("2023-01-01", periods=3)
+    >>> returns_series = pd.Series([0.1, 0.2, 0.3], index=dates)
+    >>> clean_df = clean_returns_df(returns_series)
+    >>> clean_df.head()
+                0
+    date
+    2023-01-01  0.1
+    2023-01-02  0.2
+    2023-01-03  0.3
+    """
     if isinstance(returns, list):
         returns_list = returns[:]
         returns = pd.DataFrame({})
@@ -301,6 +491,10 @@ def clean_returns_df(returns):
             returns = returns.merge(
                 series, right_index=True, left_index=True, how="outer"
             )
+    elif isinstance(returns, (pd.Series, pd.DataFrame)):
+        if returns.empty:
+            raise ValueError("The DataFrame is empty.")
+        returns = returns.copy()
 
     if isinstance(returns, pd.Series):
         returns = returns.to_frame()

@@ -5,7 +5,8 @@ from itertools import product
 from skopt import gp_minimize
 from skopt.space import Real, Categorical
 
-from portfolio_management.port_construction import calc_weights, PERIODS_PER_YEAR
+from portfolio_management.port_construction import calc_weights
+from portfolio_management.utils import PERIODS_PER_YEAR
 
 
 # defines the configuration for tunable parameters in the optimization process
@@ -448,7 +449,7 @@ def tune_regularization_tscv(
     returns: pd.DataFrame,
     param_dict: Dict[str, Union[List[Union[float, str]], Tuple[float, float]]],
     method: str = "grid",
-    method_cofig: Dict = {},
+    method_config: Dict = {},
     eval_metric: str = "sharpe",
     aggregator: str = "mean",
     window_type: str = "rolling",
@@ -462,8 +463,8 @@ def tune_regularization_tscv(
     Perform time-series cross-validation (TSCV) to tune portfolio optimization regularization parameters.
 
     This function supports both grid search and Bayesian search for hyperparameter tuning, allowing users
-    to optimize regularization parameters (e.g., `l1_reg`, `l2_reg`, `shrinkage_factor`, `shrinkage_target`)
-    based on cross-validated performance metrics.
+    to optimize regularization parameters (e.g., ``l1_reg``, ``l2_reg``, ``shrinkage_factor``,
+    ``shrinkage_target``) based on cross-validated performance metrics.
 
     Parameters
     ----------
@@ -473,80 +474,124 @@ def tune_regularization_tscv(
         Dictionary specifying the hyperparameters to tune. Each key must be a valid parameter name,
         and each value must be:
         - For grid search: a list of candidate values.
-        - For Bayesian search: a tuple specifying the range for numerical parameters or a list for categorical parameters.
-        Currently supported hyperparameters are `l1_reg`, `l2_reg`, `shrinkage_target`, and `shrinkage_factor`.
-        Example for grid search:
+        - For Bayesian search: a tuple specifying the range for numeric parameters or a list for categorical parameters.
+
+        Currently supported hyperparameters are ``l1_reg``, ``l2_reg``, ``shrinkage_factor``, and
+        ``shrinkage_target``. For example:
+
+        **Grid search example**::
+
             param_dict = {
                 "l1_reg": [0.0, 0.01, 0.02],
                 "l2_reg": [0.0, 0.01, 0.02],
                 "shrinkage_factor": [0.0, 0.2, 0.5],
                 "shrinkage_target": ["diagonal", "constant_correlation"]
             }
-        Example for Bayesian search:
+
+        **Bayesian search example**::
+
             param_dict = {
                 "l1_reg": (0.0, 0.1),
                 "l2_reg": (0.0, 0.1),
                 "shrinkage_factor": (0.0, 1.0),
                 "shrinkage_target": ["diagonal", "constant_correlation"]
             }
-    method : str, default="grid"
+    method : str, optional
         Optimization method to use. Must be one of:
-        - "grid": Perform grid search over the parameter space.
-        - "bayes": Perform Bayesian search using scikit-optimize.
+        - ``"grid"``: Perform a grid search over the parameter space.
+        - ``"bayes"``: Perform Bayesian optimization using scikit-optimize.
+        Defaults to ``"grid"``.
     method_config : Dict, optional
-        Additional method-specific configuration. Currently used only for Bayesian search:
-        - "n_calls": Number of evaluations for Bayesian search (default: 20).
-        - "random_state": Random seed for reproducibility (default: 42).
-        Example:
-            method_config = {
-                "n_calls": 50,
-                "random_state": 123
-            }
-    eval_metric : str, default="sharpe"
-        The performance metric to optimize. Supported metrics include:
-        - "mean_return": Maximize mean return.
-        - "sharpe": Maximize Sharpe ratio.
-        - "volatility": Minimize portfolio volatility.
-    aggregator : str, default="mean"
-        Aggregation method for cross-validation fold scores. Supported values:
-        - "mean": Use the mean of fold scores.
-        - "median": Use the median of fold scores.
-    window_type : str, default="rolling"
-        Type of cross-validation windowing. Supported values:
-        - "rolling": Use rolling windows for train/test splits.
-        - "expanding": Use expanding windows for train/test splits.
+        Additional configuration for the chosen method. Currently used only for Bayesian search:
+        - ``"n_calls"``: Number of function evaluations (iterations) in the Bayesian search. Default is 20.
+        - ``"random_state"``: Random seed for reproducibility. Default is 42.
+    eval_metric : str, optional
+        The performance metric to optimize. Valid options include:
+        - ``"mean_return"``: Maximize mean return.
+        - ``"sharpe"``: Maximize Sharpe ratio.
+        - ``"volatility"``: Minimize portfolio volatility.
+        Defaults to ``"sharpe"``.
+    aggregator : str, optional
+        How to aggregate cross-validation fold scores. Valid options:
+        - ``"mean"``: Use the mean of the fold scores.
+        - ``"median"``: Use the median of the fold scores.
+        Defaults to ``"mean"``.
+    window_type : str, optional
+        Type of cross-validation windowing:
+        - ``"rolling"``: Use rolling windows for train/test splits.
+        - ``"expanding"``: Use expanding windows for train/test splits.
+        Defaults to ``"rolling"``.
     n_folds : int, optional
-        Number of cross-validation folds. If not specified, it will be calculated automatically based
-        on the data size, train window, and test window.
+        Number of cross-validation folds. If not specified, it is calculated automatically based on the data
+        size, train window, test window, and window type.
     train_window : int, optional
-        Number of periods in the training window. Required if not provided in percentage.
+        Number of periods in the training window. Required if not specified in percentage terms. Defaults to None.
     test_window : int, optional
-        Number of periods in the testing window. Required if not provided in percentage.
+        Number of periods in the testing window. Required if not specified in percentage terms. Defaults to None.
     step_size : int, optional
-        Number of periods to step between consecutive train/test splits. Defaults to `test_window`.
+        Number of periods to move forward after each fold. Defaults to ``test_window``.
     calc_weights_kwargs : dict, optional
-        Additional keyword arguments to pass to the `calc_weights` function. Refer to `calc_weights` documentation
+        Additional keyword arguments to pass to the :func:`calc_weights` function. Refer to its documentation
         for a full list of parameters.
 
     Returns
     -------
     Dict
         A dictionary containing:
-        - "best_params": The best-performing hyperparameter combination.
-        - "best_score": The best cross-validated performance score.
-        - "cv_results": A dictionary of all hyperparameter combinations and their respective scores.
+        - ``"best_params"``: The best-performing hyperparameter combination.
+        - ``"best_score"``: The best cross-validated performance score.
+        - ``"cv_results"``: A dictionary mapping each hyperparameter combination to its CV score.
 
     Raises
     ------
     ValueError
-        If any of the following conditions are met:
-        - Invalid keys in `param_dict`.
-        - `param_dict` does not specify at least one valid hyperparameter with a non-empty range.
-        - Tuning parameters are specified in `calc_weights_kwargs` instead of `param_dict`.
-        - Invalid `eval_metric` is provided.
-        - Invalid `method` is specified.
+        - If any invalid keys appear in ``param_dict``.
+        - If tuning parameters are passed in ``calc_weights_kwargs`` instead of ``param_dict``.
+        - If no valid hyperparameters with non-empty ranges are specified in ``param_dict``.
+        - If an invalid ``eval_metric`` is provided.
+        - If ``method`` is not one of ``{"grid", "bayes"}``.
     TypeError
-        If `eval_metric` is not a valid evaluation metric.
+        If ``eval_metric`` is not recognized.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.port_tscv import tune_regularization_tscv
+    >>> # Example returns DataFrame (rows=time, columns=assets)
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, -0.02, 0.03],
+    ...     'AssetB': [0.005, 0.007, -0.002]
+    ... })
+    >>> # Grid search example
+    >>> param_dict_grid = {
+    ...     "l1_reg": [0.0, 0.01],
+    ...     "l2_reg": [0.0, 0.02]
+    ... }
+    >>> results_grid = tune_regularization_tscv(
+    ...     returns=returns_df,
+    ...     param_dict=param_dict_grid,
+    ...     method="grid",
+    ...     eval_metric="sharpe",
+    ...     train_window=12,
+    ...     test_window=3
+    ... )
+    >>> results_grid["best_params"], results_grid["best_score"]
+
+    >>> # Bayesian search example
+    >>> param_dict_bayes = {
+    ...     "l1_reg": (0.0, 0.1),
+    ...     "l2_reg": (0.0, 0.1)
+    ... }
+    >>> results_bayes = tune_regularization_tscv(
+    ...     returns=returns_df,
+    ...     param_dict=param_dict_bayes,
+    ...     method="bayes",
+    ...     method_config={"n_calls": 10, "random_state": 123},
+    ...     eval_metric="sharpe",
+    ...     train_window=12,
+    ...     test_window=3
+    ... )
+    >>> results_bayes["best_params"], results_bayes["best_score"]
     """
 
     # validate that all keys in param_dict are valid
@@ -605,8 +650,8 @@ def tune_regularization_tscv(
             train_window=train_window,
             test_window=test_window,
             step_size=step_size,
-            n_calls=method_cofig.get("n_calls", 20),
-            random_state=method_cofig.get("random_state", 42),
+            n_calls=method_config.get("n_calls", 20),
+            random_state=method_config.get("random_state", 42),
             **calc_weights_kwargs,
         )
     else:

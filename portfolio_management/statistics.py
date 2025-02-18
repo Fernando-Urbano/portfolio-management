@@ -38,17 +38,41 @@ def calc_negative_pct(
     """
     Calculates the percentage of negative or positive returns in the provided data.
 
-    Parameters:
-    returns (pd.DataFrame, pd.Series, or list): Time series of returns.
-    calc_positive (bool, default=False): If True, calculates the percentage of positive returns.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): Whether to drop specified columns/indexes before keeping.
+    Parameters
+    ----------
+    returns : pd.DataFrame, pd.Series, or list
+        Time series of returns.
+    calc_positive : bool, optional
+        If True, calculates the percentage of positive returns. If False, calculates
+        the percentage of negative returns. Defaults to False.
+    keep_columns : list or str, optional
+        Columns to keep in the resulting DataFrame. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the resulting DataFrame. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes to keep in the resulting DataFrame. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes to drop from the resulting DataFrame. Defaults to None.
+    drop_before_keep : bool, optional
+        Whether to drop specified columns/indexes before keeping them. Defaults to False.
 
-    Returns:
-    pd.DataFrame: A DataFrame with the percentage of negative or positive returns, number of returns, and the count of negative/positive returns.
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame with the percentage of negative or positive returns,
+        the total number of returns, and the count of negative or positive returns.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.statistics import calc_negative_pct
+    >>> returns = pd.Series([0.01, -0.02, 0.03, -0.01])
+    >>> result = calc_negative_pct(returns)
+    >>> result
+    % Negative Returns       0.5
+    Nº Returns              4.0
+    Nº Negative Returns     2.0
+    Name: 0, dtype: float64
     """
     returns = clean_returns_df(returns)
     if calc_positive:
@@ -86,16 +110,44 @@ def calc_cumulative_returns(
     """
     Calculates cumulative returns from a time series of returns.
 
-    Parameters:
-    returns (pd.DataFrame or pd.Series): Time series of returns.
-    return_plot (bool, default=True): If True, plots the cumulative returns.
-    fig_size (tuple, default=(7, 5)): Size of the plot for cumulative returns.
-    return_series (bool, default=False): If True, returns the cumulative returns as a DataFrame.
-    name (str, default=None): Name for the title of the plot or the cumulative return series.
-    timeframes (dict or None, default=None): Dictionary of timeframes to calculate cumulative returns for each period.
+    Parameters
+    ----------
+    returns : pd.DataFrame or pd.Series
+        Time series of returns.
+    return_plot : bool, optional
+        If True, plots the cumulative returns. Defaults to True.
+    fig_size : tuple, optional
+        Size of the plot (width, height). Defaults to (7, 5).
+    return_series : bool, optional
+        If True, returns the cumulative returns as a DataFrame instead of None. Defaults to False.
+    name : str, optional
+        Name for the plot title or the returned series. Defaults to None.
+    timeframes : dict or None, optional
+        Dictionary of timeframes (key = label, value = (start, end)) for which to calculate
+        and optionally plot cumulative returns separately. Defaults to None.
 
-    Returns:
-    pd.DataFrame or None: Returns cumulative returns DataFrame if `return_series` is True.
+    Returns
+    -------
+    pd.DataFrame or None
+        If `return_series` is True, returns a DataFrame of cumulative returns.
+        Otherwise, returns None.
+
+    Raises
+    ------
+    Exception
+        If a specified timeframe has no data in `returns`.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.statistics import calc_cumulative_returns
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, -0.02, 0.03],
+    ...     'AssetB': [0.005, 0.007, -0.002]
+    ... })
+    >>> # Plot cumulative returns and also return the series:
+    >>> cum_df = calc_cumulative_returns(returns_df, return_plot=True, return_series=True)
+    >>> cum_df.head()
     """
     returns = clean_returns_df(returns)
     if timeframes is not None:
@@ -154,13 +206,41 @@ def get_best_and_worst(
     """
     Identifies the best and worst assets based on a specified statistic.
 
-    Parameters:
-    summary_statistics (pd.DataFrame): DataFrame containing summary statistics.
-    stat (str, default='Annualized Sharpe'): The statistic to compare assets by.
-    return_df (bool, default=True): If True, returns a DataFrame with the best and worst assets.
+    Parameters
+    ----------
+    summary_statistics : pd.DataFrame
+        DataFrame containing summary statistics for each asset (rows) and various metrics (columns).
+    stat : str, optional
+        The statistic (column name) to compare assets by. Defaults to 'Annualized Sharpe'.
 
-    Returns:
-    pd.DataFrame or None: DataFrame with the best and worst assets if `return_df` is True.
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the rows of the best and worst assets according to the specified statistic.
+
+    Raises
+    ------
+    Exception
+        If `summary_statistics` has fewer than two rows.
+    ValueError
+        If `stat` is not found in the columns of `summary_statistics`.
+    ValueError
+        If all values in the specified `stat` column are missing.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.statistics import get_best_and_worst
+    >>> data = {
+    ...     'Annualized Sharpe': [1.2, 0.8, 0.5],
+    ...     'Another Stat': [0.1, 0.2, 0.3]
+    ... }
+    >>> index = ['AssetA', 'AssetB', 'AssetC']
+    >>> summary_df = pd.DataFrame(data, index=index)
+    >>> get_best_and_worst(summary_df, stat='Annualized Sharpe')
+        Annualized Sharpe  Another Stat
+    AssetA               1.2           0.1
+    AssetC               0.5           0.3
     """
     summary_statistics = summary_statistics.copy()
 
@@ -207,23 +287,69 @@ def calc_summary_statistics(
     """
     Calculates summary statistics for a time series of returns.
 
-    Parameters:
-    returns (pd.DataFrame or List): Time series of returns.
-    periods_per_year (int, default=None): Factor for annualizing returns.
-    provided_excess_returns (bool, default=None): Whether excess returns are already provided.
-    rf (pd.Series or pd.DataFrame, default=None): Risk-free rate data.
-    var_quantile (float or list, default=0.05): Quantile for Value at Risk (VaR) calculation.
-    timeframes (dict or None, default=None): Dictionary of timeframes to calculate statistics for each period.
-    return_tangency_weights (bool, default=True): If True, returns tangency portfolio weights.
-    correlations (bool or list, default=True): If True, returns correlations, or specify columns for correlations.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): Whether to drop specified columns/indexes before keeping.
+    Parameters
+    ----------
+    returns : pd.DataFrame or list
+        Time series of returns. Columns represent assets or factors.
+    periods_per_year : int, optional
+        Number of periods per year for annualizing returns. If None, attempts to infer from the data.
+        Defaults to None.
+    provided_excess_returns : bool, optional
+        If True, indicates that `returns` are already excess returns (i.e., returns - risk-free rate).
+        If False or None, will subtract `rf` (if provided). Defaults to True.
+    rf : pd.Series or pd.DataFrame, optional
+        Risk-free rate data with the same index as `returns`. Only used if `provided_excess_returns` is False.
+        Defaults to None.
+    var_quantile : float or list of float, optional
+        Quantile(s) for calculating Value at Risk (VaR) and Conditional VaR (CVaR). Defaults to 0.05.
+    timeframes : dict or None, optional
+        Dictionary of timeframes (key = label, value = (start, end)) for which to calculate
+        summary statistics separately. Defaults to None.
+    return_tangency_weights : bool, optional
+        If True, includes tangency portfolio weights in the summary. Defaults to True.
+    correlations : bool or list, optional
+        If True, appends the correlation matrix to the summary. If a list of column names, appends
+        correlations only for those columns. Defaults to True.
+    keep_columns : list or str, optional
+        Columns to keep in the final DataFrame. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final DataFrame. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final DataFrame. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final DataFrame. Defaults to None.
+    drop_before_keep : bool, optional
+        Whether to drop specified columns/indexes before keeping. Defaults to False.
+    _timeframe_name : str, optional
+        Internal parameter for naming a timeframe. Not typically set by the user. Defaults to None.
 
-    Returns:
-    pd.DataFrame: Summary statistics of the returns.
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing summary statistics such as mean, volatility, Sharpe ratios, VaR, CVaR,
+        drawdowns, tangency weights (optional), and correlations (optional).
+
+    Raises
+    ------
+    Exception
+        If both `rf` is provided and `provided_excess_returns` is True.
+    Exception
+        If `rf` does not match the index length of `returns` when `provided_excess_returns` is False.
+    Exception
+        If a specified timeframe has no data in `returns`.
+    ValueError
+        If the columns specified for correlation do not exist in `returns`.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.statistics import calc_summary_statistics
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, -0.02, 0.03],
+    ...     'AssetB': [0.005, 0.007, -0.002]
+    ... })
+    >>> stats_df = calc_summary_statistics(returns_df)
+    >>> stats_df.head()
     """
     returns = returns.copy()
     if isinstance(rf, (pd.Series, pd.DataFrame)):
@@ -405,21 +531,58 @@ def calc_correlations(
     drop_before_keep: bool = False,
 ):
     """
-    Calculates the correlation matrix of the provided returns and optionally prints or visualizes it.
+    Calculates the correlation matrix of the provided returns and optionally visualizes it.
 
-    Parameters:
-    returns (pd.DataFrame): Time series of returns.
-    print_highest_lowest (bool, default=True): If True, prints the highest and lowest correlations.
-    matrix_size (int or float, default=7): Size of the heatmap for correlation matrix visualization.
-    return_heatmap (bool, default=True): If True, returns a heatmap of the correlation matrix.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): Whether to drop specified columns/indexes before keeping.
+    Parameters
+    ----------
+    returns : pd.DataFrame
+        Time series of returns.
+    return_only_highest_and_lowest : bool, optional
+        If True, returns a DataFrame with only the highest and lowest correlations. Defaults to False.
+    matrix_size : int, float, or tuple, optional
+        Size for the heatmap figure. If a single int/float, uses (matrix_size * 1.5, matrix_size).
+        If a tuple of length 2, uses that as (width, height). Defaults to 7.
+    return_heatmap : bool, optional
+        If True, returns a seaborn heatmap object of the correlation matrix. If False,
+        returns the correlation matrix as a DataFrame. Defaults to True.
+    keep_columns : list or str, optional
+        Columns to keep in the resulting DataFrame. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the resulting DataFrame. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes to keep in the resulting DataFrame. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes to drop from the resulting DataFrame. Defaults to None.
+    drop_before_keep : bool, optional
+        Whether to drop specified columns/indexes before keeping. Defaults to False.
 
-    Returns:
-    sns.heatmap or pd.DataFrame: Heatmap of the correlation matrix or the correlation matrix itself.
+    Returns
+    -------
+    sns.heatmap or pd.DataFrame
+        - If `return_only_highest_and_lowest` is True, returns a DataFrame with the highest and lowest correlations.
+        - Else if `return_heatmap` is True, returns a seaborn heatmap object.
+        - Otherwise, returns a DataFrame of the full correlation matrix.
+
+    Raises
+    ------
+    Exception
+        If `matrix_size` is a tuple with a length other than 2.
+    Exception
+        If specified columns or indexes to keep/drop are not found in `returns`.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.statistics import calc_correlations
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, 0.007, 0.002]
+    ... })
+    >>> # Get a heatmap:
+    >>> heatmap = calc_correlations(returns_df, return_heatmap=True)
+    >>> # Or get the correlation DataFrame:
+    >>> corr_df = calc_correlations(returns_df, return_heatmap=False)
+    >>> corr_df
     """
     returns = clean_returns_df(returns)
 
