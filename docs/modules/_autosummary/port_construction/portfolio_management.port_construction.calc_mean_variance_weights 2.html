@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>portfolio_management.port_construction.calc_weights &#8212; Portfolio Management  documentation</title>
+    <title>portfolio_management.port_construction.calc_mean_variance_weights &#8212; Portfolio Management  documentation</title>
 
 
 
@@ -42,7 +42,7 @@
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/_autosummary/port_construction/portfolio_management.port_construction.calc_weights';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/_autosummary/port_construction/portfolio_management.port_construction.calc_mean_variance_weights';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -327,7 +327,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">portfolio_management.port_construction.calc_weights</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">portfolio_management.port_construction.calc_mean_variance_weights</span></li>
   </ul>
 </nav>
 </div>
@@ -344,69 +344,44 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
 
-  <section id="portfolio-management-port-construction-calc-weights">
-<h1>portfolio_management.port_construction.calc_weights<a class="headerlink" href="#portfolio-management-port-construction-calc-weights" title="Link to this heading">#</a></h1>
+  <section id="portfolio-management-port-construction-calc-mean-variance-weights">
+<h1>portfolio_management.port_construction.calc_mean_variance_weights<a class="headerlink" href="#portfolio-management-port-construction-calc-mean-variance-weights" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_weights">
-<span class="sig-name descname"><span class="pre">calc_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ObjectiveType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max_sharpe'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_reg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_reg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrinkage_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrinkage_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../../../_modules/portfolio_management/port_construction.html#calc_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights using a flexible optimization framework.</p>
-<p>This function computes portfolio weights by solving a convex optimization
-problem that supports multiple objective types (e.g., minimum variance,
-maximum Sharpe ratio, target return, or mean-variance optimization) and
-incorporates constraints and regularization. The weights are normalized so
-that they sum to 1.</p>
+<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_mean_variance_weights">
+<span class="sig-name descname"><span class="pre">calc_mean_variance_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">calc_weight_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../../../_modules/portfolio_management/port_construction.html#calc_mean_variance_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_mean_variance_weights" title="Link to this definition">#</a></dt>
+<dd><p>Calculate portfolio weights using mean-variance optimization.</p>
+<p>This function computes portfolio weights that balance expected return and variance
+using a risk tolerance parameter. It internally sets the optimization objective to
+“mean_variance” and applies the risk tolerance (gamma) in the objective.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns for each asset (columns represent assets).</p></li>
-<li><p><strong>objective_type</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>ObjectiveType</em><em>]</em><em>, </em><em>optional</em>) – Optimization objective type. Can be provided as a string (e.g., “min_variance”,
-“max_sharpe”, “max_return”, “mean_variance”) or as an ObjectiveType enum.
-Defaults to “max_sharpe”.</p></li>
-<li><p><strong>target_return</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired portfolio return to be enforced as a constraint. Defaults to None.</p></li>
-<li><p><strong>target_variance</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired portfolio variance to be enforced as a constraint. Defaults to None.</p></li>
-<li><p><strong>strict_targets</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enforces strict equality (==) for target_return and target_variance.
-Otherwise, inequality constraints are used. Defaults to False.</p></li>
-<li><p><strong>risk_tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – Risk tolerance parameter (gamma) for mean-variance optimization.
-Required when objective_type is “mean_variance”. Defaults to None.</p></li>
-<li><p><strong>l1_reg</strong> (<em>float</em><em>, </em><em>optional</em>) – Coefficient for L1 regularization (Lasso). Defaults to 0.0.</p></li>
-<li><p><strong>l2_reg</strong> (<em>float</em><em>, </em><em>optional</em>) – Coefficient for L2 regularization (Ridge). Defaults to 0.0.</p></li>
-<li><p><strong>shrinkage_target</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The target for covariance matrix shrinkage. Options include “diagonal”,
-“constant_correlation”, or a custom numpy array. Defaults to None (no shrinkage).</p></li>
-<li><p><strong>shrinkage_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – The intensity of shrinkage (alpha), between 0 and 1. If None, the optimal
-shrinkage factor is calculated using the Ledoit-Wolf method. Defaults to None.</p></li>
-<li><p><strong>long_only</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, constrains portfolio weights to be non-negative (long-only portfolio).
-Defaults to False.</p></li>
-<li><p><strong>periods_per_year</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of periods per year used to annualize return and covariance estimates.
-For example, 12 for monthly data. Defaults to None.</p></li>
+<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
+<li><p><strong>risk_tolerance</strong> (<em>float</em>) – Risk tolerance parameter (gamma) for the mean-variance objective.</p></li>
+<li><p><strong>**calc_weight_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to <a class="reference internal" href="../../port_construction.html#portfolio_management.port_construction.calc_weights" title="portfolio_management.port_construction.calc_weights"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_weights()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights as a pandas Series, indexed by asset names (columns in returns).</p>
+<dd class="field-even"><p>Portfolio weights based on mean-variance optimization.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.Series</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the solver does not converge or if normalization fails due to a non-positive
-    sum of weights.</p></li>
-<li><p><strong>TypeError</strong> – If the provided objective_type is not a valid string or ObjectiveType.</p></li>
-</ul>
+<dd class="field-even"><p><strong>ValueError</strong> – If objective_type is provided in calc_weight_kwargs, as it conflicts with this function’s purpose.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sample returns DataFrame</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_mean_variance_weights</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
 <span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Calculate tangency (maximum Sharpe) weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">objective_type</span><span class="o">=</span><span class="s2">&quot;max_sharpe&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_mean_variance_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">risk_tolerance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.6</span>
-<span class="go">AssetB    0.4</span>
+<span class="go">AssetA    0.50</span>
+<span class="go">AssetB    0.50</span>
 <span class="go">Name: Weights, dtype: float64</span>
 </pre></div>
 </div>
@@ -443,7 +418,7 @@ For example, 12 for monthly data. Defaults to None.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_weights"><code class="docutils literal notranslate"><span class="pre">calc_weights()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_mean_variance_weights"><code class="docutils literal notranslate"><span class="pre">calc_mean_variance_weights()</span></code></a></li>
 </ul>
   </nav></div>
 
@@ -451,7 +426,7 @@ For example, 12 for monthly data. Defaults to None.</p></li>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../../_sources/modules/_autosummary/port_construction/portfolio_management.port_construction.calc_weights.rst.txt"
+      <li><a href="../../../_sources/modules/_autosummary/port_construction/portfolio_management.port_construction.calc_mean_variance_weights.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

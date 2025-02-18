@@ -6,7 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Search - Portfolio Management  documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Indices &#8212; Portfolio Management  documentation</title>
 
 
 
@@ -28,7 +30,7 @@
   <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
 
   <!-- So that users can add custom icons -->
@@ -38,14 +40,12 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'search';</script>
-  <script src="_static/searchtools.js"></script>
-  <script src="_static/language_data.js"></script>
-  <script src="searchindex.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -67,7 +67,7 @@
   <dialog id="pst-search-dialog">
 
 <form class="bd-search d-flex align-items-center"
-      action="#"
+      action="search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -103,7 +103,7 @@
 
 
 
-<a class="navbar-brand logo" href="index.html">
+<a class="navbar-brand logo" href="#">
 
 
 
@@ -202,6 +202,10 @@
     </div>
 
 
+
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
 
 </div>
 
@@ -312,41 +316,59 @@
               <div class="bd-header-article d-print-none"></div>
 
 
-  <div class="bd-search-container">
-    <h1>Search</h1>
-    <noscript>
-      <div class="admonition error">
-        <p class="admonition-title">Error</p>
-        <p>Please activate JavaScript to enable the search functionality.</p>
-      </div>
-    </noscript>
 
-<form class="bd-search d-flex align-items-center"
-      action="#"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-    <div id="search-results"></div>
-  </div>
-  <script>
-    // Activate the search field on page load
-    let searchInput = document.querySelector("form.bd-search input");
-    if (searchInput) {
-        searchInput.focus();
-        searchInput.select();
-        console.log("[PST]: Set focus on search field.");
-    }
-  </script>
+
+<div id="searchbox"></div>
+                <article class="bd-article">
+
+  <table style="border: 0; border-collapse: collapse; margin-bottom: 30px; background-color: transparent;">
+<tr style="background-color: transparent;">
+  <!-- Logo cell -->
+  <td style="padding-right: 40px; vertical-align: middle;">
+    <img src="_static/logo.png"
+         alt="Portfolio Management Logo"
+         style="width: 200px; background-color: transparent;" />
+  </td>
+  <!-- Title cell -->
+  <td style="vertical-align: middle;">
+    <h1 style="margin: 0;">Portfolio Management Package Documentation</h1>
+  </td>
+</tr>
+</table><p>This package was first idealized as helper functions for the <a class="reference external" href="https://finmath.uchicago.edu/curriculum/required-courses/finm-36700/">Portfolio and Risk Management</a> course at the University of Chicago <a class="reference external" href="https://finmath.uchicago.edu/">Masters in Financial Mathematics</a>.</p>
+<p>It aims to provide a set of tools for portfolio analysis, construction, risk management, foreign exchange, and more.</p>
+<p>The package is available in GitHub in: <a class="github reference external" href="https://github.com/Fernando-Urbano/portfolio-management">Fernando-Urbano/portfolio-management</a></p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#usage-example">Usage Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/analysis.html">Analysis Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/port_construction.html">Portfolio Construction Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/risk.html">Risk Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/statistics.html">Statistics Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/utils.html">Utils Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/port_tscv.html">Port TSCV Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="indices">
+<h1>Indices<a class="headerlink" href="#indices" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+                </article>
 
 
 
@@ -355,12 +377,36 @@
                 <footer class="prev-next-footer d-print-none">
 
 <div class="prev-next-area">
+    <a class="right-next"
+       href="getting_started.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Getting Started</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
 
             </div>
 
 
+
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
 
 
           </div>
@@ -394,7 +440,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

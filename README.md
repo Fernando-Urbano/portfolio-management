@@ -117,7 +117,7 @@ cd ..
 cp -r portfolio-management/doc/build/html/* portfolio-management-page/docs/
 cd portfolio-management-page
 git add .
-git commit -m "Update documentation"
+git commit -m "Update documentation" --no-verify
 git push
 cd ..
 cd portfolio-management

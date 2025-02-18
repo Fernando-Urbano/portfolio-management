@@ -1,6 +1,8 @@
 Risk Module
 ===========
 
+.. currentmodule:: portfolio_management.risk
+
 .. automodule:: portfolio_management.risk
    :members:
    :undoc-members:
