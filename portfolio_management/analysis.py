@@ -7,20 +7,25 @@ from typing import Union, List
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
-import warnings
+from warnings import warn, filterwarnings
 from arch import arch_model
 from collections import defaultdict
 from scipy.stats import norm
-from portfolio_management.utils import _filter_columns_and_indexes
+from portfolio_management.port_construction import calc_tangency_weights
+from portfolio_management.utils import (
+    _filter_columns_and_indexes,
+    clean_returns_df,
+    define_periods_per_year,
+)
 
 pd.options.display.float_format = "{:,.4f}".format
-warnings.filterwarnings("ignore")
+filterwarnings("ignore")
 
 
 def calc_cross_section_regression(
     returns: Union[pd.DataFrame, List],
     factors: Union[pd.DataFrame, List],
-    annual_factor: int = None,
+    periods_per_year: int = None,
     provided_excess_returns: bool = None,
     rf: pd.Series = None,
     return_model: bool = False,
@@ -39,30 +44,77 @@ def calc_cross_section_regression(
     """
     Performs a cross-sectional regression on the provided returns and factors.
 
-    Parameters:
-    returns (pd.DataFrame or list): Time series of returns.
-    factors (pd.DataFrame or list): Time series of factor data.
-    annual_factor (int, default=None): Factor for annualizing returns.
-    provided_excess_returns (bool, default=None): Whether excess returns are already provided.
-    rf (pd.Series, default=None): Risk-free rate data for subtracting from returns.
-    return_model (bool, default=False): If True, returns the regression model.
-    name (str, default=None): Name for labeling the regression.
-    return_mae (bool, default=True): If True, returns the mean absolute error of the regression.
-    intercept_cross_section (bool, default=True): If True, includes an intercept in the cross-sectional regression.
-    return_historical_premium (bool, default=True): If True, returns the historical premium of factors.
-    return_annualized_premium (bool, default=True): If True, returns the annualized premium of factors.
-    compare_premiums (bool, default=False): If True, compares the historical and estimated premiums.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): Whether to drop specified columns/indexes before keeping.
+    Parameters
+    ----------
+    returns : pd.DataFrame or list
+        Time series of asset returns.
+    factors : pd.DataFrame or list
+        Time series of factor data.
+    periods_per_year : int, optional
+        Number of periods per year for annualizing returns. If None, attempts to infer from `returns`.
+        Defaults to None.
+    provided_excess_returns : bool, optional
+        Whether `returns` are already excess returns (i.e., returns minus risk-free rate). If None,
+        a warning is issued and it defaults to True. Defaults to None.
+    rf : pd.Series, optional
+        Risk-free rate data, used if `provided_excess_returns` is False. Must have the same index as `returns`.
+        Defaults to None.
+    return_model : bool, optional
+        If True, returns the fitted regression model instead of a DataFrame of results. Defaults to False.
+    name : str, optional
+        Name/label for the regression. Defaults to None.
+    return_mae : bool, optional
+        If True, calculates and returns mean absolute error (MAE) metrics. Defaults to True.
+    intercept_cross_section : bool, optional
+        If True, includes an intercept in the cross-sectional regression. Defaults to True.
+    return_historical_premium : bool, optional
+        If True, adds columns for the average (historical) factor premiums. Defaults to True.
+    return_annualized_premium : bool, optional
+        If True, adds columns for the annualized factor premiums. Defaults to True.
+    compare_premiums : bool, optional
+        If True, compares historical vs. estimated premiums in a single table. Defaults to False.
+    keep_columns : list or str, optional
+        Columns to keep in the final output. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final output. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final output. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final output. Defaults to None.
+    drop_before_keep : bool, optional
+        If True, drops specified columns/indexes before keeping the specified ones. Defaults to False.
 
-    Returns:
-    pd.DataFrame or model: Cross-sectional regression output or the model if `return_model` is True.
+    Returns
+    -------
+    pd.DataFrame or statsmodels.regression.linear_model.RegressionResults
+        - If `return_model` is False, returns a DataFrame containing cross-sectional regression results.
+        - If `return_model` is True, returns the fitted OLS model object.
+
+    Raises
+    ------
+    Exception
+        If `rf` is provided but its index length does not match `returns` when `provided_excess_returns` is False.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.analysis import calc_cross_section_regression
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, -0.02, 0.03],
+    ...     'AssetB': [0.005, 0.007, -0.002]
+    ... })
+    >>> factors_df = pd.DataFrame({
+    ...     'Factor1': [0.001, 0.002, 0.003],
+    ...     'Factor2': [0.0005, 0.0007, 0.001]
+    ... })
+    >>> # Run a cross-sectional regression and get a summary DataFrame:
+    >>> result = calc_cross_section_regression(returns_df, factors_df)
+    >>> result
     """
-    returns = returns.copy()
-    factors = factors.copy()
+    returns = clean_returns_df(returns)
+    factors = clean_returns_df(factors)
+    periods_per_year = define_periods_per_year(returns, periods_per_year)
+
     if isinstance(rf, (pd.Series, pd.DataFrame)):
         rf = rf.copy()
 
@@ -70,50 +122,26 @@ def calc_cross_section_regression(
         return_historical_premium = True
         return_annualized_premium = True
 
-    if isinstance(returns, list):
-        returns_list = returns[:]
-        returns = pd.DataFrame({})
-        for series in returns_list:
-            returns = returns.merge(
-                series, right_index=True, left_index=True, how="outer"
-            )
-
-    if annual_factor is None:
-        print("Assuming monthly returns with annualization term of 12")
-        annual_factor = 12
-
-    if isinstance(factors, list):
-        factors_list = returns[:]
-        factors = pd.DataFrame({})
-        for series in factors_list:
-            factors = factors.merge(
-                series, right_index=True, left_index=True, how="outer"
-            )
-
-    if "date" in returns.columns.str.lower():
-        returns = returns.rename({"Date": "date"}, axis=1)
-        returns = returns.set_index("date")
-    returns.index.name = "date"
-
     if provided_excess_returns is None:
-        print("Assuming excess returns were provided")
+        warn(
+            "Assuming excess returns were provided. Set 'provided_excess_returns' to silence this warning"
+        )
         provided_excess_returns = True
     elif provided_excess_returns is False:
         if rf is not None:
             if len(rf.index) != len(returns.index):
                 raise Exception('"rf" index must be the same lenght as "returns"')
-            print('"rf" is used to subtract returns')
-            returns = returns.sub(rf, axis=0)
+            returns = returns.sub(rf.values, axis=0)
 
     time_series_regressions = calc_iterative_regression(
-        returns, factors, annual_factor=annual_factor, warnings=False
+        returns, factors, periods_per_year=periods_per_year, warnings=False
     )
     time_series_betas = time_series_regressions.filter(regex="Beta$", axis=1)
     time_series_historical_returns = time_series_regressions[["Fitted Mean"]]
     cross_section_regression = calc_regression(
         time_series_historical_returns,
         time_series_betas,
-        annual_factor=annual_factor,
+        periods_per_year=periods_per_year,
         intercept=intercept_cross_section,
         return_model=return_model,
         warnings=False,
@@ -149,7 +177,7 @@ def calc_cross_section_regression(
     if return_annualized_premium:
         factors_annualized_premium = (
             cross_section_regression.filter(regex=" Lambda$", axis=1)
-            .apply(lambda x: x * annual_factor)
+            .apply(lambda x: x * periods_per_year)
             .rename(columns=lambda c: c.replace(" Lambda", " Annualized Lambda"))
         )
         cross_section_regression = cross_section_regression.join(
@@ -157,9 +185,6 @@ def calc_cross_section_regression(
         )
 
     if return_historical_premium:
-        print(
-            "Lambda represents the premium calculated by the cross-section regression and the historical premium is the average of the factor excess returns"
-        )
         factors_historical_premium = (
             factors.mean()
             .to_frame(f"{name} Cross-Section Regression")
@@ -171,7 +196,7 @@ def calc_cross_section_regression(
         )
         if return_annualized_premium:
             factors_annualized_historical_premium = factors_historical_premium.apply(
-                lambda x: x * annual_factor
+                lambda x: x * periods_per_year
             ).rename(
                 columns=lambda c: c.replace(
                     " Historical Premium", " Annualized Historical Premium"
@@ -186,9 +211,13 @@ def calc_cross_section_regression(
             regex="Lambda$|Historical Premium$", axis=1
         )
         cross_section_regression = cross_section_regression.transpose()
-        cross_section_regression["Factor"] = cross_section_regression.index.str.extract(
+        factor_index = cross_section_regression.index.str.extract(
             f'({"|".join(list(factors.columns))})'
         ).values
+        cross_section_regression["Factor"] = [
+            f[0] if isinstance(f, (list, tuple, np.ndarray, np.array)) else f
+            for f in factor_index
+        ]
         cross_section_regression["Premium Type"] = (
             cross_section_regression.index.str.replace(
                 f'({"|".join(list(factors.columns))})', ""
@@ -224,7 +253,7 @@ def calc_cross_section_regression(
         cross_section_regression_model = calc_regression(
             time_series_historical_returns,
             time_series_betas,
-            annual_factor=annual_factor,
+            periods_per_year=periods_per_year,
             intercept=intercept_cross_section,
             return_model=True,
             warnings=False,
@@ -233,7 +262,7 @@ def calc_cross_section_regression(
             cross_section_regression_model.resid.abs().mean()
         )
         cross_section_regression["CS Annualized MAE"] = (
-            cross_section_regression["CS MAE"] * annual_factor
+            cross_section_regression["CS MAE"] * periods_per_year
         )
 
     return _filter_columns_and_indexes(
@@ -250,7 +279,7 @@ def calc_regression(
     y: Union[pd.DataFrame, pd.Series],
     X: Union[pd.DataFrame, pd.Series],
     intercept: bool = True,
-    annual_factor: Union[None, int] = None,
+    periods_per_year: Union[None, int] = None,
     warnings: bool = True,
     return_model: bool = False,
     return_fitted_values: bool = False,
@@ -263,30 +292,79 @@ def calc_regression(
     drop_indexes: Union[list, str] = None,
     drop_before_keep: bool = False,
     calc_sortino_ratio: bool = False,
+    is_time_series_regression: bool = False,
 ):
     """
     Performs an OLS regression on the provided data with optional intercept, timeframes, and statistical ratios.
 
-    Parameters:
-    y (pd.DataFrame or pd.Series): Dependent variable for the regression.
-    X (pd.DataFrame or pd.Series): Independent variable(s) for the regression.
-    intercept (bool, default=True): If True, includes an intercept in the regression.
-    annual_factor (int or None, default=None): Factor for annualizing regression statistics.
-    warnings (bool, default=True): If True, prints warnings about assumptions.
-    return_model (bool, default=False): If True, returns the regression model object.
-    return_fitted_values (bool, default=False): If True, returns the fitted values of the regression.
-    name_fitted_values (str, default=None): Name for the fitted values column.
-    calc_treynor_info_ratios (bool, default=True): If True, calculates Treynor and Information ratios.
-    timeframes (dict or None, default=None): Dictionary of timeframes to run separate regressions for each period.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
-    calc_sortino_ratio (bool, default=False): If True, calculates the Sortino ratio.
+    Parameters
+    ----------
+    y : pd.DataFrame or pd.Series
+        Dependent variable(s) for the regression (one column if DataFrame).
+    X : pd.DataFrame or pd.Series
+        Independent variable(s) for the regression. If multiple columns, each is treated as a separate predictor.
+    intercept : bool, optional
+        If True, includes an intercept in the regression. Defaults to True.
+    periods_per_year : int or None, optional
+        Number of periods per year for annualizing regression statistics. If None and
+        `is_time_series_regression` is False, defaults to 12. Defaults to None.
+    warnings : bool, optional
+        If True, prints warnings (e.g., about index alignment). Defaults to True.
+    return_model : bool, optional
+        If True, returns the fitted regression model object (from `statsmodels`). Defaults to False.
+    return_fitted_values : bool, optional
+        If True, returns a DataFrame of fitted values instead of summary statistics. Implies `return_model=True`.
+        Defaults to False.
+    name_fitted_values : str, optional
+        Name for the fitted values column if `return_fitted_values` is True. Defaults to None.
+    calc_treynor_info_ratios : bool, optional
+        If True, calculates Treynor and Information ratios (only valid if there's exactly one factor
+        when including an intercept). Defaults to True.
+    timeframes : dict or None, optional
+        Dictionary of timeframes (key = label, value = (start, end)) for which to run separate regressions.
+        Defaults to None.
+    keep_columns : list or str, optional
+        Columns to keep in the final output. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final output. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final output. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final output. Defaults to None.
+    drop_before_keep : bool, optional
+        If True, drops specified columns/indexes before keeping the specified ones. Defaults to False.
+    calc_sortino_ratio : bool, optional
+        If True, calculates the Sortino ratio. Defaults to False.
+    is_time_series_regression : bool, optional
+        If True, attempts to infer `periods_per_year` from the data (e.g., daily, monthly). Defaults to False.
 
-    Returns:
-    pd.DataFrame or model: Regression summary statistics or the model if `return_model` is True.
+    Returns
+    -------
+    pd.DataFrame or statsmodels.regression.linear_model.RegressionResults
+        - If `return_model` is False and `return_fitted_values` is False, returns a DataFrame of regression summary statistics.
+        - If `return_model` is True but `return_fitted_values` is False, returns the fitted OLS model.
+        - If `return_fitted_values` is True, returns a DataFrame of fitted values.
+
+    Raises
+    ------
+    Exception
+        If `y` has more than one column.
+    ValueError
+        If `periods_per_year` is not a positive integer when provided.
+    Exception
+        If `y` and `X` have mismatched indexes that result in fewer than 4 observations after alignment.
+    Exception
+        If no data is found for a given timeframe in `timeframes`.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.analysis import calc_regression
+    >>> y = pd.Series([0.01, 0.02, -0.01], name='AssetA')
+    >>> X = pd.DataFrame({'Factor1': [0.001, 0.002, 0.003]})
+    >>> # Simple regression with intercept:
+    >>> result_df = calc_regression(y, X, intercept=True)
+    >>> result_df
     """
     y = y.copy()
     X = X.copy()
@@ -297,25 +375,37 @@ def calc_regression(
 
     return_model = return_model if not return_fitted_values else True
 
-    if annual_factor is None:
-        print(
-            "Regression assumes 'annual_factor' equals to 12 since it was not provided"
+    if is_time_series_regression:
+        periods_per_year = define_periods_per_year(
+            clean_returns_df(y), periods_per_year
         )
-        annual_factor = 12
-
-    if "date" in X.columns.str.lower():
-        X = X.rename({"Date": "date"}, axis=1)
-        X = X.set_index("date")
-    X.index.name = "date"
-
-    if warnings:
-        print(
-            '"calc_regression" assumes excess returns to calculate Information and Treynor Ratios'
+    elif periods_per_year is None:
+        periods_per_year = 12
+        warn(
+            "Assuming 12 periods per year. Set 'periods_per_year' to silence "
+            + "this warning or speficy 'is_time_series_regression' as True to "
+            + "allow for estimate of 'periods_per_year'"
         )
+    elif isinstance(periods_per_year, (float)):
+        if periods_per_year % 1 != 0:
+            raise ValueError("Periods per year must be an integer")
+        periods_per_year = int(periods_per_year)
+    if isinstance(periods_per_year, (int)):
+        if periods_per_year < 1:
+            raise ValueError("periods_per_year must be a positive integer")
+
     if intercept:
         X = sm.add_constant(X)
 
     y_name = y.name if isinstance(y, pd.Series) else y.columns[0]
+
+    if isinstance(y, pd.Series):
+        y = y.to_frame(y_name)
+
+    if y.shape[1] > 1:
+        raise Exception(
+            f"y has more than one column. Please provide a single column DataFrame or Series"
+        )
 
     if len(X.index) != len(y.index):
         print(
@@ -351,7 +441,7 @@ def calc_regression(
                 y=timeframe_y,
                 X=timeframe_X,
                 intercept=intercept,
-                annual_factor=annual_factor,
+                periods_per_year=periods_per_year,
                 warnings=False,
                 return_model=False,
                 calc_treynor_info_ratios=calc_treynor_info_ratios,
@@ -375,7 +465,7 @@ def calc_regression(
         X = X.reset_index(drop=True)
         model = sm.OLS(y, X, missing="drop", hasconst=intercept)
         if warnings:
-            print(
+            warn(
                 f'"{y_name}" Required to reset indexes to make regression work. Try passing "y" and "X" as pd.DataFrame'
             )
     results = model.fit()
@@ -395,7 +485,7 @@ def calc_regression(
     betas = results.params[1:] if intercept else results.params
 
     summary["Alpha"] = inter if inter is not None else "-"
-    summary["Annualized Alpha"] = inter * annual_factor if inter is not None else "-"
+    summary["Annualized Alpha"] = inter * periods_per_year if inter is not None else "-"
     summary["R-Squared"] = results.rsquared
 
     if isinstance(X, pd.Series):
@@ -409,23 +499,27 @@ def calc_regression(
         if len([c for c in X.columns if c != "const"]) == 1:
             summary["Treynor Ratio"] = y.mean() / betas[0]
             summary["Annualized Treynor Ratio"] = (
-                summary["Treynor Ratio"] * annual_factor
+                summary["Treynor Ratio"] * periods_per_year
             )
         summary["Information Ratio"] = (
             (inter / results.resid.std()) if intercept else "-"
         )
         summary["Annualized Information Ratio"] = (
-            summary["Information Ratio"] * np.sqrt(annual_factor) if intercept else "-"
+            summary["Information Ratio"] * np.sqrt(periods_per_year)
+            if intercept
+            else "-"
         )
     summary["Tracking Error"] = results.resid.std()
-    summary["Annualized Tracking Error"] = results.resid.std() * np.sqrt(annual_factor)
+    summary["Annualized Tracking Error"] = results.resid.std() * np.sqrt(
+        periods_per_year
+    )
     summary["Fitted Mean"] = results.fittedvalues.mean()
-    summary["Annualized Fitted Mean"] = summary["Fitted Mean"] * annual_factor
+    summary["Annualized Fitted Mean"] = summary["Fitted Mean"] * periods_per_year
     if calc_sortino_ratio:
         try:
             summary["Sortino Ratio"] = summary["Fitted Mean"] / y[y < 0].std()
             summary["Annualized Sortino Ratio"] = summary["Sortino Ratio"] * np.sqrt(
-                annual_factor
+                periods_per_year
             )
         except Exception as e:
             print(
@@ -445,7 +539,7 @@ def calc_regression(
 def calc_iterative_regression(
     multiple_y: Union[pd.DataFrame, pd.Series],
     X: Union[pd.DataFrame, pd.Series],
-    annual_factor: Union[None, int] = 12,
+    periods_per_year: Union[None, int] = None,
     intercept: bool = True,
     warnings: bool = True,
     calc_treynor_info_ratios: bool = True,
@@ -457,37 +551,62 @@ def calc_iterative_regression(
     drop_before_keep: bool = False,
 ):
     """
-    Performs iterative regression across multiple dependent variables (assets).
+    Performs iterative regression across multiple dependent variables (assets), each regressed on the same predictors.
 
-    Parameters:
-    multiple_y (pd.DataFrame or pd.Series): Dependent variables for multiple assets.
-    X (pd.DataFrame or pd.Series): Independent variable(s) (predictors).
-    annual_factor (int or None, default=12): Factor for annualizing regression statistics.
-    intercept (bool, default=True): If True, includes an intercept in the regression.
-    warnings (bool, default=True): If True, prints warnings about assumptions.
-    calc_treynor_info_ratios (bool, default=True): If True, calculates Treynor and Information ratios.
-    calc_sortino_ratio (bool, default=False): If True, calculates the Sortino ratio.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
+    Parameters
+    ----------
+    multiple_y : pd.DataFrame or pd.Series
+        Dependent variables (assets). If multiple columns, each column is treated as a separate dependent variable.
+    X : pd.DataFrame or pd.Series
+        Independent variable(s) (predictors) used for all assets in `multiple_y`.
+    periods_per_year : int or None, optional
+        Number of periods per year for annualizing statistics. If None, attempts to infer from the data. Defaults to 12.
+    intercept : bool, optional
+        If True, includes an intercept in each regression. Defaults to True.
+    warnings : bool, optional
+        If True, prints warnings (e.g., about index alignment). Defaults to True.
+    calc_treynor_info_ratios : bool, optional
+        If True, calculates Treynor and Information ratios (when applicable). Defaults to True.
+    calc_sortino_ratio : bool, optional
+        If True, calculates the Sortino ratio. Defaults to False.
+    keep_columns : list or str, optional
+        Columns to keep in the final output. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final output. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final output. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final output. Defaults to None.
+    drop_before_keep : bool, optional
+        If True, drops specified columns/indexes before keeping the specified ones. Defaults to False.
 
-    Returns:
-    pd.DataFrame: Summary statistics for each asset regression.
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing summary statistics for each asset's regression.
+
+    Raises
+    ------
+    Exception
+        If a timeframe is specified with no matching data (when `define_periods_per_year` is used or if the user-specified
+        timeframe has no overlap with the data).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.analysis import calc_iterative_regression
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, -0.003, 0.004]
+    ... })
+    >>> factor_df = pd.DataFrame({'Factor1': [0.001, 0.002, 0.003]})
+    >>> # Run iterative regression for each asset against the same factor(s):
+    >>> iterative_results = calc_iterative_regression(returns_df, factor_df)
+    >>> iterative_results
     """
-    multiple_y = multiple_y.copy()
-    X = X.copy()
-
-    if "date" in multiple_y.columns.str.lower():
-        multiple_y = multiple_y.rename({"Date": "date"}, axis=1)
-        multiple_y = multiple_y.set_index("date")
-    multiple_y.index.name = "date"
-
-    if "date" in X.columns.str.lower():
-        X = X.rename({"Date": "date"}, axis=1)
-        X = X.set_index("date")
-    X.index.name = "date"
+    multiple_y = clean_returns_df(multiple_y)
+    X = clean_returns_df(X)
+    periods_per_year = define_periods_per_year(multiple_y, periods_per_year)
 
     regressions = pd.DataFrame({})
     for asset in multiple_y.columns:
@@ -495,7 +614,7 @@ def calc_iterative_regression(
         new_regression = calc_regression(
             y,
             X,
-            annual_factor=annual_factor,
+            periods_per_year=periods_per_year,
             intercept=intercept,
             warnings=warnings,
             calc_treynor_info_ratios=calc_treynor_info_ratios,

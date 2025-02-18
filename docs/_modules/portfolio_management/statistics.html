@@ -1,0 +1,1058 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>portfolio_management.statistics &#8212; Portfolio Management  documentation</title>
+
+
+
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/portfolio_management/statistics';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+
+
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+
+
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  <div id="pst-scroll-pixel-helper"></div>
+
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+
+  <dialog id="pst-search-dialog">
+
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+
+
+  <div class="col-lg-3 navbar-header-items__start">
+
+      <div class="navbar-item">
+
+
+
+
+
+<a class="navbar-brand logo" href="../../index.html">
+
+
+
+
+
+
+    <p class="title logo__title">Portfolio Management  documentation</p>
+
+</a></div>
+
+  </div>
+
+  <div class="col-lg-9 navbar-header-items">
+
+    <div class="me-auto navbar-header-items__center">
+
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+
+    </div>
+
+
+    <div class="navbar-header-items__end">
+
+        <div class="navbar-item navbar-persistent--container">
+
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+
+
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+
+
+
+
+
+
+
+
+          <a href="https://github.com/yourusername/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+
+    </div>
+
+  </div>
+
+
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+
+
+
+</div>
+
+    </header>
+
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+
+
+
+
+
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+
+
+
+  <div class="sidebar-header-items sidebar-primary__section">
+
+
+      <div class="sidebar-header-items__center">
+
+
+
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+
+
+      </div>
+
+
+
+      <div class="sidebar-header-items__end">
+
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+
+
+
+
+
+
+
+
+          <a href="https://github.com/yourusername/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+
+      </div>
+
+  </div>
+
+
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+
+      <main id="main-content" class="bd-main" role="main">
+
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+
+    <div class="header-article-items__start">
+
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">portfolio_management.statistics</span></li>
+  </ul>
+</nav>
+</div>
+
+    </div>
+
+
+</div>
+</div>
+
+
+
+
+<div id="searchbox"></div>
+                <article class="bd-article">
+
+  <h1>Source code for portfolio_management.statistics</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">arch</span><span class="w"> </span><span class="kn">import</span> <span class="n">arch_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_filter_columns_and_indexes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_tangency_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PERIODS_PER_YEAR_MAP</span><span class="p">,</span>
+    <span class="n">clean_returns_df</span><span class="p">,</span>
+    <span class="n">define_periods_per_year</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:,.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="calc_negative_pct">
+<a class="viewcode-back" href="../../modules/statistics.html#portfolio_management.statistics.calc_negative_pct">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_negative_pct</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span>
+    <span class="n">calc_positive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">keep_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">keep_indexes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_indexes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_before_keep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the percentage of negative or positive returns in the provided data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame, pd.Series, or list</span>
+<span class="sd">        Time series of returns.</span>
+<span class="sd">    calc_positive : bool, optional</span>
+<span class="sd">        If True, calculates the percentage of positive returns. If False, calculates</span>
+<span class="sd">        the percentage of negative returns. Defaults to False.</span>
+<span class="sd">    keep_columns : list or str, optional</span>
+<span class="sd">        Columns to keep in the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    drop_columns : list or str, optional</span>
+<span class="sd">        Columns to drop from the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    keep_indexes : list or str, optional</span>
+<span class="sd">        Indexes to keep in the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    drop_indexes : list or str, optional</span>
+<span class="sd">        Indexes to drop from the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    drop_before_keep : bool, optional</span>
+<span class="sd">        Whether to drop specified columns/indexes before keeping them. Defaults to False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        A DataFrame with the percentage of negative or positive returns,</span>
+<span class="sd">        the total number of returns, and the count of negative or positive returns.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from portfolio_management.statistics import calc_negative_pct</span>
+<span class="sd">    &gt;&gt;&gt; returns = pd.Series([0.01, -0.02, 0.03, -0.01])</span>
+<span class="sd">    &gt;&gt;&gt; result = calc_negative_pct(returns)</span>
+<span class="sd">    &gt;&gt;&gt; result</span>
+<span class="sd">    % Negative Returns       0.5</span>
+<span class="sd">    Nº Returns              4.0</span>
+<span class="sd">    Nº Negative Returns     2.0</span>
+<span class="sd">    Name: 0, dtype: float64</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">clean_returns_df</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">calc_positive</span><span class="p">:</span>
+        <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">negative_statistics</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;% Negative Returns&quot;</span><span class="p">,</span> <span class="s2">&quot;Nº Returns&quot;</span><span class="p">,</span> <span class="s2">&quot;Nº Negative Returns&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">calc_positive</span><span class="p">:</span>
+        <span class="n">negative_statistics</span> <span class="o">=</span> <span class="n">negative_statistics</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Negative&quot;</span><span class="p">,</span> <span class="s2">&quot;Positive&quot;</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_filter_columns_and_indexes</span><span class="p">(</span>
+        <span class="n">negative_statistics</span><span class="p">,</span>
+        <span class="n">keep_columns</span><span class="o">=</span><span class="n">keep_columns</span><span class="p">,</span>
+        <span class="n">drop_columns</span><span class="o">=</span><span class="n">drop_columns</span><span class="p">,</span>
+        <span class="n">keep_indexes</span><span class="o">=</span><span class="n">keep_indexes</span><span class="p">,</span>
+        <span class="n">drop_indexes</span><span class="o">=</span><span class="n">drop_indexes</span><span class="p">,</span>
+        <span class="n">drop_before_keep</span><span class="o">=</span><span class="n">drop_before_keep</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calc_cumulative_returns">
+<a class="viewcode-back" href="../../modules/statistics.html#portfolio_management.statistics.calc_cumulative_returns">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_cumulative_returns</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">],</span>
+    <span class="n">return_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">fig_size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">return_series</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeframes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates cumulative returns from a time series of returns.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame or pd.Series</span>
+<span class="sd">        Time series of returns.</span>
+<span class="sd">    return_plot : bool, optional</span>
+<span class="sd">        If True, plots the cumulative returns. Defaults to True.</span>
+<span class="sd">    fig_size : tuple, optional</span>
+<span class="sd">        Size of the plot (width, height). Defaults to (7, 5).</span>
+<span class="sd">    return_series : bool, optional</span>
+<span class="sd">        If True, returns the cumulative returns as a DataFrame instead of None. Defaults to False.</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        Name for the plot title or the returned series. Defaults to None.</span>
+<span class="sd">    timeframes : dict or None, optional</span>
+<span class="sd">        Dictionary of timeframes (key = label, value = (start, end)) for which to calculate</span>
+<span class="sd">        and optionally plot cumulative returns separately. Defaults to None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame or None</span>
+<span class="sd">        If `return_series` is True, returns a DataFrame of cumulative returns.</span>
+<span class="sd">        Otherwise, returns None.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If a specified timeframe has no data in `returns`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from portfolio_management.statistics import calc_cumulative_returns</span>
+<span class="sd">    &gt;&gt;&gt; returns_df = pd.DataFrame({</span>
+<span class="sd">    ...     &#39;AssetA&#39;: [0.01, -0.02, 0.03],</span>
+<span class="sd">    ...     &#39;AssetB&#39;: [0.005, 0.007, -0.002]</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; # Plot cumulative returns and also return the series:</span>
+<span class="sd">    &gt;&gt;&gt; cum_df = calc_cumulative_returns(returns_df, return_plot=True, return_series=True)</span>
+<span class="sd">    &gt;&gt;&gt; cum_df.head()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">clean_returns_df</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">timeframes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="n">timeframes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:]</span>
+            <span class="k">elif</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">timeframe_returns</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No returns for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> timeframe&quot;</span><span class="p">)</span>
+            <span class="n">calc_cumulative_returns</span><span class="p">(</span>
+                <span class="n">timeframe_returns</span><span class="p">,</span>
+                <span class="n">return_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">fig_size</span><span class="o">=</span><span class="n">fig_size</span><span class="p">,</span>
+                <span class="n">return_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">timeframes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cumulative Returns </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="s2">&quot;Cumulative Returns&quot;</span>
+    <span class="k">if</span> <span class="n">return_plot</span><span class="p">:</span>
+        <span class="c1"># Add a first row with a value of zero only for plotting</span>
+        <span class="n">plot_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">first_row_index</span> <span class="o">=</span> <span class="n">plot_returns</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span>
+            <span class="n">plot_returns</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">plot_returns</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">first_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">plot_returns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">plot_returns</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">first_row_index</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">plot_returns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">first_row</span><span class="p">,</span> <span class="n">plot_returns</span><span class="p">])</span>
+        <span class="c1"># Plot</span>
+        <span class="n">plot_returns</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">fig_size</span><span class="p">,</span>
+            <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Cumulative Returns&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_series</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">returns</span></div>
+
+
+
+<div class="viewcode-block" id="get_best_and_worst">
+<a class="viewcode-back" href="../../modules/statistics.html#portfolio_management.statistics.get_best_and_worst">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_best_and_worst</span><span class="p">(</span>
+    <span class="n">summary_statistics</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">stat</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Annualized Sharpe&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifies the best and worst assets based on a specified statistic.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    summary_statistics : pd.DataFrame</span>
+<span class="sd">        DataFrame containing summary statistics for each asset (rows) and various metrics (columns).</span>
+<span class="sd">    stat : str, optional</span>
+<span class="sd">        The statistic (column name) to compare assets by. Defaults to &#39;Annualized Sharpe&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        A DataFrame containing the rows of the best and worst assets according to the specified statistic.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If `summary_statistics` has fewer than two rows.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If `stat` is not found in the columns of `summary_statistics`.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If all values in the specified `stat` column are missing.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from portfolio_management.statistics import get_best_and_worst</span>
+<span class="sd">    &gt;&gt;&gt; data = {</span>
+<span class="sd">    ...     &#39;Annualized Sharpe&#39;: [1.2, 0.8, 0.5],</span>
+<span class="sd">    ...     &#39;Another Stat&#39;: [0.1, 0.2, 0.3]</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; index = [&#39;AssetA&#39;, &#39;AssetB&#39;, &#39;AssetC&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; summary_df = pd.DataFrame(data, index=index)</span>
+<span class="sd">    &gt;&gt;&gt; get_best_and_worst(summary_df, stat=&#39;Annualized Sharpe&#39;)</span>
+<span class="sd">        Annualized Sharpe  Another Stat</span>
+<span class="sd">    AssetA               1.2           0.1</span>
+<span class="sd">    AssetC               0.5           0.3</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary_statistics</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s1">&#39;&quot;summary_statistics&quot; must have at least two lines in order to do comparison&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">stat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">stat</span><span class="si">}</span><span class="s1"> not in &quot;summary_statistics&quot;&#39;</span><span class="p">)</span>
+    <span class="n">summary_statistics</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">summary_statistics</span><span class="p">[</span><span class="n">stat</span><span class="p">])):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;All values in &quot;</span><span class="si">{</span><span class="n">stat</span><span class="si">}</span><span class="s1">&quot; are missing&#39;</span><span class="p">)</span>
+    <span class="n">asset_best_stat</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">asset_worst_stat</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="n">stat</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">summary_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">asset_best_stat</span><span class="p">],</span>
+            <span class="n">summary_statistics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">asset_worst_stat</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calc_summary_statistics">
+<a class="viewcode-back" href="../../modules/statistics.html#portfolio_management.statistics.calc_summary_statistics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_summary_statistics</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span>
+    <span class="n">periods_per_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">provided_excess_returns</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">rf</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">var_quantile</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">timeframes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_tangency_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">correlations</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">keep_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">keep_indexes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_indexes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_before_keep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">_timeframe_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates summary statistics for a time series of returns.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame or list</span>
+<span class="sd">        Time series of returns. Columns represent assets or factors.</span>
+<span class="sd">    periods_per_year : int, optional</span>
+<span class="sd">        Number of periods per year for annualizing returns. If None, attempts to infer from the data.</span>
+<span class="sd">        Defaults to None.</span>
+<span class="sd">    provided_excess_returns : bool, optional</span>
+<span class="sd">        If True, indicates that `returns` are already excess returns (i.e., returns - risk-free rate).</span>
+<span class="sd">        If False or None, will subtract `rf` (if provided). Defaults to True.</span>
+<span class="sd">    rf : pd.Series or pd.DataFrame, optional</span>
+<span class="sd">        Risk-free rate data with the same index as `returns`. Only used if `provided_excess_returns` is False.</span>
+<span class="sd">        Defaults to None.</span>
+<span class="sd">    var_quantile : float or list of float, optional</span>
+<span class="sd">        Quantile(s) for calculating Value at Risk (VaR) and Conditional VaR (CVaR). Defaults to 0.05.</span>
+<span class="sd">    timeframes : dict or None, optional</span>
+<span class="sd">        Dictionary of timeframes (key = label, value = (start, end)) for which to calculate</span>
+<span class="sd">        summary statistics separately. Defaults to None.</span>
+<span class="sd">    return_tangency_weights : bool, optional</span>
+<span class="sd">        If True, includes tangency portfolio weights in the summary. Defaults to True.</span>
+<span class="sd">    correlations : bool or list, optional</span>
+<span class="sd">        If True, appends the correlation matrix to the summary. If a list of column names, appends</span>
+<span class="sd">        correlations only for those columns. Defaults to True.</span>
+<span class="sd">    keep_columns : list or str, optional</span>
+<span class="sd">        Columns to keep in the final DataFrame. Defaults to None.</span>
+<span class="sd">    drop_columns : list or str, optional</span>
+<span class="sd">        Columns to drop from the final DataFrame. Defaults to None.</span>
+<span class="sd">    keep_indexes : list or str, optional</span>
+<span class="sd">        Indexes (rows) to keep in the final DataFrame. Defaults to None.</span>
+<span class="sd">    drop_indexes : list or str, optional</span>
+<span class="sd">        Indexes (rows) to drop from the final DataFrame. Defaults to None.</span>
+<span class="sd">    drop_before_keep : bool, optional</span>
+<span class="sd">        Whether to drop specified columns/indexes before keeping. Defaults to False.</span>
+<span class="sd">    _timeframe_name : str, optional</span>
+<span class="sd">        Internal parameter for naming a timeframe. Not typically set by the user. Defaults to None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        A DataFrame containing summary statistics such as mean, volatility, Sharpe ratios, VaR, CVaR,</span>
+<span class="sd">        drawdowns, tangency weights (optional), and correlations (optional).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If both `rf` is provided and `provided_excess_returns` is True.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If `rf` does not match the index length of `returns` when `provided_excess_returns` is False.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If a specified timeframe has no data in `returns`.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the columns specified for correlation do not exist in `returns`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from portfolio_management.statistics import calc_summary_statistics</span>
+<span class="sd">    &gt;&gt;&gt; returns_df = pd.DataFrame({</span>
+<span class="sd">    ...     &#39;AssetA&#39;: [0.01, -0.02, 0.03],</span>
+<span class="sd">    ...     &#39;AssetB&#39;: [0.005, 0.007, -0.002]</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; stats_df = calc_summary_statistics(returns_df)</span>
+<span class="sd">    &gt;&gt;&gt; stats_df.head()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">provided_excess_returns</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;rf is provided but excess returns were provided as well.&quot;</span>
+                <span class="s1">&#39;Remove &quot;rf&quot; or set &quot;provided_excess_returns&quot; to None or False&#39;</span>
+            <span class="p">)</span>
+
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">clean_returns_df</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="n">periods_per_year</span> <span class="o">=</span> <span class="n">define_periods_per_year</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">periods_per_year</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">provided_excess_returns</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">returns</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;&quot;rf&quot; index must be the same lenght as &quot;returns&quot;&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">all_timeframes_summary_statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({})</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="n">timeframes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">timeframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:]</span>
+            <span class="k">elif</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span> <span class="n">timeframe</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">timeframe_returns</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No returns for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> timeframe&quot;</span><span class="p">)</span>
+            <span class="n">timeframe_returns</span> <span class="o">=</span> <span class="n">timeframe_returns</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">timeframe_summary_statistics</span> <span class="o">=</span> <span class="n">calc_summary_statistics</span><span class="p">(</span>
+                <span class="n">returns</span><span class="o">=</span><span class="n">timeframe_returns</span><span class="p">,</span>
+                <span class="n">periods_per_year</span><span class="o">=</span><span class="n">periods_per_year</span><span class="p">,</span>
+                <span class="n">provided_excess_returns</span><span class="o">=</span><span class="n">provided_excess_returns</span><span class="p">,</span>
+                <span class="n">rf</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span>
+                <span class="n">var_quantile</span><span class="o">=</span><span class="n">var_quantile</span><span class="p">,</span>
+                <span class="n">timeframes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">correlations</span><span class="o">=</span><span class="n">correlations</span><span class="p">,</span>
+                <span class="n">_timeframe_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">keep_columns</span><span class="o">=</span><span class="n">keep_columns</span><span class="p">,</span>
+                <span class="n">drop_columns</span><span class="o">=</span><span class="n">drop_columns</span><span class="p">,</span>
+                <span class="n">keep_indexes</span><span class="o">=</span><span class="n">keep_indexes</span><span class="p">,</span>
+                <span class="n">drop_indexes</span><span class="o">=</span><span class="n">drop_indexes</span><span class="p">,</span>
+                <span class="n">drop_before_keep</span><span class="o">=</span><span class="n">drop_before_keep</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">all_timeframes_summary_statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">all_timeframes_summary_statistics</span><span class="p">,</span> <span class="n">timeframe_summary_statistics</span><span class="p">],</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">all_timeframes_summary_statistics</span>
+
+    <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">returns</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Annualized Mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="n">periods_per_year</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Vol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Annualized Vol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">provided_excess_returns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+                <span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+                <span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;&quot;rf&quot; must be either a pd.DataFrame or pd.Series&#39;</span><span class="p">)</span>
+            <span class="n">excess_returns</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="n">rf</span><span class="p">)</span>
+            <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Sharpe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excess_returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Sharpe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not calculate Sharpe: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Annualized Sharpe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Sharpe&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">periods_per_year</span>
+    <span class="p">)</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Min&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Max&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Skewness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Excess Kurtosis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">()</span>
+    <span class="n">var_quantile</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[</span><span class="n">var_quantile</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var_quantile</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">else</span> <span class="n">var_quantile</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">var_q</span> <span class="ow">in</span> <span class="n">var_quantile</span><span class="p">:</span>
+        <span class="n">summary_statistics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Historical VaR (</span><span class="si">{</span><span class="n">var_q</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span>
+            <span class="n">var_q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">summary_statistics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Annualized Historical VaR (</span><span class="si">{</span><span class="n">var_q</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">var_q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">summary_statistics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Historical CVaR (</span><span class="si">{</span><span class="n">var_q</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="p">[</span>
+            <span class="n">returns</span> <span class="o">&lt;=</span> <span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">var_q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">summary_statistics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Annualized Historical CVaR (</span><span class="si">{</span><span class="n">var_q</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">returns</span><span class="p">[</span>
+            <span class="n">returns</span> <span class="o">&lt;=</span> <span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">var_q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
+
+    <span class="n">wealth_index</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">returns</span><span class="p">)</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()</span>
+    <span class="n">previous_peaks</span> <span class="o">=</span> <span class="n">wealth_index</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span>
+    <span class="n">drawdowns</span> <span class="o">=</span> <span class="p">(</span><span class="n">wealth_index</span> <span class="o">-</span> <span class="n">previous_peaks</span><span class="p">)</span> <span class="o">/</span> <span class="n">previous_peaks</span>
+
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Max Drawdown&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">drawdowns</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Peak&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">previous_peaks</span><span class="p">[</span><span class="n">col</span><span class="p">][:</span> <span class="n">drawdowns</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">previous_peaks</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">]</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Bottom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">drawdowns</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">return_tangency_weights</span><span class="p">:</span>
+        <span class="n">tangency_weights</span> <span class="o">=</span> <span class="n">calc_tangency_weights</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tangency_weights</span><span class="p">)</span>
+
+    <span class="n">recovery_date</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">wealth_index</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">prev_max</span> <span class="o">=</span> <span class="n">previous_peaks</span><span class="p">[</span><span class="n">col</span><span class="p">][:</span> <span class="n">drawdowns</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">recovery_wealth</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">wealth_index</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">drawdowns</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span> <span class="p">:]])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">recovery_date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">recovery_wealth</span><span class="p">[</span><span class="n">recovery_wealth</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">prev_max</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Recovery&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recovery_date</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Duration (days)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="s2">&quot;-&quot;</span> <span class="k">else</span> <span class="s2">&quot;-&quot;</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Recovery&quot;</span><span class="p">],</span> <span class="n">summary_statistics</span><span class="p">[</span><span class="s2">&quot;Bottom&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Cannot calculate &quot;Drawdown Duration&quot; calculation because there was no recovery or because index are not dates: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">correlations</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">returns_corr</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">_timeframe_name</span><span class="p">:</span>
+            <span class="n">returns_corr</span> <span class="o">=</span> <span class="n">returns_corr</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">_timeframe_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">returns_corr</span> <span class="o">=</span> <span class="n">returns_corr</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span> <span class="o">+</span> <span class="s2">&quot; Correlation&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">correlations</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">correlation_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="s2">&quot; Correlation&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">correlations</span><span class="p">]</span>
+            <span class="n">not_in_returns_corr</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">correlation_names</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">returns_corr</span><span class="o">.</span><span class="n">columns</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">not_in_returns_corr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">not_in_returns_corr</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; Correlation&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">not_in_returns_corr</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">not_in_returns_corr</span><span class="si">}</span><span class="s2"> not in returns columns&quot;</span><span class="p">)</span>
+            <span class="n">returns_corr</span> <span class="o">=</span> <span class="n">returns_corr</span><span class="p">[[</span><span class="n">c</span> <span class="o">+</span> <span class="s2">&quot; Correlation&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">correlations</span><span class="p">]]</span>
+        <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">returns_corr</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">provided_excess_returns</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">summary_statistics</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;Sharpe&quot;</span><span class="p">:</span> <span class="s2">&quot;Mean / Vol&quot;</span><span class="p">,</span> <span class="s2">&quot;Annualized Sharpe&quot;</span><span class="p">:</span> <span class="s2">&quot;Annualized Mean / Vol&quot;</span><span class="p">},</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_filter_columns_and_indexes</span><span class="p">(</span>
+        <span class="n">summary_statistics</span><span class="p">,</span>
+        <span class="n">keep_columns</span><span class="o">=</span><span class="n">keep_columns</span><span class="p">,</span>
+        <span class="n">drop_columns</span><span class="o">=</span><span class="n">drop_columns</span><span class="p">,</span>
+        <span class="n">keep_indexes</span><span class="o">=</span><span class="n">keep_indexes</span><span class="p">,</span>
+        <span class="n">drop_indexes</span><span class="o">=</span><span class="n">drop_indexes</span><span class="p">,</span>
+        <span class="n">drop_before_keep</span><span class="o">=</span><span class="n">drop_before_keep</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calc_correlations">
+<a class="viewcode-back" href="../../modules/statistics.html#portfolio_management.statistics.calc_correlations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_correlations</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">return_only_highest_and_lowest</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">matrix_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="n">return_heatmap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">keep_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">keep_indexes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_indexes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_before_keep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the correlation matrix of the provided returns and optionally visualizes it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame</span>
+<span class="sd">        Time series of returns.</span>
+<span class="sd">    return_only_highest_and_lowest : bool, optional</span>
+<span class="sd">        If True, returns a DataFrame with only the highest and lowest correlations. Defaults to False.</span>
+<span class="sd">    matrix_size : int, float, or tuple, optional</span>
+<span class="sd">        Size for the heatmap figure. If a single int/float, uses (matrix_size * 1.5, matrix_size).</span>
+<span class="sd">        If a tuple of length 2, uses that as (width, height). Defaults to 7.</span>
+<span class="sd">    return_heatmap : bool, optional</span>
+<span class="sd">        If True, returns a seaborn heatmap object of the correlation matrix. If False,</span>
+<span class="sd">        returns the correlation matrix as a DataFrame. Defaults to True.</span>
+<span class="sd">    keep_columns : list or str, optional</span>
+<span class="sd">        Columns to keep in the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    drop_columns : list or str, optional</span>
+<span class="sd">        Columns to drop from the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    keep_indexes : list or str, optional</span>
+<span class="sd">        Indexes to keep in the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    drop_indexes : list or str, optional</span>
+<span class="sd">        Indexes to drop from the resulting DataFrame. Defaults to None.</span>
+<span class="sd">    drop_before_keep : bool, optional</span>
+<span class="sd">        Whether to drop specified columns/indexes before keeping. Defaults to False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sns.heatmap or pd.DataFrame</span>
+<span class="sd">        - If `return_only_highest_and_lowest` is True, returns a DataFrame with the highest and lowest correlations.</span>
+<span class="sd">        - Else if `return_heatmap` is True, returns a seaborn heatmap object.</span>
+<span class="sd">        - Otherwise, returns a DataFrame of the full correlation matrix.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If `matrix_size` is a tuple with a length other than 2.</span>
+<span class="sd">    Exception</span>
+<span class="sd">        If specified columns or indexes to keep/drop are not found in `returns`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from portfolio_management.statistics import calc_correlations</span>
+<span class="sd">    &gt;&gt;&gt; returns_df = pd.DataFrame({</span>
+<span class="sd">    ...     &#39;AssetA&#39;: [0.01, 0.02, -0.01],</span>
+<span class="sd">    ...     &#39;AssetB&#39;: [0.005, 0.007, 0.002]</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; # Get a heatmap:</span>
+<span class="sd">    &gt;&gt;&gt; heatmap = calc_correlations(returns_df, return_heatmap=True)</span>
+<span class="sd">    &gt;&gt;&gt; # Or get the correlation DataFrame:</span>
+<span class="sd">    &gt;&gt;&gt; corr_df = calc_correlations(returns_df, return_heatmap=False)</span>
+<span class="sd">    &gt;&gt;&gt; corr_df</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">clean_returns_df</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+
+    <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">return_heatmap</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix_size</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">matrix_size</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">matrix_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix_size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix_size</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                    <span class="s2">&quot;matrix_size must be a tuple with two elements (width, height) or a single integer/float&quot;</span>
+                <span class="p">)</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">matrix_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="n">matrix_size</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">matrix_size</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="n">heatmap</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+            <span class="n">correlation_matrix</span><span class="p">,</span>
+            <span class="n">xticklabels</span><span class="o">=</span><span class="n">correlation_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">yticklabels</span><span class="o">=</span><span class="n">correlation_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.2%&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_only_highest_and_lowest</span><span class="p">:</span>
+        <span class="n">highest_lowest_corr</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">correlation_matrix</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s2">&quot;asset_1&quot;</span><span class="p">,</span> <span class="s2">&quot;asset_2&quot;</span><span class="p">,</span> <span class="s2">&quot;corr&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">asset_1</span> <span class="o">!=</span> <span class="n">df</span><span class="o">.</span><span class="n">asset_2</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">highest_corr</span> <span class="o">=</span> <span class="n">highest_lowest_corr</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">lowest_corr</span> <span class="o">=</span> <span class="n">highest_lowest_corr</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;First Asset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">highest_corr</span><span class="o">.</span><span class="n">asset_1</span><span class="p">,</span> <span class="n">lowest_corr</span><span class="o">.</span><span class="n">asset_1</span><span class="p">],</span>
+                <span class="s2">&quot;Second Asset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">highest_corr</span><span class="o">.</span><span class="n">asset_2</span><span class="p">,</span> <span class="n">lowest_corr</span><span class="o">.</span><span class="n">asset_2</span><span class="p">],</span>
+                <span class="s2">&quot;Correlation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">highest_corr</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">lowest_corr</span><span class="p">],</span>
+            <span class="p">},</span>
+            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Highest&quot;</span><span class="p">,</span> <span class="s2">&quot;Lowest&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_heatmap</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">heatmap</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_filter_columns_and_indexes</span><span class="p">(</span>
+            <span class="n">correlation_matrix</span><span class="p">,</span>
+            <span class="n">keep_columns</span><span class="o">=</span><span class="n">keep_columns</span><span class="p">,</span>
+            <span class="n">drop_columns</span><span class="o">=</span><span class="n">drop_columns</span><span class="p">,</span>
+            <span class="n">keep_indexes</span><span class="o">=</span><span class="n">keep_indexes</span><span class="p">,</span>
+            <span class="n">drop_indexes</span><span class="o">=</span><span class="n">drop_indexes</span><span class="p">,</span>
+            <span class="n">drop_before_keep</span><span class="o">=</span><span class="n">drop_before_keep</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+
+
+
+
+
+                <footer class="prev-next-footer d-print-none">
+
+<div class="prev-next-area">
+</div>
+                </footer>
+
+            </div>
+
+
+
+
+          </div>
+          <footer class="bd-footer-content">
+
+          </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+
+    <div class="footer-items__start">
+
+        <div class="footer-item">
+
+  <p class="copyright">
+
+      © Copyright 2024.
+      <br/>
+
+  </p>
+</div>
+
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+
+    </div>
+
+
+
+    <div class="footer-items__end">
+
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+
+    </div>
+
+</div>
+
+  </footer>
+  </body>
+</html>

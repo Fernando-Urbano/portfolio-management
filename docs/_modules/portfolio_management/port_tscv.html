@@ -1,0 +1,1065 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>portfolio_management.port_tscv &#8212; Portfolio Management  documentation</title>
+
+
+
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/portfolio_management/port_tscv';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+
+
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+
+
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  <div id="pst-scroll-pixel-helper"></div>
+
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+
+  <dialog id="pst-search-dialog">
+
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+
+
+  <div class="col-lg-3 navbar-header-items__start">
+
+      <div class="navbar-item">
+
+
+
+
+
+<a class="navbar-brand logo" href="../../index.html">
+
+
+
+
+
+
+    <p class="title logo__title">Portfolio Management  documentation</p>
+
+</a></div>
+
+  </div>
+
+  <div class="col-lg-9 navbar-header-items">
+
+    <div class="me-auto navbar-header-items__center">
+
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+
+    </div>
+
+
+    <div class="navbar-header-items__end">
+
+        <div class="navbar-item navbar-persistent--container">
+
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+
+
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+
+
+
+
+
+
+
+
+          <a href="https://github.com/yourusername/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+
+    </div>
+
+  </div>
+
+
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+
+
+
+</div>
+
+    </header>
+
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+
+
+
+
+
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+
+
+
+  <div class="sidebar-header-items sidebar-primary__section">
+
+
+      <div class="sidebar-header-items__center">
+
+
+
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+
+
+      </div>
+
+
+
+      <div class="sidebar-header-items__end">
+
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+
+
+
+
+
+
+
+
+          <a href="https://github.com/yourusername/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+
+      </div>
+
+  </div>
+
+
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+
+      <main id="main-content" class="bd-main" role="main">
+
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+
+    <div class="header-article-items__start">
+
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">portfolio_management.port_tscv</span></li>
+  </ul>
+</nav>
+</div>
+
+    </div>
+
+
+</div>
+</div>
+
+
+
+
+<div id="searchbox"></div>
+                <article class="bd-article">
+
+  <h1>Source code for portfolio_management.port_tscv</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skopt</span><span class="w"> </span><span class="kn">import</span> <span class="n">gp_minimize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skopt.space</span><span class="w"> </span><span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Categorical</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">PERIODS_PER_YEAR</span>
+
+
+<span class="c1"># defines the configuration for tunable parameters in the optimization process</span>
+<span class="n">PARAM_SPECS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;l1_reg&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+    <span class="s2">&quot;l2_reg&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+    <span class="s2">&quot;shrinkage_target&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">Categorical</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+    <span class="s2">&quot;shrinkage_factor&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">Real</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="c1"># supported evaluation metrics and their optimization direction.</span>
+<span class="n">EVAL_METRICS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mean_return&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;maximize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="s2">&quot;sharpe&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;maximize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;maximize&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_performance</span><span class="p">(</span>
+    <span class="n">test_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">periods_per_year</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate the test performance given test_data and portfolio weights.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    test_data : pd.DataFrame</span>
+<span class="sd">        Test returns data (rows=time, columns=assets).</span>
+<span class="sd">    weights : pd.Series</span>
+<span class="sd">        Portfolio weights for each asset.</span>
+<span class="sd">    metric : str</span>
+<span class="sd">        Performance metric to calculate.</span>
+<span class="sd">    periods_per_year : int</span>
+<span class="sd">        Number of periods in a year for annualization (e.g. 12 for monthly data).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Calculated performance value based on the specified performance metric.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">portfolio_returns</span> <span class="o">=</span> <span class="n">test_data</span> <span class="o">@</span> <span class="n">weights</span>
+
+    <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;mean_return&quot;</span><span class="p">:</span>
+        <span class="n">mean_return</span> <span class="o">=</span> <span class="n">portfolio_returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">periods_per_year</span><span class="p">:</span>
+            <span class="n">mean_return</span> <span class="o">*=</span> <span class="n">periods_per_year</span>
+        <span class="k">return</span> <span class="n">mean_return</span>
+    <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;volatility&quot;</span><span class="p">:</span>
+        <span class="n">volatility</span> <span class="o">=</span> <span class="n">portfolio_returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">periods_per_year</span><span class="p">:</span>
+            <span class="n">volatility</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">volatility</span>
+    <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;sharpe&quot;</span><span class="p">:</span>
+        <span class="n">mean_return</span> <span class="o">=</span> <span class="n">portfolio_returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">std_dev</span> <span class="o">=</span> <span class="n">portfolio_returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">periods_per_year</span><span class="p">:</span>
+            <span class="n">mean_return</span> <span class="o">*=</span> <span class="n">periods_per_year</span>
+            <span class="n">std_dev</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">periods_per_year</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">mean_return</span> <span class="o">/</span> <span class="n">std_dev</span><span class="p">)</span> <span class="k">if</span> <span class="n">std_dev</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Invalid evaluation metric: &#39;</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">&#39;. Valid options are: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EVAL_METRICS</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># CORE TSCV HELPER</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_run_tscv_for_params</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">eval_metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">aggregator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">l1_reg</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">l2_reg</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">shrinkage_target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">shrinkage_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">window_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">train_window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">test_window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">step_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function that runs time-series cross-validation (TSCV) for a single</span>
+<span class="sd">    hyperparameter combination (e.g., l1_reg, l2_reg, shrinkage_target, shrinkage_factor)</span>
+<span class="sd">    and returns an aggregated performance score.</span>
+
+<span class="sd">    This function slices the data into training and testing windows for each fold,</span>
+<span class="sd">    calls `calc_weights` to fit portfolio weights on the training set, then evaluates</span>
+<span class="sd">    out-of-sample performance on the test set. The final score is computed by</span>
+<span class="sd">    aggregating (mean or median) the per-fold performance values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame</span>
+<span class="sd">        Historical returns data.</span>
+<span class="sd">    eval_metric : str</span>
+<span class="sd">        The evaluation metric (e.g., mean_return, sharpe, volatility). Also used to decide</span>
+<span class="sd">        whether we maximize or minimize scores.</span>
+<span class="sd">    aggregator : str</span>
+<span class="sd">        How to combine the fold-level performance scores. Must be one of (&#39;mean&#39;, &#39;median&#39;).</span>
+<span class="sd">    l1_reg : float</span>
+<span class="sd">        L1 regularization penalty factor (Lasso). Passed to `calc_weights`.</span>
+<span class="sd">    l2_reg : float</span>
+<span class="sd">        L2 regularization penalty factor (Ridge). Passed to `calc_weights`.</span>
+<span class="sd">    shrinkage_target : Union[str, np.ndarray]</span>
+<span class="sd">        Covariance shrinkage target. Passed to `calc_weights`.</span>
+<span class="sd">    shrinkage_factor : float</span>
+<span class="sd">        Covariance shrinkage intensity. Passed to `calc_weights`.</span>
+<span class="sd">    window_type : str</span>
+<span class="sd">        TSCV approach: &quot;rolling&quot; or &quot;expanding&quot;.</span>
+<span class="sd">    n_folds : int</span>
+<span class="sd">        Number of folds. If None, it is derived automatically from the data length,</span>
+<span class="sd">        train_window, test_window, and window_type.</span>
+<span class="sd">    train_window : int</span>
+<span class="sd">        Number of observations used for the training set.</span>
+<span class="sd">    test_window : int</span>
+<span class="sd">        Number of observations used for the testing set.</span>
+<span class="sd">    step_size : int</span>
+<span class="sd">        How many observations to move forward after each fold. Defaults to test_window.</span>
+<span class="sd">    **calc_weights_kwargs</span>
+<span class="sd">        Additional parameters forwarded to `calc_weights`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The aggregated performance score over all TSCV folds. If no valid folds are found,</span>
+<span class="sd">        returns ±inf depending on whether the metric is maximized or minimized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">train_window</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">test_window</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;train_window and test_window must be specified.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">step_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">step_size</span> <span class="o">=</span> <span class="n">test_window</span>
+
+    <span class="c1"># automatically calculate n_folds if not specified</span>
+    <span class="k">if</span> <span class="n">n_folds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;rolling&quot;</span><span class="p">:</span>
+            <span class="n">n_folds</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_rows</span> <span class="o">-</span> <span class="n">train_window</span><span class="p">)</span> <span class="o">//</span> <span class="n">step_size</span>
+        <span class="k">elif</span> <span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;expanding&quot;</span><span class="p">:</span>
+            <span class="n">n_folds</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_rows</span> <span class="o">-</span> <span class="n">test_window</span><span class="p">)</span> <span class="o">//</span> <span class="n">step_size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;window_type must be &#39;rolling&#39; or &#39;expanding&#39;.&quot;</span><span class="p">)</span>
+        <span class="c1"># ensure at least one fold</span>
+        <span class="n">n_folds</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_folds</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">fold_perfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">start_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">fold_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_folds</span><span class="p">):</span>
+        <span class="c1"># define train/test boundaries</span>
+        <span class="k">if</span> <span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;rolling&quot;</span><span class="p">:</span>
+            <span class="n">train_start</span> <span class="o">=</span> <span class="n">start_idx</span>
+            <span class="n">train_end</span> <span class="o">=</span> <span class="n">train_start</span> <span class="o">+</span> <span class="n">train_window</span>
+        <span class="k">elif</span> <span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;expanding&quot;</span><span class="p">:</span>
+            <span class="n">train_start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">train_end</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="n">train_window</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;window_type must be &#39;rolling&#39; or &#39;expanding&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="n">test_start</span> <span class="o">=</span> <span class="n">train_end</span>
+        <span class="n">test_end</span> <span class="o">=</span> <span class="n">test_start</span> <span class="o">+</span> <span class="n">test_window</span>
+
+        <span class="c1"># not enough data for another fold</span>
+        <span class="k">if</span> <span class="n">test_end</span> <span class="o">&gt;</span> <span class="n">n_rows</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># slice train/test data</span>
+        <span class="n">train_data</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_start</span><span class="p">:</span><span class="n">train_end</span><span class="p">]</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_start</span><span class="p">:</span><span class="n">test_end</span><span class="p">]</span>
+
+        <span class="c1"># fit model</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">calc_weights</span><span class="p">(</span>
+                <span class="n">train_data</span><span class="p">,</span>
+                <span class="n">l1_reg</span><span class="o">=</span><span class="n">l1_reg</span><span class="p">,</span>
+                <span class="n">l2_reg</span><span class="o">=</span><span class="n">l2_reg</span><span class="p">,</span>
+                <span class="n">shrinkage_target</span><span class="o">=</span><span class="n">shrinkage_target</span><span class="p">,</span>
+                <span class="n">shrinkage_factor</span><span class="o">=</span><span class="n">shrinkage_factor</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">fold_perfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># evaluate performance</span>
+            <span class="n">perf</span> <span class="o">=</span> <span class="n">_evaluate_performance</span><span class="p">(</span>
+                <span class="n">test_data</span><span class="p">,</span>
+                <span class="n">weights</span><span class="p">,</span>
+                <span class="n">eval_metric</span><span class="p">,</span>
+                <span class="n">calc_weights_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periods_per_year&quot;</span><span class="p">,</span> <span class="n">PERIODS_PER_YEAR</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">fold_perfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">perf</span><span class="p">)</span>
+
+        <span class="n">start_idx</span> <span class="o">+=</span> <span class="n">step_size</span>
+        <span class="k">if</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="n">train_window</span> <span class="o">+</span> <span class="n">test_window</span> <span class="o">&gt;</span> <span class="n">n_rows</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="n">maximize</span> <span class="o">=</span> <span class="n">EVAL_METRICS</span><span class="p">[</span><span class="n">eval_metric</span><span class="p">][</span><span class="s2">&quot;maximize&quot;</span><span class="p">]</span>
+
+    <span class="n">valid_perfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">fold_perfs</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_perfs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">agg_perf</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">maximize</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">aggregator</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="n">agg_perf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid_perfs</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">aggregator</span> <span class="o">==</span> <span class="s2">&quot;median&quot;</span><span class="p">:</span>
+            <span class="n">agg_perf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">valid_perfs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid aggregator: </span><span class="si">{</span><span class="n">aggregator</span><span class="si">}</span><span class="s2">. Choose from [&#39;mean&#39;, &#39;median&#39;].&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">agg_perf</span>
+
+
+<span class="c1">### GRID SEARCH</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_tune_grid_search_tscv</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">param_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]],</span>
+    <span class="n">eval_metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">aggregator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">window_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">train_window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">test_window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">step_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a grid search over user-specified hyperparameter values and evaluate each</span>
+<span class="sd">    combination via time-series cross-validation (TSCV).</span>
+
+<span class="sd">    This function is invoked by the public `tune_regularization_tscv` method when</span>
+<span class="sd">    `method=&quot;grid&quot;`. It iterates over all parameter combinations in `param_grid`,</span>
+<span class="sd">    merges them with default values from `PARAM_SPECS`, and calls `_run_tscv_for_params`</span>
+<span class="sd">    to compute cross-validation scores.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame</span>
+<span class="sd">        Historical returns data.</span>
+<span class="sd">    param_dict : Dict[str, List[Union[float, str]]]</span>
+<span class="sd">        Hyperparameter candidates, where each key is a recognized parameter name</span>
+<span class="sd">        (e.g., &#39;l1_reg&#39;) and its value is a list of possible numeric or categorical options.</span>
+<span class="sd">    eval_metric : str</span>
+<span class="sd">        The evaluation metric (e.g., mean_return, sharpe, volatility). Also used to decide</span>
+<span class="sd">        whether we maximize or minimize scores.</span>
+<span class="sd">    aggregator : str</span>
+<span class="sd">        How to combine fold scores (&#39;mean&#39;, &#39;median&#39;).</span>
+<span class="sd">    window_type : str</span>
+<span class="sd">        Type of cross-validation windowing (&#39;rolling&#39; or &#39;expanding&#39;).</span>
+<span class="sd">    n_folds : int</span>
+<span class="sd">        Number of TSCV folds (determined if not provided).</span>
+<span class="sd">    train_window : int</span>
+<span class="sd">        Number of periods in the training window.</span>
+<span class="sd">    test_window : int</span>
+<span class="sd">        Number of periods in the testing window.</span>
+<span class="sd">    step_size : int</span>
+<span class="sd">        How many periods to move forward after each fold. Defaults to test_window if None.</span>
+<span class="sd">    **calc_weights_kwargs</span>
+<span class="sd">        Additional keyword arguments passed through to `calc_weights`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">maximize</span> <span class="o">=</span> <span class="n">EVAL_METRICS</span><span class="p">[</span><span class="n">eval_metric</span><span class="p">][</span><span class="s2">&quot;maximize&quot;</span><span class="p">]</span>
+    <span class="n">tuning_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">p_name</span> <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="p">]</span>
+
+    <span class="c1"># hyperparameter values to use in grid search</span>
+    <span class="n">param_candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_dict</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">tuning_params</span><span class="p">]</span>
+
+    <span class="c1"># list of fold performances</span>
+    <span class="n">cv_results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">maximize</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">best_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">param_candidates</span><span class="p">):</span>
+        <span class="n">param_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">p_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tuning_params</span><span class="p">,</span> <span class="n">combo</span><span class="p">):</span>
+            <span class="n">param_values</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_val</span>
+
+        <span class="c1"># defaults for unspecified hyperparameters</span>
+        <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">param_values</span><span class="p">:</span>
+                <span class="n">param_values</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="n">_run_tscv_for_params</span><span class="p">(</span>
+            <span class="n">returns</span><span class="o">=</span><span class="n">returns</span><span class="p">,</span>
+            <span class="n">eval_metric</span><span class="o">=</span><span class="n">eval_metric</span><span class="p">,</span>
+            <span class="n">aggregator</span><span class="o">=</span><span class="n">aggregator</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">param_values</span><span class="p">,</span>
+            <span class="n">window_type</span><span class="o">=</span><span class="n">window_type</span><span class="p">,</span>
+            <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+            <span class="n">train_window</span><span class="o">=</span><span class="n">train_window</span><span class="p">,</span>
+            <span class="n">test_window</span><span class="o">=</span><span class="n">test_window</span><span class="p">,</span>
+            <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># store fold results in a dictionary for reference</span>
+        <span class="n">combo_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">p_name</span><span class="p">:</span> <span class="n">param_values</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">tuning_params</span><span class="p">}</span>
+        <span class="n">combo_key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">combo_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="n">cv_results</span><span class="p">[</span><span class="n">combo_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+
+        <span class="c1"># check best</span>
+        <span class="k">if</span> <span class="n">maximize</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
+                <span class="n">best_score</span> <span class="o">=</span> <span class="n">score</span>
+                <span class="n">best_params</span> <span class="o">=</span> <span class="n">combo_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&lt;</span> <span class="n">best_score</span><span class="p">:</span>
+                <span class="n">best_score</span> <span class="o">=</span> <span class="n">score</span>
+                <span class="n">best_params</span> <span class="o">=</span> <span class="n">combo_dict</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;best_params&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">,</span>
+        <span class="s2">&quot;best_score&quot;</span><span class="p">:</span> <span class="n">best_score</span><span class="p">,</span>
+        <span class="s2">&quot;cv_results&quot;</span><span class="p">:</span> <span class="n">cv_results</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="c1">### BAYES SEARCH</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_tune_bayes_search_tscv</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">param_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>
+    <span class="n">eval_metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">aggregator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">window_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">train_window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">test_window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">step_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_calls</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a Bayesian optimization search over the hyperparameter space, evaluating</span>
+<span class="sd">    each sampled combination via time-series cross-validation (TSCV).</span>
+
+<span class="sd">    This function is invoked by the public `tune_regularization_tscv` method when</span>
+<span class="sd">    `method=&quot;bayes&quot;`. It uses scikit-optimize (`gp_minimize`) to adaptively sample</span>
+<span class="sd">    parameter combinations from `param_dict`, merges them with default values from</span>
+<span class="sd">    `PARAM_SPECS`, and calls `_run_tscv_for_params` to compute cross-validation scores.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame</span>
+<span class="sd">        Historical returns data.</span>
+<span class="sd">    param_dict : Dict[str, Union[Tuple[float, float], List[str]]]</span>
+<span class="sd">        Hyperparameter ranges or lists, where each key is a recognized parameter name</span>
+<span class="sd">        (e.g., &#39;l1_reg&#39;) and its value is a numeric range (tuple) or a list</span>
+<span class="sd">        for categorical parameters. This defines the space to be searched by Bayesian optimization.</span>
+<span class="sd">    eval_metric : str</span>
+<span class="sd">        The evaluation metric (e.g., mean_return, sharpe, volatility). Also used to decide</span>
+<span class="sd">        whether we maximize or minimize scores.</span>
+<span class="sd">    aggregator : str</span>
+<span class="sd">        How to combine fold scores (&#39;mean&#39;, &#39;median&#39;).</span>
+<span class="sd">    window_type : str</span>
+<span class="sd">        Type of cross-validation windowing (&#39;rolling&#39; or &#39;expanding&#39;).</span>
+<span class="sd">    n_folds : int</span>
+<span class="sd">        Number of TSCV folds (determined if not provided).</span>
+<span class="sd">    train_window : int</span>
+<span class="sd">        Number of periods in the training window.</span>
+<span class="sd">    test_window : int</span>
+<span class="sd">        Number of periods in the testing window.</span>
+<span class="sd">    step_size : int</span>
+<span class="sd">        How many periods to move forward after each fold. Defaults to test_window if None.</span>
+<span class="sd">    n_calls : int</span>
+<span class="sd">        The number of function evaluations (iterations) in the Bayesian optimization.</span>
+<span class="sd">    random_state : int</span>
+<span class="sd">        Random seed for reproducibility in the optimization procedure.</span>
+<span class="sd">    **calc_weights_kwargs</span>
+<span class="sd">        Additional keyword arguments passed to `calc_weights`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dim_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cv_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">maximize</span> <span class="o">=</span> <span class="n">EVAL_METRICS</span><span class="p">[</span><span class="n">eval_metric</span><span class="p">][</span><span class="s2">&quot;maximize&quot;</span><span class="p">]</span>
+
+    <span class="n">tuning_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">p_name</span> <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">tuning_params</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">PARAM_SPECS</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span>
+        <span class="n">param_range</span> <span class="o">=</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="n">Categorical</span><span class="p">:</span>
+            <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">](</span><span class="n">param_range</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">p_name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">](</span><span class="o">*</span><span class="n">param_range</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">p_name</span><span class="p">))</span>
+        <span class="n">dim_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p_name</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective_fun</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="n">param_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dim_names</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
+
+        <span class="c1"># defaults for unspecified hyperparameters</span>
+        <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">param_values</span><span class="p">:</span>
+                <span class="n">param_values</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="n">_run_tscv_for_params</span><span class="p">(</span>
+            <span class="n">returns</span><span class="o">=</span><span class="n">returns</span><span class="p">,</span>
+            <span class="n">eval_metric</span><span class="o">=</span><span class="n">eval_metric</span><span class="p">,</span>
+            <span class="n">aggregator</span><span class="o">=</span><span class="n">aggregator</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">param_values</span><span class="p">,</span>
+            <span class="n">window_type</span><span class="o">=</span><span class="n">window_type</span><span class="p">,</span>
+            <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+            <span class="n">train_window</span><span class="o">=</span><span class="n">train_window</span><span class="p">,</span>
+            <span class="n">test_window</span><span class="o">=</span><span class="n">test_window</span><span class="p">,</span>
+            <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">combo_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">p_name</span><span class="p">:</span> <span class="n">param_values</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">tuning_params</span><span class="p">}</span>
+        <span class="n">combo_key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">combo_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="n">cv_results</span><span class="p">[</span><span class="n">combo_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+
+        <span class="k">return</span> <span class="o">-</span><span class="n">score</span> <span class="k">if</span> <span class="n">maximize</span> <span class="k">else</span> <span class="n">score</span>
+
+    <span class="c1"># run bayesian optimization</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">objective_fun</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span> <span class="n">n_calls</span><span class="o">=</span><span class="n">n_calls</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+    <span class="p">)</span>
+
+    <span class="n">best_x</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">best_raw_score</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="o">-</span><span class="n">best_raw_score</span> <span class="k">if</span> <span class="n">maximize</span> <span class="k">else</span> <span class="n">best_raw_score</span>
+    <span class="n">best_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dim_names</span><span class="p">,</span> <span class="n">best_x</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;best_params&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">,</span>
+        <span class="s2">&quot;best_score&quot;</span><span class="p">:</span> <span class="n">best_score</span><span class="p">,</span>
+        <span class="s2">&quot;cv_results&quot;</span><span class="p">:</span> <span class="n">cv_results</span><span class="p">,</span>
+        <span class="s2">&quot;skopt_result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<div class="viewcode-block" id="tune_regularization_tscv">
+<a class="viewcode-back" href="../../modules/port_tscv.html#portfolio_management.port_tscv.tune_regularization_tscv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tune_regularization_tscv</span><span class="p">(</span>
+    <span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">param_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;grid&quot;</span><span class="p">,</span>
+    <span class="n">method_config</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{},</span>
+    <span class="n">eval_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sharpe&quot;</span><span class="p">,</span>
+    <span class="n">aggregator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+    <span class="n">window_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rolling&quot;</span><span class="p">,</span>
+    <span class="n">n_folds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">train_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">test_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">step_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform time-series cross-validation (TSCV) to tune portfolio optimization regularization parameters.</span>
+
+<span class="sd">    This function supports both grid search and Bayesian search for hyperparameter tuning, allowing users</span>
+<span class="sd">    to optimize regularization parameters (e.g., ``l1_reg``, ``l2_reg``, ``shrinkage_factor``,</span>
+<span class="sd">    ``shrinkage_target``) based on cross-validated performance metrics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    returns : pd.DataFrame</span>
+<span class="sd">        Asset returns data with rows representing time periods and columns representing assets.</span>
+<span class="sd">    param_dict : Dict[str, Union[List[Union[float, str]], Tuple[float, float]]]</span>
+<span class="sd">        Dictionary specifying the hyperparameters to tune. Each key must be a valid parameter name,</span>
+<span class="sd">        and each value must be:</span>
+<span class="sd">        - For grid search: a list of candidate values.</span>
+<span class="sd">        - For Bayesian search: a tuple specifying the range for numeric parameters or a list for categorical parameters.</span>
+
+<span class="sd">        Currently supported hyperparameters are ``l1_reg``, ``l2_reg``, ``shrinkage_factor``, and</span>
+<span class="sd">        ``shrinkage_target``. For example:</span>
+
+<span class="sd">        **Grid search example**::</span>
+
+<span class="sd">            param_dict = {</span>
+<span class="sd">                &quot;l1_reg&quot;: [0.0, 0.01, 0.02],</span>
+<span class="sd">                &quot;l2_reg&quot;: [0.0, 0.01, 0.02],</span>
+<span class="sd">                &quot;shrinkage_factor&quot;: [0.0, 0.2, 0.5],</span>
+<span class="sd">                &quot;shrinkage_target&quot;: [&quot;diagonal&quot;, &quot;constant_correlation&quot;]</span>
+<span class="sd">            }</span>
+
+<span class="sd">        **Bayesian search example**::</span>
+
+<span class="sd">            param_dict = {</span>
+<span class="sd">                &quot;l1_reg&quot;: (0.0, 0.1),</span>
+<span class="sd">                &quot;l2_reg&quot;: (0.0, 0.1),</span>
+<span class="sd">                &quot;shrinkage_factor&quot;: (0.0, 1.0),</span>
+<span class="sd">                &quot;shrinkage_target&quot;: [&quot;diagonal&quot;, &quot;constant_correlation&quot;]</span>
+<span class="sd">            }</span>
+<span class="sd">    method : str, optional</span>
+<span class="sd">        Optimization method to use. Must be one of:</span>
+<span class="sd">        - ``&quot;grid&quot;``: Perform a grid search over the parameter space.</span>
+<span class="sd">        - ``&quot;bayes&quot;``: Perform Bayesian optimization using scikit-optimize.</span>
+<span class="sd">        Defaults to ``&quot;grid&quot;``.</span>
+<span class="sd">    method_config : Dict, optional</span>
+<span class="sd">        Additional configuration for the chosen method. Currently used only for Bayesian search:</span>
+<span class="sd">        - ``&quot;n_calls&quot;``: Number of function evaluations (iterations) in the Bayesian search. Default is 20.</span>
+<span class="sd">        - ``&quot;random_state&quot;``: Random seed for reproducibility. Default is 42.</span>
+<span class="sd">    eval_metric : str, optional</span>
+<span class="sd">        The performance metric to optimize. Valid options include:</span>
+<span class="sd">        - ``&quot;mean_return&quot;``: Maximize mean return.</span>
+<span class="sd">        - ``&quot;sharpe&quot;``: Maximize Sharpe ratio.</span>
+<span class="sd">        - ``&quot;volatility&quot;``: Minimize portfolio volatility.</span>
+<span class="sd">        Defaults to ``&quot;sharpe&quot;``.</span>
+<span class="sd">    aggregator : str, optional</span>
+<span class="sd">        How to aggregate cross-validation fold scores. Valid options:</span>
+<span class="sd">        - ``&quot;mean&quot;``: Use the mean of the fold scores.</span>
+<span class="sd">        - ``&quot;median&quot;``: Use the median of the fold scores.</span>
+<span class="sd">        Defaults to ``&quot;mean&quot;``.</span>
+<span class="sd">    window_type : str, optional</span>
+<span class="sd">        Type of cross-validation windowing:</span>
+<span class="sd">        - ``&quot;rolling&quot;``: Use rolling windows for train/test splits.</span>
+<span class="sd">        - ``&quot;expanding&quot;``: Use expanding windows for train/test splits.</span>
+<span class="sd">        Defaults to ``&quot;rolling&quot;``.</span>
+<span class="sd">    n_folds : int, optional</span>
+<span class="sd">        Number of cross-validation folds. If not specified, it is calculated automatically based on the data</span>
+<span class="sd">        size, train window, test window, and window type.</span>
+<span class="sd">    train_window : int, optional</span>
+<span class="sd">        Number of periods in the training window. Required if not specified in percentage terms. Defaults to None.</span>
+<span class="sd">    test_window : int, optional</span>
+<span class="sd">        Number of periods in the testing window. Required if not specified in percentage terms. Defaults to None.</span>
+<span class="sd">    step_size : int, optional</span>
+<span class="sd">        Number of periods to move forward after each fold. Defaults to ``test_window``.</span>
+<span class="sd">    calc_weights_kwargs : dict, optional</span>
+<span class="sd">        Additional keyword arguments to pass to the :func:`calc_weights` function. Refer to its documentation</span>
+<span class="sd">        for a full list of parameters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict</span>
+<span class="sd">        A dictionary containing:</span>
+<span class="sd">        - ``&quot;best_params&quot;``: The best-performing hyperparameter combination.</span>
+<span class="sd">        - ``&quot;best_score&quot;``: The best cross-validated performance score.</span>
+<span class="sd">        - ``&quot;cv_results&quot;``: A dictionary mapping each hyperparameter combination to its CV score.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        - If any invalid keys appear in ``param_dict``.</span>
+<span class="sd">        - If tuning parameters are passed in ``calc_weights_kwargs`` instead of ``param_dict``.</span>
+<span class="sd">        - If no valid hyperparameters with non-empty ranges are specified in ``param_dict``.</span>
+<span class="sd">        - If an invalid ``eval_metric`` is provided.</span>
+<span class="sd">        - If ``method`` is not one of ``{&quot;grid&quot;, &quot;bayes&quot;}``.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``eval_metric`` is not recognized.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from portfolio_management.port_tscv import tune_regularization_tscv</span>
+<span class="sd">    &gt;&gt;&gt; # Example returns DataFrame (rows=time, columns=assets)</span>
+<span class="sd">    &gt;&gt;&gt; returns_df = pd.DataFrame({</span>
+<span class="sd">    ...     &#39;AssetA&#39;: [0.01, -0.02, 0.03],</span>
+<span class="sd">    ...     &#39;AssetB&#39;: [0.005, 0.007, -0.002]</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; # Grid search example</span>
+<span class="sd">    &gt;&gt;&gt; param_dict_grid = {</span>
+<span class="sd">    ...     &quot;l1_reg&quot;: [0.0, 0.01],</span>
+<span class="sd">    ...     &quot;l2_reg&quot;: [0.0, 0.02]</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; results_grid = tune_regularization_tscv(</span>
+<span class="sd">    ...     returns=returns_df,</span>
+<span class="sd">    ...     param_dict=param_dict_grid,</span>
+<span class="sd">    ...     method=&quot;grid&quot;,</span>
+<span class="sd">    ...     eval_metric=&quot;sharpe&quot;,</span>
+<span class="sd">    ...     train_window=12,</span>
+<span class="sd">    ...     test_window=3</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; results_grid[&quot;best_params&quot;], results_grid[&quot;best_score&quot;]</span>
+
+<span class="sd">    &gt;&gt;&gt; # Bayesian search example</span>
+<span class="sd">    &gt;&gt;&gt; param_dict_bayes = {</span>
+<span class="sd">    ...     &quot;l1_reg&quot;: (0.0, 0.1),</span>
+<span class="sd">    ...     &quot;l2_reg&quot;: (0.0, 0.1)</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; results_bayes = tune_regularization_tscv(</span>
+<span class="sd">    ...     returns=returns_df,</span>
+<span class="sd">    ...     param_dict=param_dict_bayes,</span>
+<span class="sd">    ...     method=&quot;bayes&quot;,</span>
+<span class="sd">    ...     method_config={&quot;n_calls&quot;: 10, &quot;random_state&quot;: 123},</span>
+<span class="sd">    ...     eval_metric=&quot;sharpe&quot;,</span>
+<span class="sd">    ...     train_window=12,</span>
+<span class="sd">    ...     test_window=3</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; results_bayes[&quot;best_params&quot;], results_bayes[&quot;best_score&quot;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># validate that all keys in param_dict are valid</span>
+    <span class="n">invalid_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_dict</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">invalid_keys</span><span class="p">:</span>
+        <span class="n">valid_keys</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PARAM_SPECS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid keys in &#39;param_dict&#39;: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">invalid_keys</span><span class="p">)</span><span class="si">}</span><span class="s2">. Valid keys are: </span><span class="si">{</span><span class="n">valid_keys</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># validate that no hyperparameters were specified in the calc_weights arguments</span>
+    <span class="n">misconfigured_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">calc_weights_kwargs</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">misconfigured_params</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The following tuning parameters must be configured in &#39;param_dict&#39;, not in &#39;calc_weights_kwargs&#39;: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">misconfigured_params</span><span class="p">)</span><span class="si">}</span><span class="s2">. See documentation for details.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># validate that at least one hyperparameter is specified for tuning</span>
+    <span class="n">tuning_params</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PARAM_SPECS</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tuning_params</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;At least one hyperparameter must be specified with a non-empty list or tuple in &#39;param_dict&#39;. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Supported hyperparameters are: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PARAM_SPECS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># validate evaluation metric</span>
+    <span class="k">if</span> <span class="n">eval_metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EVAL_METRICS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid eval_metric: &#39;</span><span class="si">{</span><span class="n">eval_metric</span><span class="si">}</span><span class="s2">&#39;. Valid options are: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">EVAL_METRICS</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_tune_grid_search_tscv</span><span class="p">(</span>
+            <span class="n">returns</span><span class="o">=</span><span class="n">returns</span><span class="p">,</span>
+            <span class="n">param_dict</span><span class="o">=</span><span class="n">param_dict</span><span class="p">,</span>
+            <span class="n">eval_metric</span><span class="o">=</span><span class="n">eval_metric</span><span class="p">,</span>
+            <span class="n">aggregator</span><span class="o">=</span><span class="n">aggregator</span><span class="p">,</span>
+            <span class="n">window_type</span><span class="o">=</span><span class="n">window_type</span><span class="p">,</span>
+            <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+            <span class="n">train_window</span><span class="o">=</span><span class="n">train_window</span><span class="p">,</span>
+            <span class="n">test_window</span><span class="o">=</span><span class="n">test_window</span><span class="p">,</span>
+            <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;bayes&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_tune_bayes_search_tscv</span><span class="p">(</span>
+            <span class="n">returns</span><span class="o">=</span><span class="n">returns</span><span class="p">,</span>
+            <span class="n">param_dict</span><span class="o">=</span><span class="n">param_dict</span><span class="p">,</span>
+            <span class="n">eval_metric</span><span class="o">=</span><span class="n">eval_metric</span><span class="p">,</span>
+            <span class="n">aggregator</span><span class="o">=</span><span class="n">aggregator</span><span class="p">,</span>
+            <span class="n">window_type</span><span class="o">=</span><span class="n">window_type</span><span class="p">,</span>
+            <span class="n">n_folds</span><span class="o">=</span><span class="n">n_folds</span><span class="p">,</span>
+            <span class="n">train_window</span><span class="o">=</span><span class="n">train_window</span><span class="p">,</span>
+            <span class="n">test_window</span><span class="o">=</span><span class="n">test_window</span><span class="p">,</span>
+            <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span>
+            <span class="n">n_calls</span><span class="o">=</span><span class="n">method_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_calls&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">method_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;random_state&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">),</span>
+            <span class="o">**</span><span class="n">calc_weights_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;method must be &#39;grid&#39; or &#39;bayes&#39;.&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+
+
+
+
+
+                <footer class="prev-next-footer d-print-none">
+
+<div class="prev-next-area">
+</div>
+                </footer>
+
+            </div>
+
+
+
+
+          </div>
+          <footer class="bd-footer-content">
+
+          </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+
+    <div class="footer-items__start">
+
+        <div class="footer-item">
+
+  <p class="copyright">
+
+      © Copyright 2024.
+      <br/>
+
+  </p>
+</div>
+
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+
+    </div>
+
+
+
+    <div class="footer-items__end">
+
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+
+    </div>
+
+</div>
+
+  </footer>
+  </body>
+</html>
