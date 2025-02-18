@@ -7,7 +7,7 @@ from typing import Union, List
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
-import warnings
+from warnings import warn, filterwarnings
 from arch import arch_model
 from collections import defaultdict
 from scipy.stats import norm
@@ -19,7 +19,7 @@ from portfolio_management.utils import (
 )
 
 pd.options.display.float_format = "{:,.4f}".format
-warnings.filterwarnings("ignore")
+filterwarnings("ignore")
 
 
 def calc_cross_section_regression(
@@ -44,27 +44,72 @@ def calc_cross_section_regression(
     """
     Performs a cross-sectional regression on the provided returns and factors.
 
-    Parameters:
-    returns (pd.DataFrame or list): Time series of returns.
-    factors (pd.DataFrame or list): Time series of factor data.
-    periods_per_year (int, default=None): Factor for annualizing returns.
-    provided_excess_returns (bool, default=None): Whether excess returns are already provided.
-    rf (pd.Series, default=None): Risk-free rate data for subtracting from returns.
-    return_model (bool, default=False): If True, returns the regression model.
-    name (str, default=None): Name for labeling the regression.
-    return_mae (bool, default=True): If True, returns the mean absolute error of the regression.
-    intercept_cross_section (bool, default=True): If True, includes an intercept in the cross-sectional regression.
-    return_historical_premium (bool, default=True): If True, returns the historical premium of factors.
-    return_annualized_premium (bool, default=True): If True, returns the annualized premium of factors.
-    compare_premiums (bool, default=False): If True, compares the historical and estimated premiums.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): Whether to drop specified columns/indexes before keeping.
+    Parameters
+    ----------
+    returns : pd.DataFrame or list
+        Time series of asset returns.
+    factors : pd.DataFrame or list
+        Time series of factor data.
+    periods_per_year : int, optional
+        Number of periods per year for annualizing returns. If None, attempts to infer from `returns`.
+        Defaults to None.
+    provided_excess_returns : bool, optional
+        Whether `returns` are already excess returns (i.e., returns minus risk-free rate). If None,
+        a warning is issued and it defaults to True. Defaults to None.
+    rf : pd.Series, optional
+        Risk-free rate data, used if `provided_excess_returns` is False. Must have the same index as `returns`.
+        Defaults to None.
+    return_model : bool, optional
+        If True, returns the fitted regression model instead of a DataFrame of results. Defaults to False.
+    name : str, optional
+        Name/label for the regression. Defaults to None.
+    return_mae : bool, optional
+        If True, calculates and returns mean absolute error (MAE) metrics. Defaults to True.
+    intercept_cross_section : bool, optional
+        If True, includes an intercept in the cross-sectional regression. Defaults to True.
+    return_historical_premium : bool, optional
+        If True, adds columns for the average (historical) factor premiums. Defaults to True.
+    return_annualized_premium : bool, optional
+        If True, adds columns for the annualized factor premiums. Defaults to True.
+    compare_premiums : bool, optional
+        If True, compares historical vs. estimated premiums in a single table. Defaults to False.
+    keep_columns : list or str, optional
+        Columns to keep in the final output. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final output. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final output. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final output. Defaults to None.
+    drop_before_keep : bool, optional
+        If True, drops specified columns/indexes before keeping the specified ones. Defaults to False.
 
-    Returns:
-    pd.DataFrame or model: Cross-sectional regression output or the model if `return_model` is True.
+    Returns
+    -------
+    pd.DataFrame or statsmodels.regression.linear_model.RegressionResults
+        - If `return_model` is False, returns a DataFrame containing cross-sectional regression results.
+        - If `return_model` is True, returns the fitted OLS model object.
+
+    Raises
+    ------
+    Exception
+        If `rf` is provided but its index length does not match `returns` when `provided_excess_returns` is False.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.analysis import calc_cross_section_regression
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, -0.02, 0.03],
+    ...     'AssetB': [0.005, 0.007, -0.002]
+    ... })
+    >>> factors_df = pd.DataFrame({
+    ...     'Factor1': [0.001, 0.002, 0.003],
+    ...     'Factor2': [0.0005, 0.0007, 0.001]
+    ... })
+    >>> # Run a cross-sectional regression and get a summary DataFrame:
+    >>> result = calc_cross_section_regression(returns_df, factors_df)
+    >>> result
     """
     returns = clean_returns_df(returns)
     factors = clean_returns_df(factors)
@@ -78,7 +123,7 @@ def calc_cross_section_regression(
         return_annualized_premium = True
 
     if provided_excess_returns is None:
-        warnings.warn(
+        warn(
             "Assuming excess returns were provided. Set 'provided_excess_returns' to silence this warning"
         )
         provided_excess_returns = True
@@ -166,9 +211,13 @@ def calc_cross_section_regression(
             regex="Lambda$|Historical Premium$", axis=1
         )
         cross_section_regression = cross_section_regression.transpose()
-        cross_section_regression["Factor"] = cross_section_regression.index.str.extract(
+        factor_index = cross_section_regression.index.str.extract(
             f'({"|".join(list(factors.columns))})'
         ).values
+        cross_section_regression["Factor"] = [
+            f[0] if isinstance(f, (list, tuple, np.ndarray, np.array)) else f
+            for f in factor_index
+        ]
         cross_section_regression["Premium Type"] = (
             cross_section_regression.index.str.replace(
                 f'({"|".join(list(factors.columns))})', ""
@@ -248,26 +297,74 @@ def calc_regression(
     """
     Performs an OLS regression on the provided data with optional intercept, timeframes, and statistical ratios.
 
-    Parameters:
-    y (pd.DataFrame or pd.Series): Dependent variable for the regression.
-    X (pd.DataFrame or pd.Series): Independent variable(s) for the regression.
-    intercept (bool, default=True): If True, includes an intercept in the regression.
-    periods_per_year (int or None, default=None): Factor for annualizing regression statistics.
-    warnings (bool, default=True): If True, prints warnings about assumptions.
-    return_model (bool, default=False): If True, returns the regression model object.
-    return_fitted_values (bool, default=False): If True, returns the fitted values of the regression.
-    name_fitted_values (str, default=None): Name for the fitted values column.
-    calc_treynor_info_ratios (bool, default=True): If True, calculates Treynor and Information ratios.
-    timeframes (dict or None, default=None): Dictionary of timeframes to run separate regressions for each period.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
-    calc_sortino_ratio (bool, default=False): If True, calculates the Sortino ratio.
+    Parameters
+    ----------
+    y : pd.DataFrame or pd.Series
+        Dependent variable(s) for the regression (one column if DataFrame).
+    X : pd.DataFrame or pd.Series
+        Independent variable(s) for the regression. If multiple columns, each is treated as a separate predictor.
+    intercept : bool, optional
+        If True, includes an intercept in the regression. Defaults to True.
+    periods_per_year : int or None, optional
+        Number of periods per year for annualizing regression statistics. If None and
+        `is_time_series_regression` is False, defaults to 12. Defaults to None.
+    warnings : bool, optional
+        If True, prints warnings (e.g., about index alignment). Defaults to True.
+    return_model : bool, optional
+        If True, returns the fitted regression model object (from `statsmodels`). Defaults to False.
+    return_fitted_values : bool, optional
+        If True, returns a DataFrame of fitted values instead of summary statistics. Implies `return_model=True`.
+        Defaults to False.
+    name_fitted_values : str, optional
+        Name for the fitted values column if `return_fitted_values` is True. Defaults to None.
+    calc_treynor_info_ratios : bool, optional
+        If True, calculates Treynor and Information ratios (only valid if there's exactly one factor
+        when including an intercept). Defaults to True.
+    timeframes : dict or None, optional
+        Dictionary of timeframes (key = label, value = (start, end)) for which to run separate regressions.
+        Defaults to None.
+    keep_columns : list or str, optional
+        Columns to keep in the final output. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final output. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final output. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final output. Defaults to None.
+    drop_before_keep : bool, optional
+        If True, drops specified columns/indexes before keeping the specified ones. Defaults to False.
+    calc_sortino_ratio : bool, optional
+        If True, calculates the Sortino ratio. Defaults to False.
+    is_time_series_regression : bool, optional
+        If True, attempts to infer `periods_per_year` from the data (e.g., daily, monthly). Defaults to False.
 
-    Returns:
-    pd.DataFrame or model: Regression summary statistics or the model if `return_model` is True.
+    Returns
+    -------
+    pd.DataFrame or statsmodels.regression.linear_model.RegressionResults
+        - If `return_model` is False and `return_fitted_values` is False, returns a DataFrame of regression summary statistics.
+        - If `return_model` is True but `return_fitted_values` is False, returns the fitted OLS model.
+        - If `return_fitted_values` is True, returns a DataFrame of fitted values.
+
+    Raises
+    ------
+    Exception
+        If `y` has more than one column.
+    ValueError
+        If `periods_per_year` is not a positive integer when provided.
+    Exception
+        If `y` and `X` have mismatched indexes that result in fewer than 4 observations after alignment.
+    Exception
+        If no data is found for a given timeframe in `timeframes`.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.analysis import calc_regression
+    >>> y = pd.Series([0.01, 0.02, -0.01], name='AssetA')
+    >>> X = pd.DataFrame({'Factor1': [0.001, 0.002, 0.003]})
+    >>> # Simple regression with intercept:
+    >>> result_df = calc_regression(y, X, intercept=True)
+    >>> result_df
     """
     y = y.copy()
     X = X.copy()
@@ -284,11 +381,18 @@ def calc_regression(
         )
     elif periods_per_year is None:
         periods_per_year = 12
-        warnings.warn(
+        warn(
             "Assuming 12 periods per year. Set 'periods_per_year' to silence "
             + "this warning or speficy 'is_time_series_regression' as True to "
             + "allow for estimate of 'periods_per_year'"
         )
+    elif isinstance(periods_per_year, (float)):
+        if periods_per_year % 1 != 0:
+            raise ValueError("Periods per year must be an integer")
+        periods_per_year = int(periods_per_year)
+    if isinstance(periods_per_year, (int)):
+        if periods_per_year < 1:
+            raise ValueError("periods_per_year must be a positive integer")
 
     if intercept:
         X = sm.add_constant(X)
@@ -361,7 +465,7 @@ def calc_regression(
         X = X.reset_index(drop=True)
         model = sm.OLS(y, X, missing="drop", hasconst=intercept)
         if warnings:
-            warnings.warn(
+            warn(
                 f'"{y_name}" Required to reset indexes to make regression work. Try passing "y" and "X" as pd.DataFrame'
             )
     results = model.fit()
@@ -447,26 +551,59 @@ def calc_iterative_regression(
     drop_before_keep: bool = False,
 ):
     """
-    Performs iterative regression across multiple dependent variables (assets).
+    Performs iterative regression across multiple dependent variables (assets), each regressed on the same predictors.
 
-    Parameters:
-    multiple_y (pd.DataFrame or pd.Series): Dependent variables for multiple assets.
-    X (pd.DataFrame or pd.Series): Independent variable(s) (predictors).
-    periods_per_year (int or None, default=12): Factor for annualizing regression statistics.
-    intercept (bool, default=True): If True, includes an intercept in the regression.
-    warnings (bool, default=True): If True, prints warnings about assumptions.
-    calc_treynor_info_ratios (bool, default=True): If True, calculates Treynor and Information ratios.
-    calc_sortino_ratio (bool, default=False): If True, calculates the Sortino ratio.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
+    Parameters
+    ----------
+    multiple_y : pd.DataFrame or pd.Series
+        Dependent variables (assets). If multiple columns, each column is treated as a separate dependent variable.
+    X : pd.DataFrame or pd.Series
+        Independent variable(s) (predictors) used for all assets in `multiple_y`.
+    periods_per_year : int or None, optional
+        Number of periods per year for annualizing statistics. If None, attempts to infer from the data. Defaults to 12.
+    intercept : bool, optional
+        If True, includes an intercept in each regression. Defaults to True.
+    warnings : bool, optional
+        If True, prints warnings (e.g., about index alignment). Defaults to True.
+    calc_treynor_info_ratios : bool, optional
+        If True, calculates Treynor and Information ratios (when applicable). Defaults to True.
+    calc_sortino_ratio : bool, optional
+        If True, calculates the Sortino ratio. Defaults to False.
+    keep_columns : list or str, optional
+        Columns to keep in the final output. Defaults to None.
+    drop_columns : list or str, optional
+        Columns to drop from the final output. Defaults to None.
+    keep_indexes : list or str, optional
+        Indexes (rows) to keep in the final output. Defaults to None.
+    drop_indexes : list or str, optional
+        Indexes (rows) to drop from the final output. Defaults to None.
+    drop_before_keep : bool, optional
+        If True, drops specified columns/indexes before keeping the specified ones. Defaults to False.
 
-    Returns:
-    pd.DataFrame: Summary statistics for each asset regression.
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing summary statistics for each asset's regression.
+
+    Raises
+    ------
+    Exception
+        If a timeframe is specified with no matching data (when `define_periods_per_year` is used or if the user-specified
+        timeframe has no overlap with the data).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from portfolio_management.analysis import calc_iterative_regression
+    >>> returns_df = pd.DataFrame({
+    ...     'AssetA': [0.01, 0.02, -0.01],
+    ...     'AssetB': [0.005, -0.003, 0.004]
+    ... })
+    >>> factor_df = pd.DataFrame({'Factor1': [0.001, 0.002, 0.003]})
+    >>> # Run iterative regression for each asset against the same factor(s):
+    >>> iterative_results = calc_iterative_regression(returns_df, factor_df)
+    >>> iterative_results
     """
-
     multiple_y = clean_returns_df(multiple_y)
     X = clean_returns_df(X)
     periods_per_year = define_periods_per_year(multiple_y, periods_per_year)

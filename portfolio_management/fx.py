@@ -33,28 +33,6 @@ def calc_fx_exc_ret(
     drop_indexes: Union[list, str] = None,
     drop_before_keep: bool = False,
 ):
-    """
-    Calculates foreign exchange excess returns by subtracting risk-free rates from FX rates.
-
-    Parameters:
-    fx_rates (pd.DataFrame): Time series of FX rates.
-    rf_rates (pd.DataFrame): Time series of risk-free rates.
-    transform_to_log_fx_rates (bool, default=True): If True, converts FX rates to log returns.
-    transform_to_log_rf_rates (bool, default=True): If True, converts risk-free rates to log returns.
-    rf_to_fx (dict, default=None): Mapping of risk-free rates to FX pairs.
-    base_rf (str, default=None): Base risk-free rate to use for calculations.
-    base_rf_series (pd.Series or pd.DataFrame, default=None): Time series of the base risk-free rate.
-    periods_per_year (int or None, default=None): Factor for annualizing the returns.
-    return_exc_ret (bool, default=False): If True, returns the excess returns instead of summary statistics.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
-
-    Returns:
-    pd.DataFrame: Summary statistics or excess returns based on FX rates and risk-free rates.
-    """
     raise Exception("Function not available - needs testing prior to use")
     fx_rates = fx_rates.copy()
     rf_rates = rf_rates.copy()
@@ -151,28 +129,6 @@ def calc_fx_regression(
     drop_before_keep: bool = False,
     print_analysis: bool = True,
 ):
-    """
-    Calculates FX regression and provides an analysis of how the risk-free rate differentials affect FX rates.
-
-    Parameters:
-    fx_rates (pd.DataFrame): Time series of FX rates.
-    rf_rates (pd.DataFrame): Time series of risk-free rates.
-    transform_to_log_fx_rates (bool, default=True): If True, converts FX rates to log returns.
-    transform_to_log_rf_rates (bool, default=True): If True, converts risk-free rates to log returns.
-    rf_to_fx (dict, default=None): Mapping of risk-free rates to FX pairs.
-    base_rf (str, default=None): Base risk-free rate to use for calculations.
-    base_rf_series (pd.Series or pd.DataFrame, default=None): Time series of the base risk-free rate.
-    periods_per_year (int or None, default=None): Factor for annualizing returns.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
-    print_analysis (bool, default=True): If True, prints an analysis of the regression results.
-
-    Returns:
-    pd.DataFrame: Summary of regression statistics for the FX rates and risk-free rate differentials.
-    """
     raise Exception("Function not available - needs testing prior to use")
     fx_rates = fx_rates.copy()
     rf_rates = rf_rates.copy()
@@ -288,28 +244,6 @@ def calc_dynamic_carry_trade(
     drop_indexes: Union[list, str] = None,
     drop_before_keep: bool = False,
 ):
-    """
-    Calculates the dynamic carry trade strategy based on FX rates and risk-free rate differentials.
-
-    Parameters:
-    fx_rates (pd.DataFrame): Time series of FX rates.
-    rf_rates (pd.DataFrame): Time series of risk-free rates.
-    transform_to_log_fx_rates (bool, default=True): If True, converts FX rates to log returns.
-    transform_to_log_rf_rates (bool, default=True): If True, converts risk-free rates to log returns.
-    rf_to_fx (dict, default=None): Mapping of risk-free rates to FX pairs.
-    base_rf (str, default=None): Base risk-free rate to use for calculations.
-    base_rf_series (pd.Series or pd.DataFrame, default=None): Time series of the base risk-free rate.
-    periods_per_year (int or None, default=None): Factor for annualizing the returns.
-    return_premium_series (bool, default=False): If True, returns the premium series instead of summary statistics.
-    keep_columns (list or str, default=None): Columns to keep in the resulting DataFrame.
-    drop_columns (list or str, default=None): Columns to drop from the resulting DataFrame.
-    keep_indexes (list or str, default=None): Indexes to keep in the resulting DataFrame.
-    drop_indexes (list or str, default=None): Indexes to drop from the resulting DataFrame.
-    drop_before_keep (bool, default=False): If True, drops specified columns/indexes before keeping.
-
-    Returns:
-    pd.DataFrame: Summary of the carry trade strategy statistics or premium series.
-    """
     raise Exception("Function not available - needs testing prior to use")
     if periods_per_year is None:
         print(
