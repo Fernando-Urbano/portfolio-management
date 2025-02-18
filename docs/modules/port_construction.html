@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Portfolio Construction Module &#8212; Portfolio Management  documentation</title>
-
-
-
+  
+  
+  
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
@@ -25,13 +25,14 @@
 
     </style>
   </noscript>
-
+  
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -39,7 +40,7 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/port_construction';</script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -50,22 +51,22 @@
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
   </head>
-
-
+  
+  
   <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-
-
+  
+  
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-
+  
   <div id="pst-scroll-pixel-helper"></div>
-
+  
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-
+  
   <dialog id="pst-search-dialog">
-
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -87,46 +88,53 @@
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
 
-
+  
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
   </button>
-
-
+  
+  
   <div class="col-lg-3 navbar-header-items__start">
-
+    
       <div class="navbar-item">
 
-
-
-
+  
+    
+  
 
 <a class="navbar-brand logo" href="../index.html">
-
-
-
-
-
-
+  
+  
+  
+  
+  
+  
     <p class="title logo__title">Portfolio Management  documentation</p>
-
+  
 </a></div>
-
+    
   </div>
-
+  
   <div class="col-lg-9 navbar-header-items">
-
+    
     <div class="me-auto navbar-header-items__center">
-
+      
         <div class="navbar-item">
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
-
+    
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../getting_started.html">
     Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributors.html">
+    Contributors
   </a>
 </li>
 
@@ -139,14 +147,14 @@
 
   </ul>
 </nav></div>
-
+      
     </div>
-
-
+    
+    
     <div class="navbar-header-items__end">
-
+      
         <div class="navbar-item navbar-persistent--container">
-
+          
 
 <button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
@@ -154,8 +162,8 @@
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
         </div>
-
-
+      
+      
         <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -163,28 +171,28 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
-
+      
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
         <li class="nav-item">
-
-
-
-
-
-
-
-
-          <a href="https://github.com/yourusername/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fernando-urbano/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
-
+      
     </div>
-
+    
   </div>
-
-
+  
+  
     <div class="navbar-persistent--mobile">
 
 <button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -193,42 +201,49 @@
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button>
     </div>
+  
 
-
-
+  
     <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
       <span class="fa-solid fa-outdent"></span>
     </button>
-
+  
 </div>
 
     </header>
-
+  
 
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-
-
-
+      
+      
+      
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
 
-
-
+  
   <div class="sidebar-header-items sidebar-primary__section">
-
-
+    
+    
       <div class="sidebar-header-items__center">
-
-
-
+        
+          
+          
             <div class="navbar-item">
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
-
+    
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../getting_started.html">
     Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributors.html">
+    Contributors
   </a>
 </li>
 
@@ -241,14 +256,14 @@
 
   </ul>
 </nav></div>
-
-
+          
+        
       </div>
-
-
-
+    
+    
+    
       <div class="sidebar-header-items__end">
-
+        
           <div class="navbar-item">
 
 <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -256,27 +271,27 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
-
+        
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
         <li class="nav-item">
-
-
-
-
-
-
-
-
-          <a href="https://github.com/yourusername/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fernando-urbano/portfolio-management" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
-
+        
       </div>
-
+    
   </div>
-
+  
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 <nav class="bd-docs-nav bd-links"
@@ -293,8 +308,8 @@
 </div>
 </nav></div>
     </div>
-
-
+  
+  
   <div class="sidebar-primary-items__end sidebar-primary__section">
       <div class="sidebar-primary-item">
 <div id="ethical-ad-placement"
@@ -307,456 +322,61 @@
 
 
       </div>
-
+      
       <main id="main-content" class="bd-main" role="main">
-
-
+        
+        
           <div class="bd-content">
             <div class="bd-article-container">
-
+              
               <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-
+  
     <div class="header-article-items__start">
-
+      
         <div class="header-article-item">
 
 <nav aria-label="Breadcrumb" class="d-print-none">
   <ul class="bd-breadcrumbs">
-
+    
     <li class="breadcrumb-item breadcrumb-home">
       <a href="../index.html" class="nav-link" aria-label="Home">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-
+    
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
-
+    
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Portfolio Construction Module</span></li>
   </ul>
 </nav>
 </div>
-
+      
     </div>
-
-
+  
+  
 </div>
 </div>
-
-
-
-
+              
+              
+              
+                
 <div id="searchbox"></div>
                 <article class="bd-article">
-
-  <section id="module-portfolio_management.port_construction">
-<span id="portfolio-construction-module"></span><h1>Portfolio Construction Module<a class="headerlink" href="#module-portfolio_management.port_construction" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_equal_weights">
-<span class="sig-name descname"><span class="pre">calc_equal_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_equal_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_equal_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate equal-weighted portfolio weights, optionally scaled to meet a target.</p>
-<p>This function assigns an equal weight to each asset and, if a target return or variance
-is specified, scales the weights accordingly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data where columns represent assets.</p></li>
-<li><p><strong>target_return</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired annualized portfolio return. Defaults to None.</p></li>
-<li><p><strong>target_variance</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired annualized portfolio variance. Defaults to None.</p></li>
-<li><p><strong>periods_per_year</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of periods per year for annualization. Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Equal (or scaled) portfolio weights, indexed by asset names.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_equal_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_equal_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.5</span>
-<span class="go">AssetB    0.5</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_mean_variance_weights">
-<span class="sig-name descname"><span class="pre">calc_mean_variance_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">calc_weight_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_mean_variance_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_mean_variance_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights using mean-variance optimization.</p>
-<p>This function computes portfolio weights that balance expected return and variance
-using a risk tolerance parameter. It internally sets the optimization objective to
-“mean_variance” and applies the risk tolerance (gamma) in the objective.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
-<li><p><strong>risk_tolerance</strong> (<em>float</em>) – Risk tolerance parameter (gamma) for the mean-variance objective.</p></li>
-<li><p><strong>**calc_weight_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to <a class="reference internal" href="#portfolio_management.port_construction.calc_weights" title="portfolio_management.port_construction.calc_weights"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_weights()</span></code></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights based on mean-variance optimization.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If objective_type is provided in calc_weight_kwargs, as it conflicts with this function’s purpose.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_mean_variance_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_mean_variance_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">risk_tolerance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.50</span>
-<span class="go">AssetB    0.50</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_min_variance_weights">
-<span class="sig-name descname"><span class="pre">calc_min_variance_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">calc_weight_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_min_variance_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_min_variance_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights for the minimum-variance portfolio.</p>
-<p>This function computes the weights that minimize portfolio variance using a convex
-optimization framework. It internally sets the optimization objective to “min_variance”.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
-<li><p><strong>**calc_weight_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to <a class="reference internal" href="#portfolio_management.port_construction.calc_weights" title="portfolio_management.port_construction.calc_weights"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_weights()</span></code></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights corresponding to the minimum-variance portfolio.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the caller attempts to specify the objective type via calc_weight_kwargs.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_min_variance_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_min_variance_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.65</span>
-<span class="go">AssetB    0.35</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_risk_parity_weights">
-<span class="sig-name descname"><span class="pre">calc_risk_parity_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_risk_parity_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_risk_parity_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate risk parity portfolio weights, optionally scaled to meet a target.</p>
-<p>This function computes portfolio weights based on the risk parity approach,
-where each asset’s contribution to portfolio risk is equalized. Optionally, the
-weights can be scaled to achieve a desired annualized return or variance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
-<li><p><strong>target_return</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired annualized portfolio return. Defaults to None.</p></li>
-<li><p><strong>target_variance</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired annualized portfolio variance. Defaults to None.</p></li>
-<li><p><strong>periods_per_year</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of periods per year used for annualization (e.g., 12 for monthly data).
-Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights computed using the risk parity approach.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If both target_return and target_variance are specified simultaneously.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_risk_parity_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_risk_parity_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.60</span>
-<span class="go">AssetB    0.40</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_tangency_weights">
-<span class="sig-name descname"><span class="pre">calc_tangency_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">calc_weight_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_tangency_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_tangency_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights for the tangency (maximum Sharpe ratio) portfolio.</p>
-<p>This function computes the weights that maximize the Sharpe ratio using a convex
-optimization framework. It internally sets the optimization objective to “max_sharpe”.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
-<li><p><strong>**calc_weight_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to <a class="reference internal" href="#portfolio_management.port_construction.calc_weights" title="portfolio_management.port_construction.calc_weights"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_weights()</span></code></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights corresponding to the tangency portfolio.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the caller attempts to specify the objective type via calc_weight_kwargs.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_tangency_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_tangency_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.60</span>
-<span class="go">AssetB    0.40</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_target_return_weights">
-<span class="sig-name descname"><span class="pre">calc_target_return_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">calc_weight_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_target_return_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_target_return_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights by minimizing variance subject to a target return.</p>
-<p>This function computes the minimum-variance portfolio weights while enforcing a
-specified target return. It sets the optimization objective internally to “min_variance”
-and applies the target return constraint.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
-<li><p><strong>target_return</strong> (<em>float</em>) – The desired annualized portfolio return.</p></li>
-<li><p><strong>**calc_weight_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to <a class="reference internal" href="#portfolio_management.port_construction.calc_weights" title="portfolio_management.port_construction.calc_weights"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_weights()</span></code></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights that achieve the target return.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If objective_type or target_variance are provided in calc_weight_kwargs, as they
-    conflict with this function’s purpose.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_target_return_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_target_return_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">target_return</span><span class="o">=</span><span class="mf">0.015</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.55</span>
-<span class="go">AssetB    0.45</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_target_variance_weights">
-<span class="sig-name descname"><span class="pre">calc_target_variance_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">calc_weight_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_target_variance_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_target_variance_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights by maximizing return subject to a target variance.</p>
-<p>This function computes portfolio weights that maximize return while enforcing a
-specified target variance. It sets the optimization objective internally to “max_return”
-and applies the target variance constraint.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data with columns representing assets.</p></li>
-<li><p><strong>target_variance</strong> (<em>float</em>) – The desired annualized portfolio variance.</p></li>
-<li><p><strong>**calc_weight_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to <a class="reference internal" href="#portfolio_management.port_construction.calc_weights" title="portfolio_management.port_construction.calc_weights"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_weights()</span></code></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights that meet the target variance.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If objective_type or target_return are provided in calc_weight_kwargs, as they
-    conflict with this function’s purpose.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_target_variance_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_target_variance_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">target_variance</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.45</span>
-<span class="go">AssetB    0.55</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.calc_weights">
-<span class="sig-name descname"><span class="pre">calc_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ObjectiveType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max_sharpe'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_reg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_reg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrinkage_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrinkage_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#calc_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.calc_weights" title="Link to this definition">#</a></dt>
-<dd><p>Calculate portfolio weights using a flexible optimization framework.</p>
-<p>This function computes portfolio weights by solving a convex optimization
-problem that supports multiple objective types (e.g., minimum variance,
-maximum Sharpe ratio, target return, or mean-variance optimization) and
-incorporates constraints and regularization. The weights are normalized so
-that they sum to 1.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns for each asset (columns represent assets).</p></li>
-<li><p><strong>objective_type</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>ObjectiveType</em><em>]</em><em>, </em><em>optional</em>) – Optimization objective type. Can be provided as a string (e.g., “min_variance”,
-“max_sharpe”, “max_return”, “mean_variance”) or as an ObjectiveType enum.
-Defaults to “max_sharpe”.</p></li>
-<li><p><strong>target_return</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired portfolio return to be enforced as a constraint. Defaults to None.</p></li>
-<li><p><strong>target_variance</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired portfolio variance to be enforced as a constraint. Defaults to None.</p></li>
-<li><p><strong>strict_targets</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enforces strict equality (==) for target_return and target_variance.
-Otherwise, inequality constraints are used. Defaults to False.</p></li>
-<li><p><strong>risk_tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – Risk tolerance parameter (gamma) for mean-variance optimization.
-Required when objective_type is “mean_variance”. Defaults to None.</p></li>
-<li><p><strong>l1_reg</strong> (<em>float</em><em>, </em><em>optional</em>) – Coefficient for L1 regularization (Lasso). Defaults to 0.0.</p></li>
-<li><p><strong>l2_reg</strong> (<em>float</em><em>, </em><em>optional</em>) – Coefficient for L2 regularization (Ridge). Defaults to 0.0.</p></li>
-<li><p><strong>shrinkage_target</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The target for covariance matrix shrinkage. Options include “diagonal”,
-“constant_correlation”, or a custom numpy array. Defaults to None (no shrinkage).</p></li>
-<li><p><strong>shrinkage_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – The intensity of shrinkage (alpha), between 0 and 1. If None, the optimal
-shrinkage factor is calculated using the Ledoit-Wolf method. Defaults to None.</p></li>
-<li><p><strong>long_only</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, constrains portfolio weights to be non-negative (long-only portfolio).
-Defaults to False.</p></li>
-<li><p><strong>periods_per_year</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of periods per year used to annualize return and covariance estimates.
-For example, 12 for monthly data. Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Portfolio weights as a pandas Series, indexed by asset names (columns in returns).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If the solver does not converge or if normalization fails due to a non-positive
-    sum of weights.</p></li>
-<li><p><strong>TypeError</strong> – If the provided objective_type is not a valid string or ObjectiveType.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sample returns DataFrame</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Calculate tangency (maximum Sharpe) weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">calc_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">objective_type</span><span class="o">=</span><span class="s2">&quot;max_sharpe&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span>
-<span class="go">AssetA    0.6</span>
-<span class="go">AssetB    0.4</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="portfolio_management.port_construction.scale_weights">
-<span class="sig-name descname"><span class="pre">scale_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="../_modules/portfolio_management/port_construction.html#scale_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio_management.port_construction.scale_weights" title="Link to this definition">#</a></dt>
-<dd><p>Scale portfolio weights to achieve a specified target return or target variance.</p>
-<p>This function adjusts the input portfolio weights by scaling them so that the
-resulting portfolio meets the desired annualized return or variance target.
-Only one target (return or variance) may be specified.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>pd.DataFrame</em>) – Historical returns data for assets.</p></li>
-<li><p><strong>weights</strong> (<em>pd.Series</em>) – Original portfolio weights.</p></li>
-<li><p><strong>target_return</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired annualized portfolio return.</p></li>
-<li><p><strong>target_variance</strong> (<em>float</em><em>, </em><em>optional</em>) – Desired annualized portfolio variance.</p></li>
-<li><p><strong>periods_per_year</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of periods per year used for annualizing returns and variances.
-Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Scaled portfolio weights meeting the specified target.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.Series</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If both target_return and target_variance are provided simultaneously.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio_management.port_construction</span><span class="w"> </span><span class="kn">import</span> <span class="n">scale_weights</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">returns_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="s1">&#39;AssetB&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.002</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">returns_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">scaled</span> <span class="o">=</span> <span class="n">scale_weights</span><span class="p">(</span><span class="n">returns_df</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">target_return</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">scaled</span>
-<span class="go">AssetA    0.55</span>
-<span class="go">AssetB    0.45</span>
-<span class="go">Name: Weights, dtype: float64</span>
-</pre></div>
-</div>
-</dd></dl>
-
+                  
+  <section id="portfolio-construction-module">
+<h1>Portfolio Construction Module<a class="headerlink" href="#portfolio-construction-module" title="Link to this heading">#</a></h1>
 </section>
 
 
                 </article>
-
-
-
-
-
+              
+              
+              
+              
+              
                 <footer class="prev-next-footer d-print-none">
-
+                  
 <div class="prev-next-area">
     <a class="left-prev"
        href="analysis.html"
@@ -778,34 +398,14 @@ Defaults to None.</p></li>
     </a>
 </div>
                 </footer>
-
+              
             </div>
-
-
-
+            
+            
+              
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_equal_weights"><code class="docutils literal notranslate"><span class="pre">calc_equal_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_mean_variance_weights"><code class="docutils literal notranslate"><span class="pre">calc_mean_variance_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_min_variance_weights"><code class="docutils literal notranslate"><span class="pre">calc_min_variance_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_risk_parity_weights"><code class="docutils literal notranslate"><span class="pre">calc_risk_parity_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_tangency_weights"><code class="docutils literal notranslate"><span class="pre">calc_tangency_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_target_return_weights"><code class="docutils literal notranslate"><span class="pre">calc_target_return_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_target_variance_weights"><code class="docutils literal notranslate"><span class="pre">calc_target_variance_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.calc_weights"><code class="docutils literal notranslate"><span class="pre">calc_weights()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#portfolio_management.port_construction.scale_weights"><code class="docutils literal notranslate"><span class="pre">scale_weights()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
@@ -817,58 +417,58 @@ Defaults to None.</p></li>
    </div></div>
 
 </div></div>
-
-
+              
+            
           </div>
           <footer class="bd-footer-content">
-
+            
           </footer>
-
+        
       </main>
     </div>
   </div>
-
+  
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
   <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
 <script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-
+  
     <div class="footer-items__start">
-
+      
         <div class="footer-item">
 
   <p class="copyright">
-
+    
       © Copyright 2024.
       <br/>
-
+    
   </p>
 </div>
-
+      
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>
-
+      
     </div>
-
-
-
+  
+  
+  
     <div class="footer-items__end">
-
+      
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
   Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
 </p></div>
-
+      
     </div>
-
+  
 </div>
 
   </footer>

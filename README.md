@@ -105,11 +105,20 @@ cd ..
 ```
 
 # Build Website for Docs
-```
+```bash
 cd doc
 make html
 cd ..
+rm -rf docs
 mkdir -p docs
 touch docs/.nojekyll
 cp -r doc/build/html/* docs/
+cd ..
+cp -r portfolio-management/doc/build/html/* portfolio-management-page/docs/
+cd portfolio-management-page
+git add .
+git commit -m "Update documentation"
+git push
+cd ..
+cd portfolio-management
 ```

@@ -41,7 +41,7 @@ html_theme_options = {
 }
 
 # If you have a custom logo:
-html_logo = '_static/logo.png'
+# html_logo = '_static/logo.png'
 
 
 
@@ -55,3 +55,6 @@ html_extra_path = ['.nojekyll']  # Will copy an empty .nojekyll file to your bui
 # -- In case you have your .rst files or static assets in other subfolders:
 # templates_path = ['_templates']
 html_static_path = ['_static']
+html_css_files = [
+    'custom.css',  # or whatever you named it
+]

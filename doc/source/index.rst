@@ -12,7 +12,7 @@
      </td>
      <!-- Title cell -->
      <td style="vertical-align: middle;">
-       <h1 style="margin: 0;">Portfolio Management Package's Documentation</h1>
+       <h1 style="margin: 0;">Portfolio Management Package Documentation</h1>
      </td>
    </tr>
    </table>
@@ -20,6 +20,8 @@
 This package was first idealized as helper functions for the `Portfolio and Risk Management <https://finmath.uchicago.edu/curriculum/required-courses/finm-36700/>`_ course at the University of Chicago `Masters in Financial Mathematics <https://finmath.uchicago.edu/>`_.
 
 It aims to provide a set of tools for portfolio analysis, construction, risk management, foreign exchange, and more.
+
+The package is available in GitHub in: https://github.com/Fernando-Urbano/portfolio-management
 
 .. toctree::
    :maxdepth: 2

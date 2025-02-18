@@ -7,7 +7,7 @@ Port TSCV Module
    :show-inheritance:
 
 .. .. autosummary::
-..    :toctree: _autosummary/port_tscv
-..    :nosignatures:
+   :toctree: _autosummary/port_tscv
+   :nosignatures:
 
-..    tune_regularization_tscv
+   tune_regularization_tscv

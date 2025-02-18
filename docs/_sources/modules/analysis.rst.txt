@@ -9,9 +9,9 @@ Analysis Module
    :show-inheritance:
 
 .. .. autosummary::
-..    :toctree: _autosummary/analysis
-..    :nosignatures:
+   :toctree: _autosummary/analysis
+   :nosignatures:
 
-..    calc_cross_section_regression
-..    calc_regression
-..    calc_iterative_regression
+   calc_cross_section_regression
+   calc_regression
+   calc_iterative_regression
